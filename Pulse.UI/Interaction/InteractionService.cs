@@ -1,37 +1,50 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Threading;
+using Pulse.Core;
+using Pulse.UI.Interaction;
 
 namespace Pulse.UI
 {
-    public sealed class InteractionService
+    public static class InteractionService
     {
-        public static readonly Dispatcher Dispatcher = Application.Current.MainWindow.Dispatcher;
+        public static FFXIIIGamePart GamePart { get; private set; }
+        public static ApplicationConfigProviders Configuration { get; private set; }
+        public static AudioSettingsProviders AudioSettings { get; private set; }
+        public static GameLocationProviders GameLocation { get; private set; }
+        public static WorkingLocationProviders WorkingLocation { get; private set; }
+        public static TextEncodingProviders TextEncoding { get; private set; }
+        public static LocalizatorEnvironmentProviders LocalizatorEnvironment { get; private set; }
 
-        public static string GamePath { get; private set; }
-        public static event Action Refreshed;
+        public static event Action<IUiLeaf> SelectedLeafChanged;
 
-        public static void Refresh()
+        static InteractionService()
         {
-            RefreshGamePath();
+            Configuration = new ApplicationConfigProviders();
+            AudioSettings = new AudioSettingsProviders();
+            GameLocation = new GameLocationProviders();
+            WorkingLocation = new WorkingLocationProviders();
+            TextEncoding = new TextEncodingProviders();
+            LocalizatorEnvironment = new LocalizatorEnvironmentProviders();
 
-            Action h = Refreshed;
-            if (h != null)
-                Refreshed();
+            GameLocation.InfoProvided += Configuration.GameLocationProvided;
+            WorkingLocation.InfoProvided += Configuration.WorkingLocationProvided;
+            LocalizatorEnvironment.InfoProvided += Configuration.LocalizatorEnvironmentProvided;
         }
 
-        private static void RefreshGamePath()
+        public static void SetGamePart(FFXIIIGamePart result)
         {
-            IGamePathProvider[] providers = {new GamePathRegistryProvider(), new GamePathUserProvider()};
-            GamePathProviderValidator validator = new GamePathProviderValidator();
-            foreach (IGamePathProvider provider in providers)
-            {
-                string error;
-                if (!validator.Validate(provider, out error))
-                    continue;
+            GamePart = result;
+        }
 
-                GamePath = provider.GamePath;
-                return;
+        public static void RaiseSelectedNodeChanged(UiNode node)
+        {
+            try
+            {
+                SelectedLeafChanged.NullSafeInvoke(node as IUiLeaf);
+            }
+            catch (Exception ex)
+            {
+                UiHelper.ShowError(Application.Current.MainWindow, ex);
             }
         }
     }

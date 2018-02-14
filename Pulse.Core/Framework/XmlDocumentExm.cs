@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Xml;
 
 namespace Pulse.Core
@@ -11,7 +11,7 @@ namespace Pulse.Core
 
             XmlElement element = self.DocumentElement;
             if (element == null)
-                throw new ArgumentException("XmlElement ÌÂ Ì‡È‰ÂÌ.", "self");
+                throw new ArgumentException("XmlElement was not found.", nameof(self));
 
             return element;
         }

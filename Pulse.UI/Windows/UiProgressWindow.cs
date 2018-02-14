@@ -47,7 +47,7 @@ namespace Pulse.UI
                 root.AddUiElement(_progressTextBlock, 1, 0);
             }
 
-            _elapsedTextBlock = UiTextBlockFactory.Create("Прошло: 00:00");
+            _elapsedTextBlock = UiTextBlockFactory.Create(Lang.Measurement.Elapsed + ": 00:00");
             {
                 _elapsedTextBlock.HorizontalAlignment = HorizontalAlignment.Left;
                 root.AddUiElement(_elapsedTextBlock, 2, 0);
@@ -59,7 +59,7 @@ namespace Pulse.UI
                 root.AddUiElement(_processedTextBlock, 2, 0);
             }
 
-            _remainingTextBlock = UiTextBlockFactory.Create("Осталось: 00:00");
+            _remainingTextBlock = UiTextBlockFactory.Create(Lang.Measurement.Remaining + ": 00:00");
             {
                 _remainingTextBlock.HorizontalAlignment = HorizontalAlignment.Right;
                 root.AddUiElement(_remainingTextBlock, 2, 0);
@@ -98,10 +98,10 @@ namespace Pulse.UI
             Interlocked.Exchange(ref _totalCount, totalCount);
         }
 
-        public void Increment(long processedCount)
+        public void Incremented(long processedCount)
         {
             if (Interlocked.Add(ref _processedCount, processedCount) < 0)
-                throw new ArgumentOutOfRangeException("processedCount");
+                throw new ArgumentOutOfRangeException(nameof(processedCount));
         }
 
         #region Internal Logic
@@ -136,46 +136,17 @@ namespace Pulse.UI
             if (speed < 1) speed = 1;
             TimeSpan left = TimeSpan.FromSeconds((_totalCount - _processedCount) / speed);
 
-            _progressTextBlock.Text = String.Format("{0:F2}%", percents);
-            _elapsedTextBlock.Text = String.Format("{1}: {0:mm\\:ss}", elapsed, "Прошло");
-            _processedTextBlock.Text = String.Format("{0} / {1}", FormatValue(_processedCount), FormatValue(_totalCount));
-            _remainingTextBlock.Text = String.Format("{1}: {0:mm\\:ss}", left, "Осталось");
+            _progressTextBlock.Text = $"{percents:F2}%";
+            _elapsedTextBlock.Text = String.Format("{1}: {0:mm\\:ss}", elapsed, Lang.Measurement.Elapsed);
+            _processedTextBlock.Text = $"{FormatValue(_processedCount)} / {FormatValue(_totalCount)}";
+            _remainingTextBlock.Text = String.Format("{1}: {0:mm\\:ss}", left, Lang.Measurement.Remaining);
 
             _timer.Elapsed += OnTimer;
         }
 
         private string FormatValue(long value)
         {
-            if (_units == UiProgressUnits.Items)
-                return value.ToString(CultureInfo.CurrentCulture);
-
-            int i = 0;
-            decimal dec = value;
-            while ((dec > 1024))
-            {
-                dec /= 1024;
-                i++;
-            }
-
-            switch (i)
-            {
-                case 0:
-                    return string.Format("{0:F2} Б", dec);
-                case 1:
-                    return string.Format("{0:F2} КБ", dec);
-                case 2:
-                    return string.Format("{0:F2} МБ", dec);
-                case 3:
-                    return string.Format("{0:F2} ГБ", dec);
-                case 4:
-                    return string.Format("{0:F2} ТБ", dec);
-                case 5:
-                    return string.Format("{0:F2} ПБ", dec);
-                case 6:
-                    return string.Format("{0:F2} ЭБ", dec);
-                default:
-                    throw new ArgumentOutOfRangeException("value");
-            }
+            return _units == UiProgressUnits.Items ? value.ToString(CultureInfo.CurrentCulture) : UiHelper.FormatBytes(value);
         }
 
         #endregion
@@ -185,7 +156,7 @@ namespace Pulse.UI
             using (UiProgressWindow window = new UiProgressWindow(title, units))
             {
                 progressSender.ProgressTotalChanged += window.SetTotal;
-                progressSender.ProgressIncrement += window.Increment;
+                progressSender.ProgressIncremented += window.Incremented;
                 Task.Run(() => ExecuteAction(window, action));
                 window.ShowDialog();
             }
@@ -196,7 +167,7 @@ namespace Pulse.UI
             using (UiProgressWindow window = new UiProgressWindow(title, units))
             {
                 progressSender.ProgressTotalChanged += window.SetTotal;
-                progressSender.ProgressIncrement += window.Increment;
+                progressSender.ProgressIncremented += window.Incremented;
                 Task<T> task = Task.Run(() => ExecuteFunction(window, func));
                 window.ShowDialog();
                 return task.Result;
@@ -240,7 +211,7 @@ namespace Pulse.UI
         {
             try
             {
-                action(window.SetTotal, window.Increment);
+                action(window.SetTotal, window.Incremented);
             }
             finally
             {
@@ -264,7 +235,7 @@ namespace Pulse.UI
         {
             try
             {
-                return action(window.SetTotal, window.Increment);
+                return action(window.SetTotal, window.Incremented);
             }
             finally
             {

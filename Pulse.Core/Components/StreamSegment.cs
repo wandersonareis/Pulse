@@ -3,25 +3,39 @@ using System.IO;
 
 namespace Pulse.Core
 {
+    /// <summary>
+    /// НЕ потокобезопасный!
+    /// </summary>
     public sealed class StreamSegment : Stream
     {
         private long _offset, _length;
 
         public readonly Stream BaseStream;
 
-        public StreamSegment(Stream stream, long offset, long length)
+        public StreamSegment(Stream stream, long offset, long length, FileAccess access)
         {
             Exceptions.CheckArgumentNull(stream, "stream");
             if (offset < 0 || offset >= stream.Length)
-                throw new ArgumentOutOfRangeException("offset", offset, "Смещение выходит за границы потока.");
+                throw new ArgumentOutOfRangeException(nameof(offset), offset, "Смещение выходит за границы потока.");
             if (offset + length > stream.Length)
-                throw new ArgumentOutOfRangeException("length", length, "Недопустимая длина.");
+                throw new ArgumentOutOfRangeException(nameof(length), length, "Недопустимая длина.");
 
             _offset = offset;
             _length = length;
 
             BaseStream = stream;
-            BaseStream.Seek(_offset, SeekOrigin.Begin);
+            switch (access)
+            {
+                case FileAccess.Read:
+                    BaseStream.Position = _offset;
+                    break;
+                case FileAccess.Write:
+                    BaseStream.Position = _offset;
+                    break;
+                default:
+                    BaseStream.Seek(_offset, SeekOrigin.Begin);
+                    break;
+            }
         }
 
         public override bool CanRead

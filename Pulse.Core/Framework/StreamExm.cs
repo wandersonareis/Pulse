@@ -45,14 +45,11 @@ namespace Pulse.Core
             return buff;
         }
 
-        public static void CopyTo(this Stream input, Stream output, int size, byte[] buff, bool flush = true)
+        public static void CopyToStream(this Stream input, Stream output, int size, byte[] buff, Action<long> progress = null, bool flush = true)
         {
-            if (input == null)
-                throw new ArgumentNullException("input");
-            if (output == null)
-                throw new ArgumentNullException("output");
-            if (buff == null)
-                throw new ArgumentNullException("buff");
+            if (input == null) throw new ArgumentNullException(nameof(input));
+            if (output == null) throw new ArgumentNullException(nameof(output));
+            if (buff == null) throw new ArgumentNullException(nameof(buff));
 
             if (!input.CanRead)
             {
@@ -74,10 +71,11 @@ namespace Pulse.Core
             {
                 output.Write(buff, 0, read);
                 left -= read;
+                progress.NullSafeInvoke(read);
             }
 
             if (left != 0)
-                throw new Exception(String.Format("Unexpected end of stream: {0}/{1}", size - left, size));
+                throw new Exception($"Unexpected end of stream: {size - left}/{size}");
 
             if (flush)
                 output.Flush();
@@ -86,7 +84,7 @@ namespace Pulse.Core
         public static T[] ReadStructs<T>(this Stream input, int count) where T : new()
         {
             if (input == null)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             T[] result = new T[count];
 
@@ -104,36 +102,37 @@ namespace Pulse.Core
             return result;
         }
 
-        public static T[] ReadStructsByTotalSize<T>(this Stream input, long totalSize) where T:new()
+        public static T[] DungerousReadStructs<T>(this Stream input, int count) where T : struct
         {
-            if (input == null)
-                throw new ArgumentNullException("input");
+            if (count < 1)
+                return new T[0];
 
-            int size = Marshal.SizeOf(TypeCache<T>.Type);
-            if (totalSize % size != 0)
-                throw new ArgumentException("totalSize");
-            
-            return ReadStructs<T>(input, (int)(totalSize / size));
+            Array result = new T[count];
+            Int32 entrySize = UnsafeTypeCache<T>.UnsafeSize;
+            using (UnsafeTypeCache<byte>.ChangeArrayType(result, entrySize))
+                input.EnsureRead((byte[])result, 0, result.Length);
+
+            return (T[])result;
         }
 
-        public static T ReadStruct<T>(this Stream input) where T:new()
+        public static T ReadStruct<T>(this Stream input) where T : new()
         {
             if (input == null)
-                throw new ArgumentNullException("input");
+                throw new ArgumentNullException(nameof(input));
 
             return ReadStructs<T>(input, 1)[0];
         }
 
-        public static SafeHGlobalHandle ReadBuff(this Stream input, int size)
+        public static SafeUnmanagedArray ReadBuff(this Stream input, int size)
         {
-            SafeHGlobalHandle handle = new SafeHGlobalHandle(size);
+            SafeUnmanagedArray handle = new SafeUnmanagedArray(size);
 
             try
             {
                 using (UnmanagedMemoryStream output = new UnmanagedMemoryStream(handle, 0, size, FileAccess.Write))
                 {
                     byte[] buff = new byte[Math.Min(32 * 1024, size)];
-                    input.CopyTo(output, size, buff);
+                    input.CopyToStream(output, size, buff);
                 }
             }
             catch
@@ -145,31 +144,14 @@ namespace Pulse.Core
             return handle;
         }
 
-        public static string ReadNullTerminatedString(this Stream input, Encoding encoding)
-        {
-            StringBuilder sb = new StringBuilder();
-            using(StreamReader sr = new StreamReader(input, encoding))
-            {
-                int nc;
-                while ((nc = sr.Read()) != -1)
-                {
-                    if (nc == 0)
-                        break;
-
-                    sb.Append((char)nc);
-                }
-            }
-            return sb.ToString();
-        }
-
-        public static void Read(this Stream input, SafeHGlobalHandle buffer, long offset, int length)
+        public static void Read(this Stream input, SafeUnmanagedArray buffer, long offset, int length)
         {
             try
             {
-                using (UnmanagedMemoryStream output = new UnmanagedMemoryStream(buffer, 0, length, FileAccess.Write))
+                using (UnmanagedMemoryStream output = new UnmanagedMemoryStream(buffer, offset, length, FileAccess.Write))
                 {
                     byte[] buff = new byte[Math.Min(32 * 1024, length)];
-                    input.CopyTo(output, length, buff);
+                    input.CopyToStream(output, length, buff);
                 }
             }
             catch
@@ -179,10 +161,36 @@ namespace Pulse.Core
             }
         }
 
+        public static T ReadContent<T>(this Stream input) where T : IStreamingContent, new()
+        {
+            T result = new T();
+            result.ReadFromStream(input);
+            return result;
+        }
+
+        public static T[] ReadContent<T>(this Stream input, int count) where T : IStreamingContent, new()
+        {
+            T[] result = new T[count];
+            for (int i = 0; i < count; i++)
+                result[i] = ReadContent<T>(input);
+            return result;
+        }
+
+        public static void WriteContent<T>(this Stream output, T item) where T : IStreamingContent
+        {
+            item.WriteToStream(output);
+        }
+
+        public static void WriteContent<T>(this Stream output, T[] items) where T : IStreamingContent
+        {
+            foreach (T item in items)
+                item.WriteToStream(output);
+        }
+
         public static void WriteStruct(this Stream output, object pack)
         {
             if (output == null)
-                throw new ArgumentNullException("output");
+                throw new ArgumentNullException(nameof(output));
 
             int size = Marshal.SizeOf(pack);
             byte[] buff = new byte[size];
@@ -211,7 +219,66 @@ namespace Pulse.Core
 
         public static StreamSegment GetStreamSegment(this Stream output, long offset, long size = -1)
         {
-            return new StreamSegment(output, offset, size < 0 ? output.Length - offset : size);
+            return new StreamSegment(output, offset, size < 0 ? output.Length - offset : size, FileAccess.ReadWrite);
         }
+
+        #region Strings
+
+        public static string ReadFixedSizeString(this Stream input, int size, Encoding encoding)
+        {
+            unsafe
+            {
+                byte[] name = input.EnsureRead(size);
+                fixed (byte* namePtr = &name[0])
+                    return new string((sbyte*)namePtr, 0, size, encoding).TrimEnd('\0');
+            }
+        }
+
+        public static void WriteFixedSizeString(this Stream output, String str, int size, Encoding encoding)
+        {
+            byte[] name = new byte[size];
+            encoding.GetBytes(str, 0, str.Length, name, 0);
+            output.Write(name, 0, name.Length);
+        }
+
+        public static string ReadNullTerminatedString(this Stream input, Encoding encoding, int zeroCount)
+        {
+            using (MemoryStream ms = new MemoryStream(4096))
+            {
+                int nc, count = 0;
+                while ((nc = input.ReadByte()) != -1)
+                {
+                    if (nc == 0)
+                    {
+                        if (++count == zeroCount)
+                        {
+                            count = 0;
+                            break;
+                        }
+
+                        continue;
+                    }
+
+                    while (count > 0)
+                    {
+                        count--;
+                        ms.WriteByte(0);
+                    }
+
+                    ms.WriteByte((byte)nc);
+                }
+
+                while (count > 0)
+                {
+                    count--;
+                    ms.WriteByte(0);
+                }
+
+                byte[] array = ms.ToArray();
+                return encoding.GetString(array, 0, array.Length);
+            }
+        }
+
+        #endregion
     }
 }

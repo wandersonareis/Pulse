@@ -12,7 +12,7 @@ namespace Pulse.Core
 
             XmlDocument doc = self.OwnerDocument;
             if (doc == null)
-                throw new ArgumentException("XmlDocument не найден.", "self");
+                throw new ArgumentException("XmlDocument не найден.", nameof(self));
 
             return doc;
         }
@@ -25,6 +25,17 @@ namespace Pulse.Core
             XmlElement child = self[name];
             if (child == null)
                 throw Exceptions.CreateArgumentException("self", "Дочерний XmlElement '{0}' не найден.", name);
+
+            return child;
+        }
+
+        public static XmlElement GetChildElement(this XmlElement self, int index)
+        {
+            Exceptions.CheckArgumentNull(self, "self");
+
+            XmlElement child = self.ChildNodes[index] as XmlElement;
+            if (child == null)
+                throw Exceptions.CreateArgumentException("self", "Дочерний XmlElement '{0}' не найден.", index);
 
             return child;
         }
@@ -223,7 +234,7 @@ namespace Pulse.Core
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
 
             XmlAttribute arg = self.Attributes[name];
-            return arg == null ? null : arg.Value;
+            return arg?.Value;
         }
 
         public static Boolean GetBoolean(this XmlElement self, string name)

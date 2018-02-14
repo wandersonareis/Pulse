@@ -9,8 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Pulse.FS</RootNamespace>
     <AssemblyName>Pulse.FS</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,35 +33,172 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio, Version=1.7.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.7.3\lib\net35\NAudio.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NAudio.Vorbis, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.Vorbis.1.0.0.0\lib\net35\NAudio.Vorbis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NVorbis, Version=0.8.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NVorbis.0.8.4.0\lib\NVorbis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
     <Reference Include="zlib.net">
       <HintPath>..\packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArchiveExtractor\ArchiveExtractor.cs" />
+    <Compile Include="ArchiveListing\ArchiveListingCompressedData.cs" />
+    <Compile Include="ArchiveListing\XIII-2\ArchiveListingEntryInfoV2.cs" />
+    <Compile Include="ArchiveListing\ArchiveAccessor.cs" />
     <Compile Include="ArchiveListing\ArchiveListing.cs" />
-    <Compile Include="ArchiveListing\ArchiveListingEntry.cs" />
-    <Compile Include="ArchiveListing\ArchiveListingEntryInfo.cs" />
-    <Compile Include="ArchiveListing\ArchiveListingHeader.cs" />
-    <Compile Include="ArchiveListing\ArchiveListingReader.cs" />
+    <Compile Include="ArchiveListing\ArchiveEntry.cs" />
+    <Compile Include="ArchiveListing\XIII-1\ArchiveListingEntryInfoV1.cs" />
+    <Compile Include="ArchiveListing\XIII-1\ArchiveListingHeaderV1.cs" />
     <Compile Include="ArchiveListing\ArchiveListingBlockInfo.cs" />
+    <Compile Include="ArchiveListing\XIII-2\ArchiveListingHeaderV2.cs" />
+    <Compile Include="ArchiveListing\XIII-2\ArchiveListingReaderV2.cs" />
+    <Compile Include="ArchiveListing\XIII-1\ArchiveListingReaderV1.cs" />
+    <Compile Include="ArchiveListing\XIII-2\ArchiveListingTextWriterV2.cs" />
+    <Compile Include="ArchiveListing\XIII-1\ArchiveListingTextWriterV1.cs" />
+    <Compile Include="ArchiveListing\XIII-2\ArchiveListingWriterV2.cs" />
+    <Compile Include="ArchiveListing\XIII-1\ArchiveListingWriterV1.cs" />
+    <Compile Include="ArchiveListing\IArchiveEntry.cs" />
+    <Compile Include="ArchiveListing\IArchiveListing.cs" />
+    <Compile Include="ArchiveListing\IArchiveListingHeader.cs" />
+    <Compile Include="IMGB\WPD\WDB\Movies\WdbMovieArchiveListingReader.cs" />
+    <Compile Include="IMGB\WPD\WDB\Movies\WdbMovieArchiveListing.cs" />
+    <Compile Include="IMGB\WPD\WDB\DbArchiveAccessor.cs" />
+    <Compile Include="IMGB\Sections\Textures\VTEX\VtexHeader.cs" />
+    <Compile Include="IMGB\WPD\WDB\WdbHeader.cs" />
+    <Compile Include="IMGB\WPD\WDB\Movies\WdbMovieHeader.cs" />
+    <Compile Include="IMGB\WPD\WDB\Movies\WdbMovieEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IMGB\Sections\GtexHeader.cs" />
+    <Compile Include="IMGB\Sections\SectionBase.cs" />
+    <Compile Include="IMGB\Sections\SectionHeader.cs" />
+    <Compile Include="IMGB\Sections\SectionType.cs" />
+    <Compile Include="IMGB\Sections\Textures\GtexData.cs" />
+    <Compile Include="IMGB\Sections\Textures\TextureHeader.cs" />
+    <Compile Include="IMGB\Sections\Textures\GtexMipMapLocation.cs" />
+    <Compile Include="IMGB\Sections\Textures\TextureSection.cs" />
+    <Compile Include="IMGB\SeDb\SeDbResEntry.cs" />
+    <Content Include="SCD\_insert.cpp" />
+    <Compile Include="SCD\ScdFileReader.cs" />
+    <Compile Include="SCD\SscfWaveFormat.cs" />
+    <Compile Include="SCD\SscfWaveHeader.cs" />
+    <Compile Include="WAV\AdPcm\AdPcmCoefficientSet.cs" />
+    <Compile Include="SCD\SscfHeader.cs" />
+    <Compile Include="WAV\AdPcm\AdPcmWaveExtraData.cs" />
+    <Compile Include="WAV\WaveFormatEx.cs" />
+    <Compile Include="WFL\WflContent.cs" />
+    <Compile Include="WFL\WflFileReader.cs" />
+    <Compile Include="WFL\WflFileWriter.cs" />
+    <Compile Include="WFL\WflHeader.cs" />
+    <Compile Include="IMGB\SeDb\SeDbResHeader.cs" />
+    <Compile Include="IMGB\SeDb\SeDbArchiveListing.cs" />
+    <Compile Include="IMGB\SeDb\SeDbArchiveListingReader.cs" />
+    <Compile Include="IMGB\WPD\WpdEntry.cs" />
+    <Compile Include="IMGB\WPD\WpdHeader.cs" />
+    <Compile Include="IMGB\ImgbArchiveAccessor.cs" />
+    <Compile Include="IMGB\WPD\WpdArchiveListing.cs" />
+    <Compile Include="IMGB\WPD\WpdArchiveListingReader.cs" />
+    <Compile Include="WPD\Utils.cs" />
+    <Compile Include="WPD\WpdUnpack.cs" />
+    <Compile Include="YKD\ResourceViewports\EmptyYkdResourceViewport.cs" />
+    <Compile Include="YKD\ResourceViewports\ExtraYkdResourceViewport.cs" />
+    <Compile Include="YKD\ResourceViewports\FragmentYkdResourceViewport.cs" />
+    <Compile Include="YKD\ResourceViewports\FullYkdResourceViewport.cs" />
+    <Compile Include="YKD\ResourceViewports\YkdResourceViewport.cs" />
+    <Compile Include="YKD\YkdBlockEntry.cs" />
+    <Compile Include="YKD\YkdBlockHeader.cs" />
+    <Compile Include="YKD\YkdBlockOptionalTail.cs" />
+    <Compile Include="YKD\YkdBlockOptionalTails.cs" />
+    <Compile Include="YKD\YkdFile.cs" />
+    <Compile Include="YKD\YkdFrame.cs" />
+    <Compile Include="YKD\YkdFrames.cs" />
+    <Compile Include="YKD\YkdHeader.cs" />
+    <Compile Include="YKD\YkdOffsets.cs" />
+    <Compile Include="YKD\YkdResource.cs" />
+    <Compile Include="YKD\YkdResourceFlags.cs" />
+    <Compile Include="YKD\YkdResources.cs" />
+    <Compile Include="YKD\ResourceViewports\YkdResourceViewportType.cs" />
     <Compile Include="ZLibHelper.cs" />
+    <Compile Include="ZTR\IZtrFormatter.cs" />
+    <Compile Include="ZTR\StringsZtrFormatter.cs" />
+    <Compile Include="ZTR\TxtZtrFormatter.cs" />
+    <Compile Include="ZTR\ZtrFileKeysPacker.cs" />
+    <Compile Include="ZTR\ZtrFilePacker.cs" />
+    <Compile Include="ZTR\ZtrFileTextPacker.cs" />
+    <Compile Include="ZTR\ZtrTextWriter.cs" />
     <Compile Include="ZTR\ZtrFileEncoding.cs" />
+    <Compile Include="ZTR\ZtrFileEntry.cs" />
     <Compile Include="ZTR\ZtrFileHeader.cs" />
-    <Compile Include="ZTR\ZtrFileTagsUnpacker.cs" />
+    <Compile Include="ZTR\ZtrFileHeaderLineInfo.cs" />
+    <Compile Include="ZTR\ZtrFileKeysUnpacker.cs" />
     <Compile Include="ZTR\ZtrFileTextUnpacker.cs" />
     <Compile Include="ZTR\ZtrFileType.cs" />
-    <Compile Include="ZTR\ZtrUnpacker.cs" />
+    <Compile Include="ZTR\ZtrFileUnpacker.cs" />
+    <Compile Include="ZTR\ZtrTextReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -68,6 +209,13 @@
       <Name>Pulse.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Executable\ffxiiicrypt.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="IMGB\Sections\Partially Stolen.txt" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
