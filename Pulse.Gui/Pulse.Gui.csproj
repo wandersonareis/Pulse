@@ -90,10 +90,6 @@
       <Project>{0d15f2d9-f585-4fe8-a85b-6fb8a681f487}</Project>
       <Name>Pulse.FS</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Pulse.UI\Pulse.UI.csproj">
-      <Project>{87509062-bcdd-4bf0-92c8-169c0b59740b}</Project>
-      <Name>Pulse.UI</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

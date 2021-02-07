@@ -24,7 +24,7 @@ namespace Pulse.FS
             Array.Reverse(array);
             return array;
         }
-        public void unpackWpd(ref FileStream fs, ref FileInfo fi)
+        public void unpackWpd(FileStream fs, ref FileInfo fi)
         {
             string text2 = fi.DirectoryName + "\\_unpacked";
             string text = fi.DirectoryName + "\\_unpacked\\" + fi.Name;
