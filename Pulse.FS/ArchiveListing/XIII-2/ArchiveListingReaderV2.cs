@@ -94,7 +94,7 @@ namespace Pulse.FS
                         StartInfo = new ProcessStartInfo()
                         {
                             FileName = @"Resources\Executable\ffxiiicrypt.exe",
-                            Arguments = "-d \"" + tmpProvider.FilePath + "\" 2",
+                            Arguments = $"-d \"{tmpProvider.FilePath}\" filelist",
                             CreateNoWindow = true,
                             UseShellExecute = false,
                             RedirectStandardOutput = true,
@@ -105,7 +105,7 @@ namespace Pulse.FS
                     Task<string> erroMessage = decrypter.StandardError.ReadToEndAsync();
                     Task<string> outputMessage = decrypter.StandardOutput.ReadToEndAsync();
                     decrypter.WaitForExit();
-                    if (decrypter.ExitCode != 0)
+                    if (decrypter.ExitCode != -2)
                     {
                         StringBuilder sb = new StringBuilder("Decryption error! Code: ");
                         sb.AppendLine(decrypter.ExitCode.ToString());

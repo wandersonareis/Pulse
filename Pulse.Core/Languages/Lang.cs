@@ -37,9 +37,9 @@ namespace Pulse.Core
                     }
                 }
 
-                string pathCombine = Path.Combine(dir.FullName, "ru-RU.xml");
+                string pathCombine = Path.Combine(dir.FullName, "en.xml");
 
-                using (Stream input = Assembly.GetExecutingAssembly().GetManifestResourceStream("Pulse.Core.Languages.ru-RU.xml"))
+                using (Stream input = Assembly.GetExecutingAssembly().GetManifestResourceStream("Pulse.Core.Languages.en.xml"))
                 using (Stream output = File.Create(pathCombine))
                     input.CopyTo(output);
 
