@@ -29,6 +29,7 @@ namespace Pulse.UI
                 case UiArchiveExtension.Xgr:
                 case UiArchiveExtension.Xwb:
                 case UiArchiveExtension.Xfv:
+                case UiArchiveExtension.Bin:
                     return ExpandWpdChilds();
                 case UiArchiveExtension.Trb:
                     return ExpandTrbChilds();

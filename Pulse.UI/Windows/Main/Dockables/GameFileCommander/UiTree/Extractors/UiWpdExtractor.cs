@@ -10,7 +10,7 @@ namespace Pulse.UI
     {
         private readonly WpdArchiveListing _listing;
         private readonly WpdEntry[] _leafs;
-        private readonly Boolean? _conversion;
+        private readonly bool? _conversion;
         private readonly IUiExtractionTarget _target;
         private readonly Dictionary<string, IWpdEntryExtractor> _extractors;
         private readonly Lazy<Stream> _headers;
@@ -38,25 +38,25 @@ namespace Pulse.UI
             if (_leafs.Length == 0)
                 return;
 
-            String root = InteractionService.WorkingLocation.Provide().ProvideExtractedDirectory();
-            String targetDirectory = Path.Combine(root, _listing.ExtractionSubpath);
+            string root = InteractionService.WorkingLocation.Provide().ProvideExtractedDirectory();
+            string targetDirectory = Path.Combine(root, _listing.ExtractionSubpath);
             _target.CreateDirectory(targetDirectory);
 
             byte[] buff = new byte[32 * 1024];
             foreach (WpdEntry entry in _leafs)
             {
-                String targetExtension;
+                string targetExtension;
                 IWpdEntryExtractor extractor = GetExtractor(entry, out targetExtension);
                 if (extractor == null)
                     return;
 
-                String targetPath = Path.Combine(targetDirectory, entry.NameWithoutExtension + '.' + targetExtension);
+                string targetPath = Path.Combine(targetDirectory, entry.NameWithoutExtension + '.' + targetExtension);
                 using (Stream output = _target.Create(targetPath))
                     extractor.Extract(entry, output, _headers, _content, buff);
             }
         }
 
-        private IWpdEntryExtractor GetExtractor(WpdEntry entry, out String targetExtension)
+        private IWpdEntryExtractor GetExtractor(WpdEntry entry, out string targetExtension)
         {
             targetExtension = entry.Extension.ToLowerInvariant();
 
@@ -69,7 +69,7 @@ namespace Pulse.UI
             return result;
         }
 
-        private Dictionary<String, IWpdEntryExtractor> ProvideExtractors(bool? conversion)
+        private Dictionary<string, IWpdEntryExtractor> ProvideExtractors(bool? conversion)
         {
             return conversion == false ? Empty : Converters;
         }
@@ -78,7 +78,7 @@ namespace Pulse.UI
         {
             return _listing.Accessor.ExtractHeaders();
         }
-        
+
         private Stream AcquireContent()
         {
             return _listing.Accessor.ExtractContent();
@@ -87,20 +87,21 @@ namespace Pulse.UI
         #region Static
 
         private static readonly IWpdEntryExtractor DefaultExtractor = ProvideDefaultExtractor();
-        private static readonly Dictionary<String, IWpdEntryExtractor> Empty = new Dictionary<String, IWpdEntryExtractor>(0);
-        private static readonly Dictionary<String, IWpdEntryExtractor> Converters = RegisterConverters();
+        private static readonly Dictionary<string, IWpdEntryExtractor> Empty = new Dictionary<string, IWpdEntryExtractor>(0);
+        private static readonly Dictionary<string, IWpdEntryExtractor> Converters = RegisterConverters();
 
         private static IWpdEntryExtractor ProvideDefaultExtractor()
         {
             return new DefaultWpdEntryExtractor();
         }
 
-        private static Dictionary<String, IWpdEntryExtractor> RegisterConverters()
+        private static Dictionary<string, IWpdEntryExtractor> RegisterConverters()
         {
-            return new Dictionary<String, IWpdEntryExtractor>
+            return new Dictionary<string, IWpdEntryExtractor>
             {
                 {"txbh", new TxbhToDdsWpdEntryExtractor()},
-                {"vtex", new VtexToDdsWpdEntryExtractor()}
+                {"vtex", new VtexToDdsWpdEntryExtractor()},
+                {"ztr", new ZtrToStringsArchiveEntryExtractor()}
             };
         }
 

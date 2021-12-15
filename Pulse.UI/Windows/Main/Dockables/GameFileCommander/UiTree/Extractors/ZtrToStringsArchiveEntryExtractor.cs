@@ -5,7 +5,7 @@ using Pulse.FS;
 
 namespace Pulse.UI
 {
-    public sealed class ZtrToStringsArchiveEntryExtractor : IArchiveEntryExtractor
+    public sealed class ZtrToStringsArchiveEntryExtractor : IArchiveEntryExtractor, IWpdEntryExtractor
     {
         public string TargetExtension
         {
@@ -19,6 +19,17 @@ namespace Pulse.UI
                 return;
 
             ZtrFileUnpacker unpacker = new ZtrFileUnpacker(input, InteractionService.TextEncoding.Provide().Encoding);
+            ZtrFileEntry[] entries = unpacker.Unpack();
+
+            ZtrTextWriter writer = new ZtrTextWriter(output, StringsZtrFormatter.Instance);
+            writer.Write(entry.Name, entries);
+        }
+
+        public void Extract(WpdEntry entry, Stream output, Lazy<Stream> headers, Lazy<Stream> content, byte[] buff)
+        {
+            headers.Value.Position = entry.Offset;
+
+            ZtrFileUnpacker unpacker = new ZtrFileUnpacker(headers.Value, InteractionService.TextEncoding.Provide().Encoding);
             ZtrFileEntry[] entries = unpacker.Unpack();
 
             ZtrTextWriter writer = new ZtrTextWriter(output, StringsZtrFormatter.Instance);

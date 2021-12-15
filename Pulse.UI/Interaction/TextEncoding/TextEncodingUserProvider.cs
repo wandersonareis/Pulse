@@ -245,6 +245,8 @@ namespace Pulse.UI
                     return CreateAccessorV1();
                 case FFXIIIGamePart.Part2:
                     return CreateAccessorV2();
+                case FFXIIIGamePart.Part3:
+                    return CreateAccessorV3();
                 default:
                     throw new NotSupportedException(InteractionService.GamePart.ToString());
             }
@@ -278,6 +280,19 @@ namespace Pulse.UI
             return new ImgbArchiveAccessor(listing, xgrEntry, imgbEntry);
         }
 
+        private ImgbArchiveAccessor CreateAccessorV3()
+        {
+            GameLocationInfo gameLocation = InteractionService.GameLocation.Provide();
+            string binaryPath = Path.Combine(gameLocation.SystemDirectory, "white_imga.win32.bin");
+            string listingPath = Path.Combine(gameLocation.SystemDirectory, "filelista.win32.bin");
+
+            ArchiveAccessor accessor = new ArchiveAccessor(binaryPath, listingPath);
+            ArchiveListing listing = ArchiveListingReaderV1.Read(accessor, null, null);
+            ArchiveEntry xgrEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.xgr"));
+            ArchiveEntry imgbEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.imgb"));
+
+            return new ImgbArchiveAccessor(listing, xgrEntry, imgbEntry);
+        }
         private void ReadXgrContent(ImgbArchiveAccessor accessor, out WpdArchiveListing listing, out WpdEntry[] fontEntries, out WflContent[] fontContent, out TextureSection[] textureHeaders, out string[] names)
         {
             using (Stream indices = accessor.ExtractHeaders())

@@ -31,6 +31,9 @@ namespace Pulse.UI
             if (TryAddImgbPair(listing, entry, entryPath, entryName))
                 return true;
 
+            if (TryAddDbFiles(listing, entry, entryPath, entryName))
+                return true;
+
             return false;
         }
 
@@ -108,6 +111,18 @@ namespace Pulse.UI
         private Pair<ArchiveEntry, ArchiveEntry> ProvidePair(string entryPathWithoutExtension)
         {
             return _pairs.GetOrAdd(entryPathWithoutExtension, p => new Pair<ArchiveEntry, ArchiveEntry>());
+        }
+
+        private bool TryAddDbFiles(ArchiveListing listing, ArchiveEntry entry, string entryPath, string entryName)
+        {
+            if (!entryPath.StartsWith("db/ai/npc/pack")) return false;
+
+            UiArchiveExtension extension = UiArchiveExtension.Bin;
+
+            UiFileTableNode node = new UiFileTableNode(listing, extension, entry, entry);
+            ConcurrentBag<UiNode> container = ProvideRootNodeChilds(extension);
+            container.Add(node);
+            return true;
         }
 
         private bool TryAddZoneListing(ArchiveListing parentListing, ArchiveEntry entry, string entryPath)

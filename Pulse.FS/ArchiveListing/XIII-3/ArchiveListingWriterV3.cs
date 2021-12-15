@@ -7,18 +7,18 @@ using Pulse.Core;
 
 namespace Pulse.FS
 {
-    public sealed class ArchiveListingWriterV2
+    public sealed class ArchiveListingWriterV3
     {
         public static void Write(ArchiveListing listing)
         {
-            ArchiveListingWriterV2 writer = new ArchiveListingWriterV2(listing);
+            ArchiveListingWriterV3 writer = new ArchiveListingWriterV3(listing);
             writer.Write();
         }
 
         private readonly ArchiveListing _listing;
         private readonly ArchiveAccessor _accessor;
 
-        private ArchiveListingWriterV2(ArchiveListing listing)
+        private ArchiveListingWriterV3(ArchiveListing listing)
         {
             _listing = listing;
             _accessor = _listing.Accessor;
@@ -30,13 +30,13 @@ namespace Pulse.FS
             using (MemoryStream textBuff = new MemoryStream(32768))
             {
                 ArchiveListingBlockInfo[] blocksInfo;
-                ArchiveListingEntryInfoV2[] entriesInfoV2;
-                ArchiveListingTextWriterV2 textWriter = new ArchiveListingTextWriterV2(textBuff);
-                textWriter.Write(_listing, out blocksInfo, out entriesInfoV2);
+                ArchiveListingEntryInfoV3[] entriesInfoV3;
+                ArchiveListingTextWriterV3 textWriter = new ArchiveListingTextWriterV3(textBuff);
+                textWriter.Write(_listing, out blocksInfo, out entriesInfoV3);
 
-                for (int i = 0; i < entriesInfoV2.Length; i++)
+                for (int i = 0; i < entriesInfoV3.Length; i++)
                 {
-                    ArchiveListingEntryInfoV2 info = entriesInfoV2[i];
+                    ArchiveListingEntryInfoV3 info = entriesInfoV3[i];
                     ArchiveEntry entry = _listing[i];
                     info.UnknownNumber = entry.UnknownNumber;
                     info.UnknownValue = entry.UnknownValue;
@@ -47,13 +47,13 @@ namespace Pulse.FS
                 int blocksSize = (int)textBuff.Position;
                 textBuff.Position = 0;
 
-                ArchiveListingHeaderV2 header = (ArchiveListingHeaderV2)_listing.Header;
-                header.EntriesCount = entriesInfoV2.Length;
-                header.RawBlockOffset = entriesInfoV2.Length * 8 + 12;
+                ArchiveListingHeaderV3 header = (ArchiveListingHeaderV3)_listing.Header;
+                header.EntriesCount = entriesInfoV3.Length;
+                header.RawBlockOffset = entriesInfoV3.Length * 8 + 12;
                 header.RawInfoOffset = header.RawBlockOffset + blocksInfo.Length * 12;
 
                 headerBuff.WriteContent(header);
-                foreach (ArchiveListingEntryInfoV2 entry in entriesInfoV2)
+                foreach (ArchiveListingEntryInfoV3 entry in entriesInfoV3)
                     headerBuff.WriteContent(entry);
                 foreach (ArchiveListingBlockInfo block in blocksInfo)
                     headerBuff.WriteStruct(block);
