@@ -6,18 +6,19 @@ namespace Pulse.Core
 {
     public sealed class TempFileProvider : IDisposable
     {
-        public readonly String FilePath;
-        public readonly String FilePrefix;
-        public readonly String Extension;
-
+        public readonly string FilePath;
+        public readonly string FilePrefix;
+        public readonly string Extension;
         private long _counter;
 
+        public long Size { get; set; }
+
         public TempFileProvider()
-            : this(String.Empty, String.Empty)
+            : this(string.Empty, string.Empty)
         {
         }
 
-        public TempFileProvider(String filePrefix, String extension)
+        public TempFileProvider(string filePrefix, string extension)
         {
             FilePrefix = filePrefix;
             Extension = extension;

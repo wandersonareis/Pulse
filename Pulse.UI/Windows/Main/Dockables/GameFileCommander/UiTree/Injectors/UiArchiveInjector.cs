@@ -11,8 +11,8 @@ namespace Pulse.UI
         private readonly ArchiveListing _listing;
         private readonly ArchiveEntry[] _leafs;
         private readonly IUiInjectionSource _source;
-        private readonly Dictionary<String, IArchiveEntryInjector> _injectors;
-        private readonly Byte[] _buff = new Byte[32 * 1024];
+        private readonly Dictionary<string, IArchiveEntryInjector> _injectors;
+        private readonly byte[] _buff = new byte[32 * 1024];
         private readonly bool? _conversion;
         private readonly bool? _compression;
         private readonly ArchiveEntryInjectionData _injectionData;
@@ -38,12 +38,12 @@ namespace Pulse.UI
             if (_leafs.Length == 0)
                 return;
 
-            String root = _source.ProvideRootDirectory();
+            string root = _source.ProvideRootDirectory();
 
             foreach (ArchiveEntry entry in _leafs)
             {
-                String sourcePath = Path.Combine(root, PathEx.ChangeMultiDotExtension(entry.Name, null));
-                String directoryPath = Path.GetDirectoryName(sourcePath);
+                string sourcePath = Path.Combine(root, PathEx.ChangeMultiDotExtension(entry.Name, null));
+                string directoryPath = Path.GetDirectoryName(sourcePath);
 
                 if (entry.Name.EndsWith(".ztr"))
                 {
@@ -60,7 +60,7 @@ namespace Pulse.UI
                 manager.Enqueue(_listing);
         }
 
-        private void Inject(ArchiveEntry entry, String sourcePath)
+        private void Inject(ArchiveEntry entry, string sourcePath)
         {
             string sourceExtension = PathEx.GetMultiDotComparableExtension(entry.Name);
             string sourceFullPath = sourcePath + sourceExtension;
@@ -93,7 +93,7 @@ namespace Pulse.UI
             return writer;
         }
 
-        private Dictionary<String, IArchiveEntryInjector> ProvideInjectors()
+        private Dictionary<string, IArchiveEntryInjector> ProvideInjectors()
         {
             return _conversion != false ? Converters : Emptry;
         }
@@ -101,17 +101,17 @@ namespace Pulse.UI
         #region Static
 
         private static readonly IArchiveEntryInjector DefaultInjector = ProvideDefaultInjector();
-        private static readonly Dictionary<String, IArchiveEntryInjector> Emptry = new Dictionary<String, IArchiveEntryInjector>(0);
-        private static readonly Dictionary<String, IArchiveEntryInjector> Converters = RegisterConverters();
+        private static readonly Dictionary<string, IArchiveEntryInjector> Emptry = new Dictionary<string, IArchiveEntryInjector>(0);
+        private static readonly Dictionary<string, IArchiveEntryInjector> Converters = RegisterConverters();
 
         private static IArchiveEntryInjector ProvideDefaultInjector()
         {
             return new DefaultArchiveEntryInjector();
         }
 
-        private static Dictionary<String, IArchiveEntryInjector> RegisterConverters()
+        private static Dictionary<string, IArchiveEntryInjector> RegisterConverters()
         {
-            return new Dictionary<String, IArchiveEntryInjector>
+            return new Dictionary<string, IArchiveEntryInjector>
             {
                 {".ztr", new StringsToZtrArchiveEntryInjector()}
             };

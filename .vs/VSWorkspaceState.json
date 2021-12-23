@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Pulse.FS",
+    "\\Pulse.FS\\ArchiveListing",
+    "\\Pulse.FS\\ArchiveListing\\XIII-3",
+    "\\Pulse.UI",
+    "\\Pulse.UI\\Windows",
+    "\\Pulse.UI\\Windows\\Main",
+    "\\Pulse.UI\\Windows\\Main\\Dockables",
+    "\\Pulse.UI\\Windows\\Main\\Dockables\\GameFileCommander",
+    "\\Pulse.UI\\Windows\\Main\\Dockables\\GameFileCommander\\UiTree",
+    "\\Pulse.UI\\Windows\\Main\\Dockables\\GameFileCommander\\UiTree\\Accessors"
+  ],
+  "SelectedNode": "\\Pulse.sln",
+  "PreviewInSolutionExplorer": false
+}

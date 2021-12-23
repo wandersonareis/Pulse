@@ -283,13 +283,13 @@ namespace Pulse.UI
         private ImgbArchiveAccessor CreateAccessorV3()
         {
             GameLocationInfo gameLocation = InteractionService.GameLocation.Provide();
-            string binaryPath = Path.Combine(gameLocation.SystemDirectory, "white_imga.win32.bin");
-            string listingPath = Path.Combine(gameLocation.SystemDirectory, "filelista.win32.bin");
+            string binaryPath = Path.Combine(gameLocation.SystemDirectory, "white_img2a.win32.bin");
+            string listingPath = Path.Combine(gameLocation.SystemDirectory, "filelist2a.win32.bin");
 
             ArchiveAccessor accessor = new ArchiveAccessor(binaryPath, listingPath);
-            ArchiveListing listing = ArchiveListingReaderV1.Read(accessor, null, null);
-            ArchiveEntry xgrEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.xgr"));
-            ArchiveEntry imgbEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.imgb"));
+            ArchiveListing listing = ArchiveListingReaderV3.Read(accessor, null, null);
+            ArchiveEntry xgrEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system_jp.win32.xgr"));
+            ArchiveEntry imgbEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system_jp.win32.imgb"));
 
             return new ImgbArchiveAccessor(listing, xgrEntry, imgbEntry);
         }

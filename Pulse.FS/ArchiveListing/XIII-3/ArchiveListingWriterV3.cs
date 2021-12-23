@@ -29,10 +29,8 @@ namespace Pulse.FS
             using (MemoryStream headerBuff = new MemoryStream(32768))
             using (MemoryStream textBuff = new MemoryStream(32768))
             {
-                ArchiveListingBlockInfo[] blocksInfo;
-                ArchiveListingEntryInfoV3[] entriesInfoV3;
                 ArchiveListingTextWriterV3 textWriter = new ArchiveListingTextWriterV3(textBuff);
-                textWriter.Write(_listing, out blocksInfo, out entriesInfoV3);
+                textWriter.Write(_listing, out ArchiveListingBlockInfo[] blocksInfo, out ArchiveListingEntryInfoV3[] entriesInfoV3);
 
                 for (int i = 0; i < entriesInfoV3.Length; i++)
                 {
@@ -53,10 +51,17 @@ namespace Pulse.FS
                 header.RawInfoOffset = header.RawBlockOffset + blocksInfo.Length * 12;
 
                 headerBuff.WriteContent(header);
-                foreach (ArchiveListingEntryInfoV3 entry in entriesInfoV3)
+                for (int i = 0; i < entriesInfoV3.Length; i++)
+                {
+                    ArchiveListingEntryInfoV3 entry = entriesInfoV3[i];
                     headerBuff.WriteContent(entry);
-                foreach (ArchiveListingBlockInfo block in blocksInfo)
+                }
+
+                for (int i = 0; i < blocksInfo.Length; i++)
+                {
+                    ArchiveListingBlockInfo block = blocksInfo[i];
                     headerBuff.WriteStruct(block);
+                }
 
                 int hederSize = (int)headerBuff.Length;
                 headerBuff.Position = 0;
@@ -85,6 +90,14 @@ namespace Pulse.FS
                     headerBuff.CopyToStream(output, hederSize, buff);
                     textBuff.CopyToStream(output, blocksSize, buff);
                 }
+
+                Stream stream = tmpProvider.OpenRead();
+                tmpProvider.Size = hederSize + blocksSize + 11;
+
+                long size = new FileInfo(tmpProvider.FilePath).Length;
+                string num = (hederSize + blocksSize + 11).ToString("X8");
+                string hex = tmpProvider.Size.ToString("x8");
+                //WriteChecksum(tmpProvider);
 
                 Process encrypter = new Process
                 {
@@ -115,8 +128,38 @@ namespace Pulse.FS
                 }
 
                 using (Stream input = tmpProvider.OpenRead())
-                using (Stream output = _accessor.RecreateListing((Int32)input.Length))
-                    input.CopyToStream(output, (Int32)input.Length, buff);
+                using (Stream output = _accessor.RecreateListing((int)input.Length))
+                    input.CopyToStream(output, (int)input.Length, buff);
+            }
+        }
+        public static void WriteChecksum(TempFileProvider tmpProvider)
+        {
+            Process encrypter = new Process
+            {
+                StartInfo = new ProcessStartInfo()
+                {
+                    FileName = @"Resources\Executable\ffxiiicrypt.exe",
+                    Arguments = $"-c \"{tmpProvider.FilePath}\" {tmpProvider.Size:x8} write",
+                    CreateNoWindow = true,
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true
+                }
+            };
+            encrypter.Start();
+            Task<string> erroMessage = encrypter.StandardError.ReadToEndAsync();
+            Task<string> outputMessage = encrypter.StandardOutput.ReadToEndAsync();
+            encrypter.WaitForExit();
+            if (encrypter.ExitCode != -2)
+            {
+                StringBuilder sb = new StringBuilder("Checksum error! Code: ");
+                sb.AppendLine(encrypter.ExitCode.ToString());
+                sb.AppendLine("Error: ");
+                sb.AppendLine(erroMessage.Result);
+                sb.AppendLine("Output: ");
+                sb.AppendLine(outputMessage.Result);
+
+                throw new InvalidDataException(sb.ToString());
             }
         }
     }
