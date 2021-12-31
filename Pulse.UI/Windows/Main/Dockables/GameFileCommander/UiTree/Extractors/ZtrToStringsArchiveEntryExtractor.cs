@@ -7,10 +7,7 @@ namespace Pulse.UI
 {
     public sealed class ZtrToStringsArchiveEntryExtractor : IArchiveEntryExtractor, IWpdEntryExtractor
     {
-        public string TargetExtension
-        {
-            get { return ".strings"; }
-        }
+        public string TargetExtension => ".strings";
 
         public void Extract(ArchiveEntry entry, StreamSequence output, Stream input, Byte[] buff)
         {

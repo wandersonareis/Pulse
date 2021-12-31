@@ -44,6 +44,7 @@
         LeftRightAnalogic = 0x5E, // LeftRight Analogic
         LeftRightPad = 0x5F, //LeftRight Pad
 
-        Arrows = 0x60 
+        Arrows = 0x60,
+        PadLeft = 0x61
     }
 }

@@ -1,9 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Pulse.FS",
-    "\\Pulse.FS\\ArchiveListing",
-    "\\Pulse.FS\\ArchiveListing\\XIII-3",
+    "\\Pulse.Core",
+    "\\Pulse.Core\\Encoding",
     "\\Pulse.UI",
     "\\Pulse.UI\\Windows",
     "\\Pulse.UI\\Windows\\Main",

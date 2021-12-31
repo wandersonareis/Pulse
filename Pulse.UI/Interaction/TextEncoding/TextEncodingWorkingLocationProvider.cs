@@ -11,14 +11,8 @@ namespace Pulse.UI
             return TextEncodingInfo.Load();
         }
 
-        public string Title
-        {
-            get { return Lang.InfoProvider.TextEncoding.WorkingLocationTitle; }
-        }
+        public string Title => Lang.InfoProvider.TextEncoding.WorkingLocationTitle;
 
-        public string Description
-        {
-            get { return Lang.InfoProvider.TextEncoding.WorkingLocationDescription; }
-        }
+        public string Description => Lang.InfoProvider.TextEncoding.WorkingLocationDescription;
     }
 }
