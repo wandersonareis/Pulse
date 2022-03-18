@@ -11,15 +11,9 @@ namespace Pulse.Core
             SetHandle(GCHandle.ToIntPtr(GCHandle.Alloc(target, type)));
         }
 
-        public GCHandle Handle
-        {
-            get { return GCHandle.FromIntPtr(handle); }
-        }
+        public GCHandle Handle => GCHandle.FromIntPtr(handle);
 
-        public override bool IsInvalid
-        {
-            get { return handle == IntPtr.Zero; }
-        }
+        public override bool IsInvalid => handle == IntPtr.Zero;
 
         protected override bool ReleaseHandle()
         {

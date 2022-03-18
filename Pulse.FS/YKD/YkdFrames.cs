@@ -11,15 +11,12 @@ namespace Pulse.FS
 
         public YkdFrame[] Frames;
 
-        public int Count
-        {
-            get { return Frames.Length; }
-        }
+        public int Count => Frames.Length;
 
         public YkdFrame this[int index]
         {
-            get { return Frames[index]; }
-            set { Frames[index] = value; }
+            get => Frames[index];
+            set => Frames[index] = value;
         }
 
         public int CalcSize()

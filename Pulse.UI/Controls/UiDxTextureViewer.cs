@@ -31,7 +31,7 @@ namespace Pulse.UI
 
         public DxTexture Texture
         {
-            get { return _texture; }
+            get => _texture;
             set
             {
                 _texture?.SafeDispose();

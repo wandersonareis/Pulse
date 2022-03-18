@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Pulse.Core;
 
 namespace Pulse.FS
@@ -32,9 +29,9 @@ namespace Pulse.FS
             _innerIndex = 0;
             _innerCount = 0;
 
-            List<int> blockOffsets = new List<int>(256) {0};
-            ZtrFileHeaderLineInfo[] lines = new ZtrFileHeaderLineInfo[_input.Length];
-            ushort[,] innerOffsets = new ushort[_input.Length, 2];
+            var blockOffsets = new List<int>(256) {0};
+            var lines = new ZtrFileHeaderLineInfo[_input.Length];
+            var innerOffsets = new ushort[_input.Length, 2];
 
             ushort writeIndex = 0;
             byte[] writeBuff = new byte[4096];
@@ -87,6 +84,8 @@ namespace Pulse.FS
 
         private void WriteBlock(byte[] writeBuff, ref ushort engaged, ushort[,] innerOffsets, List<int> blockOffsets)
         {
+            //FakeCompression to normal use
+            //CompressZtrContent to gamecrash auto_yus file
             byte[] encoding = ZtrFileEncoding.FakeCompression(writeBuff, 0, ref engaged, innerOffsets, _innerIndex, _innerCount);
             _output.Write(encoding, 0, encoding.Length);
             _output.Write(writeBuff, 0, engaged);

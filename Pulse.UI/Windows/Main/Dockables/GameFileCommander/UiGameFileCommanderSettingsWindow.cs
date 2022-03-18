@@ -19,7 +19,7 @@ namespace Pulse.UI
 
                 UiStackPanel maskPanel = UiStackPanelFactory.Create(Orientation.Horizontal);
                 {
-                    UiTextBlock maskLabel = UiTextBlockFactory.Create("Маска: ");
+                    UiTextBlock maskLabel = UiTextBlockFactory.Create("Máscara: ");
                     {
                         maskLabel.Margin = margin;
                         maskLabel.VerticalAlignment = VerticalAlignment.Center;
@@ -40,7 +40,7 @@ namespace Pulse.UI
                 {
                     if (!isExtracting)
                     {
-                        _compressBox = UiCheckBoxFactory.Create("Сжать", false);
+                        _compressBox = UiCheckBoxFactory.Create("Comprimir", false);
                         {
                             _compressBox.Margin = margin;
                             _compressBox.IsThreeState = true;
@@ -49,7 +49,7 @@ namespace Pulse.UI
                         }
                     }
 
-                    _convertBox = UiCheckBoxFactory.Create("Конвертировать", false);
+                    _convertBox = UiCheckBoxFactory.Create("Converta", false);
                     {
                         _convertBox.Margin = margin;
                         _convertBox.IsThreeState = true;
@@ -72,7 +72,7 @@ namespace Pulse.UI
                         buttonsPanel.AddUiElement(okButton);
                     }
 
-                    UiButton cancelButton = UiButtonFactory.Create("Отмена");
+                    UiButton cancelButton = UiButtonFactory.Create("Cancelamento");
                     {
                         cancelButton.Width = 100;
                         cancelButton.Margin = margin;

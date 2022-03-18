@@ -18,14 +18,8 @@ namespace Pulse.FS
             Accessor = accessor;
         }
 
-        public string Name
-        {
-            get { return Accessor.Name; }
-        }
+        public string Name => Accessor.Name;
 
-        public string ExtractionSubpath
-        {
-            get { return PathEx.ChangeMultiDotExtension(Name, ".unpack"); }
-        }
+        public string ExtractionSubpath => PathEx.ChangeMultiDotExtension(Name, ".unpack");
     }
 }

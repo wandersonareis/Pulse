@@ -41,7 +41,7 @@ namespace Pulse.UI
             return true;
         }
 
-        private void Inject(ArchiveListing listing, ArchiveEntry entry, Dictionary<String, String> sourceEntries, Stream output)
+        private void Inject(ArchiveListing listing, ArchiveEntry entry, Dictionary<string, string> sourceEntries, Stream output)
         {
             ZtrFileType type = ZtrFileType.LittleEndianUncompressedDictionary;
             ZtrFileEntry[] targetEntries;

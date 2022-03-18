@@ -20,8 +20,8 @@ namespace Pulse.UI
 
         public ImageSource ImageSource
         {
-            get { return Image.Source; }
-            set { Image.Source = value; }
+            get => Image.Source;
+            set => Image.Source = value;
         }
 
         private static readonly ControlTemplate StaticTemplate = CreateTemplate();

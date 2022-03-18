@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 using Pulse.Core;
@@ -18,7 +17,6 @@ namespace Pulse.UI
 
         private const string Part1ResourceDirName = "white_data";
         private const string Part2ResourceDirName = "alba_data";
-        private const string Part3ResourceDirName = "weiss_data";
         private const string ExecutableRelativePath = @"prog\win\bin\ffxiiiimg.exe";
 
         public GameLocationInfo(string rootDirectory)
@@ -42,18 +40,13 @@ namespace Pulse.UI
                         return Part1ResourceDirName;
                     case FFXIIIGamePart.Part2:
                         return Part2ResourceDirName;
-                    case FFXIIIGamePart.Part3:
-                        return Part3ResourceDirName;
                     default:
                         throw new NotImplementedException();
                 }
             }
         }
 
-        public string ExecutablePath
-        {
-            get { return Path.Combine(RootDirectory, ResourceDirName, ExecutableRelativePath); }
-        }
+        public string ExecutablePath => Path.Combine(RootDirectory, ResourceDirName, ExecutableRelativePath);
 
         public void Validate()
         {
@@ -103,14 +96,14 @@ namespace Pulse.UI
             }
         }
 
-        public IEnumerable<String> EnumerateListingFiless()
+        public IEnumerable<string> EnumerateListingFiless()
         {
             if (Directory.Exists(SystemDirectory))
-                foreach (String path in Directory.EnumerateFiles(SystemDirectory, "filelist*.bin"))
+                foreach (string path in Directory.EnumerateFiles(SystemDirectory, "filelist*.bin"))
                     yield return path;
 
             if (Directory.Exists(UpdatesDirectory))
-                foreach (String path in Directory.EnumerateFiles(UpdatesDirectory, "filelist*.bin"))
+                foreach (string path in Directory.EnumerateFiles(UpdatesDirectory, "filelist*.bin"))
                     yield return path;
         }
     }

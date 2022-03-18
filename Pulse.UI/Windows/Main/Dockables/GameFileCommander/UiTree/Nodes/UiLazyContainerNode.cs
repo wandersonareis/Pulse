@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Media;
@@ -11,7 +10,7 @@ namespace Pulse.UI
         private static readonly Semaphore Semaphore = new Semaphore(Environment.ProcessorCount, Environment.ProcessorCount);
 
         private volatile object _lock;
-        private Boolean _childsCreated;
+        private bool _childsCreated;
 
         public UiLazyContainerNode(string name, UiNodeType type)
             : base(name, type)
@@ -97,10 +96,7 @@ namespace Pulse.UI
             return EmptyChilds;
         }
 
-        public override sealed ImageSource Icon
-        {
-            get { return _childsCreated ? GetIcon() : Icons.PendingIcon; }
-        }
+        public sealed override ImageSource Icon => _childsCreated ? GetIcon() : Icons.PendingIcon;
 
         protected virtual ImageSource GetIcon()
         {

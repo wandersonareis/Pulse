@@ -1,5 +1,4 @@
-﻿using System;
-using Pulse.FS;
+﻿using Pulse.FS;
 
 namespace Pulse.UI
 {
@@ -15,7 +14,7 @@ namespace Pulse.UI
         {
             _listing = listing;
             _leafs = leafs;
-            _conversion = conversion;
+            _conversion = true;
         }
 
         public void Extract(IUiExtractionTarget target)

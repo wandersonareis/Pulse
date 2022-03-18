@@ -11,8 +11,8 @@ namespace Pulse.UI
         private readonly ArchiveListing _listing;
         private readonly ArchiveEntry[] _leafs;
         private readonly IUiExtractionTarget _target;
-        private readonly Boolean? _conversion;
-        private readonly Dictionary<String, IArchiveEntryExtractor> _extractors;
+        private readonly bool? _conversion;
+        private readonly Dictionary<string, IArchiveEntryExtractor> _extractors;
 
         public UiArchiveExtractor(ArchiveListing listing, ArchiveEntry[] leafs, bool? conversion, IUiExtractionTarget target)
         {
@@ -32,18 +32,18 @@ namespace Pulse.UI
             if (_leafs.Length == 0)
                 return;
 
-            String root = InteractionService.WorkingLocation.Provide().ProvideExtractedDirectory();
+            string root = InteractionService.WorkingLocation.Provide().ProvideExtractedDirectory();
 
             byte[] buff = new byte[32 * 1024];
             foreach (ArchiveEntry entry in _leafs)
             {
-                String targetExtension;
+                string targetExtension;
                 IArchiveEntryExtractor extractor = GetExtractor(entry, out targetExtension);
                 if (extractor == null)
                     continue;
                 
-                String targetPath = Path.Combine(root, PathEx.ChangeMultiDotExtension(entry.Name, targetExtension));
-                String directoryPath = Path.GetDirectoryName(targetPath);
+                string targetPath = Path.Combine(root, PathEx.ChangeMultiDotExtension(entry.Name, targetExtension));
+                string directoryPath = Path.GetDirectoryName(targetPath);
                 _target.CreateDirectory(directoryPath);
 
                 using (Stream input = _listing.Accessor.ExtractBinary(entry))
@@ -52,7 +52,7 @@ namespace Pulse.UI
             }
         }
 
-        private IArchiveEntryExtractor GetExtractor(ArchiveEntry entry, out String targetExtension)
+        private IArchiveEntryExtractor GetExtractor(ArchiveEntry entry, out string targetExtension)
         {
             IArchiveEntryExtractor result;
             targetExtension = PathEx.GetMultiDotComparableExtension(entry.Name);
@@ -67,7 +67,7 @@ namespace Pulse.UI
             return result;
         }
 
-        private Dictionary<String, IArchiveEntryExtractor> ProvideExtractors()
+        private Dictionary<string, IArchiveEntryExtractor> ProvideExtractors()
         {
             return _conversion != false ? Converters : Emptry;
         }
@@ -75,17 +75,17 @@ namespace Pulse.UI
         #region Static
 
         private static readonly IArchiveEntryExtractor DefaultExtractor = ProvideDefaultExtractor();
-        private static readonly Dictionary<String, IArchiveEntryExtractor> Emptry = new Dictionary<String, IArchiveEntryExtractor>(0);
-        private static readonly Dictionary<String, IArchiveEntryExtractor> Converters = RegisterConverters();
+        private static readonly Dictionary<string, IArchiveEntryExtractor> Emptry = new Dictionary<string, IArchiveEntryExtractor>(0);
+        private static readonly Dictionary<string, IArchiveEntryExtractor> Converters = RegisterConverters();
 
         private static IArchiveEntryExtractor ProvideDefaultExtractor()
         {
             return new DefaultArchiveEntryExtractor();
         }
 
-        private static Dictionary<String, IArchiveEntryExtractor> RegisterConverters()
+        private static Dictionary<string, IArchiveEntryExtractor> RegisterConverters()
         {
-            return new Dictionary<String, IArchiveEntryExtractor>
+            return new Dictionary<string, IArchiveEntryExtractor>
             {
                 {".ztr", new ZtrToStringsArchiveEntryExtractor()},
                 {".win32.scd", new ScdToWaveArchiveEntryExtractor()}

@@ -15,14 +15,8 @@ namespace Pulse.UI
             return new LocalizatorEnvironmentInfo(version, patherUrls, translationUrls);
         }
 
-        public string Title
-        {
-            get { return "LocalizatorEnvironmentNewProvider"; }
-        }
+        public string Title => "LocalizatorEnvironmentNewProvider";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
     }
 }

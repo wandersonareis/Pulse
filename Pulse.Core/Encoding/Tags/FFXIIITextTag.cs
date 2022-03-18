@@ -67,6 +67,8 @@ namespace Pulse.Core
                     return new FFXIIITextTag(code);
                 case FFXIIITextTagCode.Icon:
                     return new FFXIIITextTag(code, (FFXIIITextTagIcon)bytes[offset++]);
+                case FFXIIITextTagCode.Accents:
+                    return new FFXIIITextTag(code, (FFXIIITextTagAccents)bytes[offset++]);
                 case FFXIIITextTagCode.VarF4:
                 case FFXIIITextTagCode.VarF6:
                 case FFXIIITextTagCode.VarF7:
@@ -139,52 +141,64 @@ namespace Pulse.Core
                 case FFXIIITextTagCode.VarF4:
                 case FFXIIITextTagCode.VarF6:
                 case FFXIIITextTagCode.VarF7:
-                {
-                    byte numArg;
-                    if (byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
-                        return new FFXIIITextTag(code.Value, (FFXIIITextTagParam)numArg);
-                    break;
-                }
+                    {
+                        byte numArg;
+                        if (byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
+                            return new FFXIIITextTag(code.Value, (FFXIIITextTagParam)numArg);
+                        break;
+                    }
+                case FFXIIITextTagCode.Accents:
+                    {
+                        byte numArg;
+                        FFXIIITextTagAccents? arg = EnumCache<FFXIIITextTagAccents>.TryParse(par);
+                        if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
+                            arg = (FFXIIITextTagAccents)numArg;
+                        if (arg != null)
+                            return new FFXIIITextTag(code.Value, arg.Value);
+                        break;
+                    }
                 case FFXIIITextTagCode.Icon:
-                {
-                    byte numArg;
-                    FFXIIITextTagIcon? arg = EnumCache<FFXIIITextTagIcon>.TryParse(par);
-                    if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
-                        arg = (FFXIIITextTagIcon)numArg;
-                    if (arg != null)
-                        return new FFXIIITextTag(code.Value, arg.Value);
-                    break;
-                }
+                    {
+                        byte numArg;
+                        FFXIIITextTagIcon? arg = EnumCache<FFXIIITextTagIcon>.TryParse(par);
+                        if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
+                            arg = (FFXIIITextTagIcon)numArg;
+                        if (arg != null)
+                            return new FFXIIITextTag(code.Value, arg.Value);
+                        break;
+                    }
                 case FFXIIITextTagCode.Text:
-                {
-                    byte numArg;
-                    FFXIIITextTagText? arg = EnumCache<FFXIIITextTagText>.TryParse(par);
-                    if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
-                        arg = (FFXIIITextTagText)numArg;
-                    if (arg != null)
-                        return new FFXIIITextTag(code.Value, arg.Value);
-                    break;
-                }
+                    {
+                        byte numArg;
+                        FFXIIITextTagText? arg = EnumCache<FFXIIITextTagText>.TryParse(par);
+                        if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
+                            arg = (FFXIIITextTagText)numArg;
+                        if (arg != null)
+                            return new FFXIIITextTag(code.Value, arg.Value);
+                        break;
+                    }
                 case FFXIIITextTagCode.Key:
-                {
-                    byte numArg;
-                    FFXIIITextTagKey? arg = EnumCache<FFXIIITextTagKey>.TryParse(par);
-                    if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
-                        arg = (FFXIIITextTagKey)numArg;
-                    if (arg != null)
-                        return new FFXIIITextTag(code.Value, arg.Value);
-                    break;
-                }
+                    {
+                        byte numArg;
+                        FFXIIITextTagKey? arg = EnumCache<FFXIIITextTagKey>.TryParse(par);
+                        if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
+                            arg = (FFXIIITextTagKey)numArg;
+                        if (arg != null)
+                            return new FFXIIITextTag(code.Value, arg.Value);
+                        break;
+                    }
                 case FFXIIITextTagCode.Color:
-                {
-                    byte numArg;
-                    FFXIIITextTagColor? arg = EnumCache<FFXIIITextTagColor>.TryParse(par);
-                    if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
-                        arg = (FFXIIITextTagColor)numArg;
-                    if (arg != null)
-                        return new FFXIIITextTag(code.Value, arg.Value);
-                    break;
-                }
+                    {
+                        byte numArg;
+                        FFXIIITextTagColor? arg = EnumCache<FFXIIITextTagColor>.TryParse(par);
+                        if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
+                            arg = (FFXIIITextTagColor)numArg;
+                        if (arg != null)
+                            return new FFXIIITextTag(code.Value, arg.Value);
+                        break;
+                    }
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
 
             offset = oldOffset;

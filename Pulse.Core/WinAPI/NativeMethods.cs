@@ -83,7 +83,7 @@ namespace Pulse.Core
         /// <para>INVALID_HANDLE - No Restart Manager session exists for the handle supplied.</para>
         /// </returns>
         [DllImport("rstrtmgr.dll", CharSet = CharSet.Auto, SetLastError = false)]
-        public static extern Win32Error RmRegisterResources(uint sessionHandle, UInt32 filesCount, string[] fileNames, UInt32 applicationsCount, [In] RestartManagerUniqueProcess[] applications, UInt32 servicesCount, string[] serviceNames);
+        public static extern Win32Error RmRegisterResources(uint sessionHandle, uint filesCount, string[] fileNames, uint applicationsCount, [In] RestartManagerUniqueProcess[] applications, uint servicesCount, string[] serviceNames);
 
         /// <summary>
         /// Gets a list of all applications and services that are currently using resources that have been registered with the Restart Manager session.

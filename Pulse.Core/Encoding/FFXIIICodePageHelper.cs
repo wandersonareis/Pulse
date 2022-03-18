@@ -8,7 +8,8 @@ namespace Pulse.Core
     {
         public static FFXIIICodePage CreateEuro()
         {
-            return Create(Encoding.GetEncoding(1252));
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            return Create(Encoding.GetEncoding(1252));//1252 ISO-8859-1
         }
 
         public static FFXIIICodePage CreateCyrillic()
@@ -32,7 +33,7 @@ namespace Pulse.Core
 
             CreateAdditionalCharacters(chars);
             
-            Dictionary<char, short> bytes = new Dictionary<char, short>(chars.Length);
+            Dictionary<char, short> bytes = new(chars.Length);
             for (int i = chars.Length - 1; i >= 0; i--)
             {
                 char ch = chars[i];
@@ -51,6 +52,7 @@ namespace Pulse.Core
         {
             //chars[256] = 's'; // Spanish
 
+            chars[FFXIIIEncodingMap.ValueToIndex(0x8140)] = '☠'; //ff13-3
             chars[FFXIIIEncodingMap.ValueToIndex(0x8141)] = '､';
             chars[FFXIIIEncodingMap.ValueToIndex(0x8142)] = '｡';
             chars[FFXIIIEncodingMap.ValueToIndex(0x8145)] = '･';
@@ -91,6 +93,7 @@ namespace Pulse.Core
             chars[FFXIIIEncodingMap.ValueToIndex(0x81AA)] = '↑';
             chars[FFXIIIEncodingMap.ValueToIndex(0x81AB)] = '↓';
             chars[FFXIIIEncodingMap.ValueToIndex(0x81F4)] = '♬';
+            chars[FFXIIIEncodingMap.ValueToIndex(0x8560)] = '☢'; //ff13-3
         }
 
         public static void ToXml(FFXIIICodePage codepage, XmlElement node)
@@ -116,7 +119,9 @@ namespace Pulse.Core
         {
             XmlElement charsNode = node.GetChildElement("Chars");
             XmlElement bytesNode = node.GetChildElement("Bytes");
-            if (charsNode.ChildNodes.Count != 11536) throw Exceptions.CreateException("Неверное число дочерних элементов узла '{0}': {1}. Ожидается: 11536", charsNode.Name, charsNode.ChildNodes.Count);
+            if (charsNode.ChildNodes.Count != 11536)
+                throw Exceptions.CreateException("Incorrect number of child nodes '{0}': {1}. Expected: 11536",
+                    charsNode.Name, charsNode.ChildNodes.Count);
 
             char[] chars = new char[256 + 0x2C10];
             Dictionary<char, short> bytes = new Dictionary<char, short>(256);

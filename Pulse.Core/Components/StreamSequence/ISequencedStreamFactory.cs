@@ -5,6 +5,6 @@ namespace Pulse.Core
 {
     public interface ISequencedStreamFactory
     {
-        Boolean TryCreateNextStream(String key, out Stream result, out Exception ex);
+        bool TryCreateNextStream(string key, out Stream result, out Exception ex);
     }
 }

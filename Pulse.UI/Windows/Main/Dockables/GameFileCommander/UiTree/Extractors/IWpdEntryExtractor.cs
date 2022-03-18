@@ -7,6 +7,6 @@ namespace Pulse.UI
     public interface IWpdEntryExtractor
     {
         string TargetExtension { get; }
-        void Extract(WpdEntry entry, Stream output, Lazy<Stream> headers, Lazy<Stream> content, Byte[] buff);
+        void Extract(WpdEntry entry, Stream output, Lazy<Stream> headers, Lazy<Stream> content, byte[] buff);
     }
 }

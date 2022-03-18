@@ -12,9 +12,6 @@ namespace Pulse.FS
             Accessor = accessor;
         }
 
-        public string Name
-        {
-            get { return Accessor.Name; }
-        }
+        public string Name => Accessor.Name;
     }
 }

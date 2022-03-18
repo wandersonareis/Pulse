@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,8 +39,8 @@ namespace Pulse.UI.Encoding
                 Children.Add(_indexLabel);
             }
 
-            _ox = AddUiElement(new UiEncodingLabeledNumber("OX:", 60, 0, short.MaxValue, OXChanged));
-            _oy = AddUiElement(new UiEncodingLabeledNumber("OY:", 60, 0, short.MaxValue, OYChanged));
+            _ox = AddUiElement(new UiEncodingLabeledNumber("OX:", 60, 0, short.MaxValue, OxChanged));
+            _oy = AddUiElement(new UiEncodingLabeledNumber("OY:", 60, 0, short.MaxValue, OyChanged));
             _before = AddUiElement(new UiEncodingLabeledNumber(Lang.EncodingEditor.Main.Before, 50, sbyte.MinValue, sbyte.MaxValue, BeforeChanged));
             _width = AddUiElement(new UiEncodingLabeledNumber(Lang.EncodingEditor.Main.Width, 50, 0, sbyte.MaxValue, WidthChanged));
             _after = AddUiElement(new UiEncodingLabeledNumber(Lang.EncodingEditor.Main.After, 50, sbyte.MinValue, sbyte.MaxValue, AfterChanged));
@@ -124,13 +123,13 @@ namespace Pulse.UI.Encoding
             _after.Value = after;
 
             _output.Text = source.Chars[_littleIndex].ToString(CultureInfo.CurrentCulture);
-            _input.Text = _oldInputText = String.Join(string.Empty, source.Codes.SelectWhere(p => p.Value == _littleIndex, p => p.Key));
+            _input.Text = _oldInputText = string.Join(string.Empty, source.Codes.SelectWhere(p => p.Value == _littleIndex, p => p.Key));
 
             _source = source;
             _index = index;
         }
 
-        private void OXChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void OxChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (_source == null)
                 return;
@@ -144,7 +143,7 @@ namespace Pulse.UI.Encoding
             DrawEvent.NullSafeSet();
         }
 
-        private void OYChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        private void OyChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (_source == null)
                 return;
@@ -200,7 +199,7 @@ namespace Pulse.UI.Encoding
             DrawEvent.NullSafeSet();
         }
 
-        public void IncrementXY(int ox, int oy)
+        public void IncrementXy(int ox, int oy)
         {
             if (Dispatcher.CheckAccess())
             {
@@ -209,7 +208,7 @@ namespace Pulse.UI.Encoding
             }
             else
             {
-                Dispatcher.Invoke(() => IncrementXY(ox, oy));
+                Dispatcher.Invoke(() => IncrementXy(ox, oy));
             }
         }
     }

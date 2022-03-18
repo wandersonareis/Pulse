@@ -7,15 +7,9 @@ namespace Pulse.Core
         private readonly T[] _buff;
         private int _index;
 
-        public int Length
-        {
-            get { return _buff.Length; }
-        }
+        public int Length => _buff.Length;
 
-        public long Index
-        {
-            get { return _index; }
-        }
+        public long Index => _index;
 
         public CircularBuffer(int length)
         {

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,13 +8,11 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Input;
 using Pulse.Core;
-using Pulse.UI.Interaction;
 
 namespace Pulse.UI
 {
     public sealed class UiGameFileCommander : UiMainDockableControl
     {
-        private readonly UiGrid _grid;
         private readonly UiTreeView _treeView;
         private readonly UiListView _listView;
         private UiArchives _treeNodes;
@@ -26,10 +23,10 @@ namespace Pulse.UI
 
             Header = Lang.Dockable.GameFileCommander.Header;
 
-            _grid = UiGridFactory.Create(1, 3);
+            UiGrid grid = UiGridFactory.Create(1, 3);
             {
-                _grid.ColumnDefinitions[1].Width = GridLength.Auto;
-                _grid.AddVerticalSplitter(1);
+                grid.ColumnDefinitions[1].Width = GridLength.Auto;
+                grid.AddVerticalSplitter(1);
 
                 _treeView = UiTreeViewFactory.Create();
                 {
@@ -37,7 +34,7 @@ namespace Pulse.UI
                     _treeView.ItemContainerStyle = CreateTreeViewItemContainerStyle();
                     _treeView.ContextMenu = CreateTreeViewContextMenu();
                     _treeView.SelectedItemChanged += OnTreeViewSelectedItemChanged;
-                    _grid.AddUiElement(_treeView, 0, 0);
+                    grid.AddUiElement(_treeView, 0, 0);
                 }
 
                 _listView = UiListViewFactory.Create();
@@ -49,26 +46,23 @@ namespace Pulse.UI
                     //_listView.SetBinding(Selector.SelectedItemProperty, new Binding("ListViewSelectedItem") {Mode = BindingMode.OneWayToSource});
                     _listView.SelectionChanged += OnListViewSelectionChanged;
                     _listView.DataContext = this;
-                    _grid.AddUiElement(_listView, 0, 2);
+                    grid.AddUiElement(_listView, 0, 2);
                 }
             }
 
-            Content = _grid;
+            Content = grid;
 
             #endregion
 
             Loaded += OnLoaded;
         }
 
-        protected override int Index
-        {
-            get { return 1; }
-        }
+        protected override int Index => 1;
 
         //Binding
         public UiNode ListViewSelectedItem
         {
-            set { InteractionService.RaiseSelectedNodeChanged(value); }
+            set => InteractionService.RaiseSelectedNodeChanged(value);
         }
 
         private void OnListViewSelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -81,18 +75,21 @@ namespace Pulse.UI
         {
             UiNode selectedChild = (UiNode)_listView.SelectedItem;
 
-            if (e.Key == Key.Back)
+            switch (e.Key)
             {
-                UiNode current = (UiNode)_treeView.SelectedItem;
-                if (current == null)
-                    return;    
+                case Key.Back:
+                {
+                    UiNode current = (UiNode)_treeView.SelectedItem;
+                    if (current == null)
+                        return;    
 
-                selectedChild.IsSelected = false;
-                GoToParent(current);
-            }
-            else if (e.Key == Key.Enter)
-            {
-                GoToChild(selectedChild);
+                    selectedChild.IsSelected = false;
+                    GoToParent(current);
+                    break;
+                }
+                case Key.Enter:
+                    GoToChild(selectedChild);
+                    break;
             }
         }
 

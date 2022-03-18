@@ -9,13 +9,8 @@ namespace Pulse.UI.Interaction
             return new ApplicationConfigInfo();
         }
 
-        public string Title
-        {
-            get { return Lang.InfoProvider.ApplicationConfig.NewTitle; }
-        }
+        public string Title => Lang.InfoProvider.ApplicationConfig.NewTitle;
 
-        public string Description {
-            get { return Lang.InfoProvider.ApplicationConfig.NewDescription; }
-        }
+        public string Description => Lang.InfoProvider.ApplicationConfig.NewDescription;
     }
 }

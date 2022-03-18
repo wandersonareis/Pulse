@@ -20,6 +20,6 @@ namespace Pulse.UI.Encoding
             Codes = codes;
         }
 
-        public string DisplayName { get; private set; }
+        public string DisplayName { get; }
     }
 }

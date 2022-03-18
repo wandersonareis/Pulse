@@ -1,16 +1,15 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Pulse.Core;
 
 namespace Pulse.FS
 {
     public class WdbHeader : WpdHeader
     {
-        private const String StringEntryTag = "!!string";
-        private const String StrTypeListEntryTag = "!!strtypelist";
-        private const String TypeListEntryTag = "!!typelist";
-        private const String VersionEntryTag = "!!version";
-        protected const Int32 SpecialEntriesCount = 4;
+        private const string StringEntryTag = "!!string";
+        private const string StrTypeListEntryTag = "!!strtypelist";
+        private const string TypeListEntryTag = "!!typelist";
+        private const string VersionEntryTag = "!!version";
+        protected const int SpecialEntriesCount = 4;
 
         private byte[] _stringData;
         private int[] _strTypeList;
@@ -23,12 +22,12 @@ namespace Pulse.FS
             new Deserializer(this, input).Deserialize();
         }
 
-        public String GetString(int offset)
+        public string GetString(int offset)
         {
             unsafe
             {
                 fixed (byte* ptr = &_stringData[offset])
-                    return new String((sbyte*)ptr);
+                    return new string((sbyte*)ptr);
             }
         }
 
@@ -64,7 +63,7 @@ namespace Pulse.FS
                 }
             }
 
-            private Boolean TryHandleSpecialEntry(WpdEntry entry)
+            private bool TryHandleSpecialEntry(WpdEntry entry)
             {
                 switch (entry.NameWithoutExtension)
                 {
@@ -99,7 +98,7 @@ namespace Pulse.FS
                     throw new InvalidDataException($"[HandleStrTypeList] Entry: {entry.Name}, Length: {entry.Length}, (entry.Length % 4 = {entry.Length % 4}) != 0");
 
                 _input.SetPosition(entry.Offset);
-                int[] data = _input.DungerousReadStructs<Int32>(entry.Length / 4);
+                int[] data = _input.DungerousReadStructs<int>(entry.Length / 4);
                 for (int i = 0; i < data.Length; i++)
                     data[i] = Endian.SwapInt32(data[i]);
 
@@ -112,7 +111,7 @@ namespace Pulse.FS
                     throw new InvalidDataException($"[HandleTypeList] Entry: {entry.Name}, Length: {entry.Length}, (entry.Length % 4 = {entry.Length % 4}) != 0");
 
                 _input.SetPosition(entry.Offset);
-                int[] data = _input.DungerousReadStructs<Int32>(entry.Length / 4);
+                int[] data = _input.DungerousReadStructs<int>(entry.Length / 4);
                 for (int i = 0; i < data.Length; i++)
                     data[i] = Endian.SwapInt32(data[i]);
 

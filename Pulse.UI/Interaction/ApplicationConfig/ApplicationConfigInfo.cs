@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
@@ -18,7 +17,7 @@ namespace Pulse.UI.Interaction
 
         public GameLocationInfo GameLocation;
         public WorkingLocationInfo WorkingLocation;
-        public String FileCommanderSelectedNodePath;
+        public string FileCommanderSelectedNodePath;
         public LocalizatorEnvironmentInfo LocalizatorEnvironment;
 
         public void Load()
@@ -33,15 +32,9 @@ namespace Pulse.UI.Interaction
             }
         }
 
-        public static string ConfigurationFilePath
-        {
-            get { return Path.Combine(ConfigurationDirectory, InteractionService.GamePart + "_" + ConfigurationFile); }
-        }
+        public static string ConfigurationFilePath => Path.Combine(ConfigurationDirectory, InteractionService.GamePart + "_" + ConfigurationFile);
 
-        public static string LayoutConfigurationFilePath
-        {
-            get { return Path.Combine(ConfigurationDirectory, InteractionService.GamePart + "_" + LayoutConfigurationFile); }
-        }
+        public static string LayoutConfigurationFilePath => Path.Combine(ConfigurationDirectory, InteractionService.GamePart + "_" + LayoutConfigurationFile);
 
         public void Save()
         {

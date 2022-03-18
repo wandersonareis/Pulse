@@ -25,7 +25,7 @@ namespace Pulse.FS
                 return;
 
             int index = 0, blockNumber = 0;
-            using (MemoryStream io = new MemoryStream(32768))
+            using (var io = new MemoryStream(32768))
             {
                 byte[] readBuff = new byte[4096];
                 while (compressedSize > 0)

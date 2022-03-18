@@ -13,15 +13,9 @@ namespace Pulse.Core
             Codes = Exceptions.CheckArgumentNull(bytes, "bytes");
         }
 
-        public char this[short code]
-        {
-            get { return TryGetChar(code) ?? 'Ⅷ'; }
-        }
+        public char this[short code] => TryGetChar(code) ?? 'Ⅷ';
 
-        public short this[char ch]
-        {
-            get { return TryGetCode(ch) ?? Codes['#']; }
-        }
+        public short this[char ch] => TryGetCode(ch) ?? Codes['#'];
 
         public char? TryGetChar(short code)
         {

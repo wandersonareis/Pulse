@@ -1,5 +1,4 @@
-﻿using System;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -161,7 +160,7 @@ namespace Pulse.UI.Encoding
             _colNumber.Value = (value & 0xFF);
 
             _output.Text = source.Chars[_largeIndex].ToString(CultureInfo.CurrentCulture);
-            _input.Text = String.Join(string.Empty, source.Codes.SelectWhere(p => p.Value == _largeIndex, p => p.Key));
+            _input.Text = string.Join(string.Empty, source.Codes.SelectWhere(p => p.Value == _largeIndex, p => p.Key));
 
             _source = source;
             _index = index;

@@ -14,7 +14,7 @@ namespace Pulse.Core.WinAPI
             if (formatMessage == null)
                 throw ex;
 
-            throw new Exception(String.Format(formatMessage, args), ex);
+            throw new Exception(string.Format(formatMessage, args), ex);
         }
 
         public static void Throw(this Win32Error self)

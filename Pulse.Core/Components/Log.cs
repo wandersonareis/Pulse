@@ -87,7 +87,7 @@ namespace Pulse.Core
                         return;
 
                     DateTime time = DateTime.Now;
-                    string text = args.IsNullOrEmpty() ? format : String.Format(format, args);
+                    string text = args.IsNullOrEmpty() ? format : string.Format(format, args);
 
                     WritePrefix(time, type, offset);
 

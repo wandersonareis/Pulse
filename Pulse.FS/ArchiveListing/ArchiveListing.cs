@@ -16,9 +16,6 @@ namespace Pulse.FS
 
         public ArchiveListing Parent { get; set; }
 
-        public string Name
-        {
-            get { return Accessor.ListingEntry.Name; }
-        }
+        public string Name => Accessor.ListingEntry.Name;
     }
 }

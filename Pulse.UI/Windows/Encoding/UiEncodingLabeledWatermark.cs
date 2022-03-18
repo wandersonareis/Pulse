@@ -32,8 +32,8 @@ namespace Pulse.UI.Encoding
 
         public string Text
         {
-            get { return _textControl.Text; }
-            set { _textControl.Text = value; }
+            get => _textControl.Text;
+            set => _textControl.Text = value;
         }
     }
 }

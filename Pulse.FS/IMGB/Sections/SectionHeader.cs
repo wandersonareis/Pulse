@@ -20,7 +20,7 @@ namespace Pulse.FS
             BinaryReader br = new BinaryReader(stream);
             Magic = br.ReadInt32();
             if (Magic != MagicNumber)
-                throw new Exception("Неверная сигнатура файла: " + Magic);
+                throw new Exception("Assinatura de arquivo incorreta: " + Magic);
 
             Type = (SectionType)br.ReadInt32();
             Version = br.ReadBigInt32();

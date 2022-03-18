@@ -29,10 +29,7 @@ namespace Pulse.Core
             }
         }
 
-        public int Length
-        {
-            get { return (int)ByteLength; }
-        }
+        public int Length => (int)ByteLength;
 
         public UnmanagedMemoryStream OpenStream(FileAccess access)
         {

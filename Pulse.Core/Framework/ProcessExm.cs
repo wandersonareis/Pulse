@@ -6,7 +6,7 @@ namespace Pulse.Core.WinAPI
 {
     public static class ProcessExm
     {
-        public static String GetExecutablePath(this Process process)
+        public static string GetExecutablePath(this Process process)
         {
             try
             {

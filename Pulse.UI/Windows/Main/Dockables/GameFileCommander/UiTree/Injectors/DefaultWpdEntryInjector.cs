@@ -7,12 +7,9 @@ namespace Pulse.UI
 {
     public sealed class DefaultWpdEntryInjector : IWpdEntryInjector
     {
-        public string SourceExtension
-        {
-            get { return String.Empty; }
-        }
+        public string SourceExtension => string.Empty;
 
-        public void Inject(WpdEntry entry, Stream input, Lazy<Stream> headers, Lazy<Stream> content, Byte[] buff)
+        public void Inject(WpdEntry entry, Stream input, Lazy<Stream> headers, Lazy<Stream> content, byte[] buff)
         {
             int sourceSize = (int)input.Length;
             if (sourceSize <= entry.Length)

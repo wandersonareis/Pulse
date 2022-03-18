@@ -12,15 +12,12 @@ namespace Pulse.FS
 
         public int[] Offsets;
 
-        public int Count
-        {
-            get { return Offsets.Length; }
-        }
+        public int Count => Offsets.Length;
 
         public int this[int index]
         {
-            get { return Offsets[index]; }
-            set { Offsets[index] = value; }
+            get => Offsets[index];
+            set => Offsets[index] = value;
         }
 
         public int CalcSize()

@@ -101,7 +101,7 @@ namespace Pulse.DirectX
                     for (int index = 0; index < gtex.MipMapData.Length; index++)
                     {
                         GtexMipMapLocation mimMap = gtex.MipMapData[index];
-                        Int32 pitch = GetPitch(descriptor, index);
+                        int pitch = GetPitch(descriptor, index);
                         rects[index] = CreateDataRectangle(array, io, pitch);
                         input.SetPosition(mimMap.Offset);
                         input.CopyToStream(io, mimMap.Length, buff);
@@ -130,7 +130,7 @@ namespace Pulse.DirectX
                     for (int index = 0; index < gtex.MipMapData.Length; index++)
                     {
                         GtexMipMapLocation mimMap = gtex.MipMapData[index];
-                        Int32 pitch = GetPitch(descriptor, index);
+                        int pitch = GetPitch(descriptor, index);
                         rects[index] = CreateDataRectangle(array, io, pitch);
                         input.SetPosition(mimMap.Offset);
                         input.CopyToStream(io, mimMap.Length, buff);
@@ -146,7 +146,7 @@ namespace Pulse.DirectX
             }
         }
 
-        private static Int32 GetPitch(Texture2DDescription descriptor, Int32 mipLevel)
+        private static int GetPitch(Texture2DDescription descriptor, int mipLevel)
         {
             return GetRowPitch(descriptor.Format, descriptor.Width, mipLevel);
         }
@@ -157,7 +157,7 @@ namespace Pulse.DirectX
             depthPitch = rowPitch * 6;
         }
 
-        private static Int32 GetRowPitch(Format format, Int32 width, Int32 mipLevel)
+        private static int GetRowPitch(Format format, int width, int mipLevel)
         {
             for (int i = 0; i < mipLevel; i++)
                 width >>= 1;
@@ -177,12 +177,12 @@ namespace Pulse.DirectX
             return width * FormatHelper.SizeOfInBytes(format);
         }
 
-        private static DataRectangle CreateDataRectangle(SafeUnmanagedArray array, UnmanagedMemoryStream input, Int32 pitch)
+        private static DataRectangle CreateDataRectangle(SafeUnmanagedArray array, UnmanagedMemoryStream input, int pitch)
         {
             return new DataRectangle(new IntPtr(array.DangerousGetHandle().ToInt64() + input.Position), pitch);
         }
 
-        private static DataBox CreateDataBox(SafeUnmanagedArray array, UnmanagedMemoryStream input, Int32 rowPitch, Int32 depthPitch)
+        private static DataBox CreateDataBox(SafeUnmanagedArray array, UnmanagedMemoryStream input, int rowPitch, int depthPitch)
         {
             return new DataBox(new IntPtr(array.DangerousGetHandle().ToInt64() + input.Position), rowPitch, depthPitch);
         }

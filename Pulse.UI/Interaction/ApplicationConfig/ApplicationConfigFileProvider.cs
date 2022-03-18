@@ -1,5 +1,4 @@
-﻿using System;
-using Pulse.Core;
+﻿using Pulse.Core;
 
 namespace Pulse.UI.Interaction
 {
@@ -12,14 +11,8 @@ namespace Pulse.UI.Interaction
             return result;
         }
 
-        public string Title
-        {
-            get { return Lang.InfoProvider.ApplicationConfig.FileTitle; }
-        }
+        public string Title => Lang.InfoProvider.ApplicationConfig.FileTitle;
 
-        public string Description
-        {
-            get { return String.Format(Lang.InfoProvider.ApplicationConfig.FileDescription, ApplicationConfigInfo.ConfigurationFilePath); }
-        }
+        public string Description => string.Format(Lang.InfoProvider.ApplicationConfig.FileDescription, ApplicationConfigInfo.ConfigurationFilePath);
     }
 }

@@ -106,13 +106,13 @@ namespace Pulse.UI.Encoding
             _drawEvent.NullSafeSet();
         }
 
-        public void IncrementXY(int ox, int oy)
+        public void IncrementXy(int ox, int oy)
         {
             if (CurrentSource == null)
                 return;
 
             for (int i = 0; i < CurrentMainIndices.Count; i++)
-                _mainControls[i].IncrementXY(ox, oy);
+                _mainControls[i].IncrementXy(ox, oy);
         }
     }
 }

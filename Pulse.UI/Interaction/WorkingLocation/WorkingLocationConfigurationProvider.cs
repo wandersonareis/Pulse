@@ -11,14 +11,8 @@ namespace Pulse.UI
             return value;
         }
 
-        public string Title
-        {
-            get { return Lang.InfoProvider.WorkingLocation.ConfigurationTitle; }
-        }
+        public string Title => Lang.InfoProvider.WorkingLocation.ConfigurationTitle;
 
-        public string Description
-        {
-            get { return Lang.InfoProvider.WorkingLocation.ConfigurationDescription; }
-        }
+        public string Description => Lang.InfoProvider.WorkingLocation.ConfigurationDescription;
     }
 }

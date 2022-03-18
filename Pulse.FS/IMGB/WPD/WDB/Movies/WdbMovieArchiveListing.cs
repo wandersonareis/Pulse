@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Pulse.Core;
 
 namespace Pulse.FS
@@ -14,19 +13,10 @@ namespace Pulse.FS
             Accessor = accessor;
         }
 
-        public string Name
-        {
-            get { return Accessor.Name; }
-        }
+        public string Name => Accessor.Name;
 
-        public string ExtractionSubpath
-        {
-            get { return PathEx.ChangeMultiDotExtension(Name, ".unpack"); }
-        }
+        public string ExtractionSubpath => PathEx.ChangeMultiDotExtension(Name, ".unpack");
 
-        public String PackagePostfix
-        {
-            get { return PathEx.ChangeMultiDotExtension(Name, null).EndsWith("_us") ? "_us" : String.Empty; }
-        }
+        public string PackagePostfix => PathEx.ChangeMultiDotExtension(Name, null).EndsWith("_us") ? "_us" : string.Empty;
     }
 }

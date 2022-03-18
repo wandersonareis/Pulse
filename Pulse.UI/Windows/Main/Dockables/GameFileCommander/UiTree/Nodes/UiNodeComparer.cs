@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Pulse.UI
 {
@@ -21,7 +20,7 @@ namespace Pulse.UI
             if (x.Type > y.Type)
                 return 1;
 
-            return String.CompareOrdinal(x.Name, y.Name);
+            return string.CompareOrdinal(x.Name, y.Name);
         }
     }
 }

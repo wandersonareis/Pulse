@@ -1,14 +1,13 @@
-﻿using System;
-using Pulse.FS;
+﻿using Pulse.FS;
 
 namespace Pulse.UI
 {
     public sealed class UiWdbMovieLeaf : UiNode, IUiLeaf
     {
-        public WdbMovieEntry Entry { get; private set; }
-        public WdbMovieArchiveListing Listing { get; private set; }
+        public WdbMovieEntry Entry { get; }
+        public WdbMovieArchiveListing Listing { get; }
 
-        public UiWdbMovieLeaf(String name, WdbMovieEntry entry, WdbMovieArchiveListing listing)
+        public UiWdbMovieLeaf(string name, WdbMovieEntry entry, WdbMovieArchiveListing listing)
             : base(name, UiNodeType.DataTableLeaf)
         {
             Entry = entry;

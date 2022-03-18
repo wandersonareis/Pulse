@@ -19,15 +19,9 @@ namespace Pulse.FS
         public int BottomRightColor;
         public byte[] Tail;
 
-        public override YkdResourceViewportType Type
-        {
-            get { return YkdResourceViewportType.Extra; }
-        }
+        public override YkdResourceViewportType Type => YkdResourceViewportType.Extra;
 
-        public override int Size
-        {
-            get { return 64; }
-        }
+        public override int Size => 64;
 
         public override void ReadFromStream(Stream stream)
         {

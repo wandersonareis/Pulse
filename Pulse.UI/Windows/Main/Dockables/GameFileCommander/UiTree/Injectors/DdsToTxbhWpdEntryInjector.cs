@@ -8,12 +8,9 @@ namespace Pulse.UI
 {
     public sealed class DdsToTxbhWpdEntryInjector : IWpdEntryInjector
     {
-        public string SourceExtension
-        {
-            get { return "dds"; }
-        }
+        public string SourceExtension => "dds";
 
-        public void Inject(WpdEntry entry, Stream input, Lazy<Stream> headers, Lazy<Stream> content, Byte[] buff)
+        public void Inject(WpdEntry entry, Stream input, Lazy<Stream> headers, Lazy<Stream> content, byte[] buff)
         {
             int sourceSize = (int)input.Length;
             headers.Value.Position = entry.Offset;

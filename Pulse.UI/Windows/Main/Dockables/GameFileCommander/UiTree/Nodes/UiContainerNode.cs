@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
 using Pulse.Core;
-using Pulse.FS;
 
 namespace Pulse.UI
 {
@@ -35,10 +33,7 @@ namespace Pulse.UI
             get { return RequestChilds().Where(n => n.Type <= UiNodeType.Directory).Order(UiNodeComparer.Instance); }
         }
 
-        public IEnumerable<UiNode> BindableChilds
-        {
-            get { return GetChilds().Order(UiNodeComparer.Instance); }
-        }
+        public IEnumerable<UiNode> BindableChilds => GetChilds().Order(UiNodeComparer.Instance);
 
         public override UiNode[] GetChilds()
         {
@@ -95,17 +90,17 @@ namespace Pulse.UI
                 // Это сделано специально для отложенной загрузки вложенных элементов
                 bool isChecked = parentChecked || node.IsChecked == true;
 
-                UiContainerNode container = node as UiContainerNode;
-                if (container != null)
+                switch (node)
                 {
-                    foreach (IUiLeaf child in container.EnumerateCheckedLeafs(wildcard, isChecked))
-                        yield return child;
-                }
-                else
-                {
-                    IUiLeaf leaf = node as IUiLeaf;
-                    if (leaf != null && isChecked && wildcard.IsMatch(leaf.Name))
+                    case UiContainerNode container:
+                    {
+                        foreach (IUiLeaf child in container.EnumerateCheckedLeafs(wildcard, isChecked))
+                            yield return child;
+                        break;
+                    }
+                    case IUiLeaf leaf when isChecked && wildcard.IsMatch(leaf.Name):
                         yield return leaf;
+                        break;
                 }
             }
         }

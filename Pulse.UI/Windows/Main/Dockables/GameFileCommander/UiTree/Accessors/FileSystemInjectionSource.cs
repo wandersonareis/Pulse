@@ -15,7 +15,7 @@ namespace Pulse.UI
 
         public bool DirectoryIsExists(string directoryPath)
         {
-            return String.IsNullOrEmpty(directoryPath) || Directory.Exists(directoryPath);
+            return string.IsNullOrEmpty(directoryPath) || Directory.Exists(directoryPath);
         }
 
         public Stream TryOpen(string sourcePath)

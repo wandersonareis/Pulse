@@ -29,7 +29,7 @@ namespace Pulse.UI
     {
         public UiNodeType[] Types;
         public Wildcard[] Wildcards;
-        public Boolean IsMandatory;
+        public bool IsMandatory;
 
         public bool IsMatch(UiNode node)
         {
@@ -58,20 +58,11 @@ namespace Pulse.UI
             return new UiNodePath(_elements.ToArray());
         }
 
-        public void Add(UiNodePathElement element)
-        {
-            _elements.Add(element);
-        }
+        public void Add(UiNodePathElement element) => _elements.Add(element);
 
-        public void Add()
-        {
-            Add(new UiNodePathElement {IsMandatory = false});
-        }
+        public void Add() => Add(new UiNodePathElement { IsMandatory = false });
 
-        public void Add(UiNodeType type)
-        {
-            Add(new UiNodePathElement {Types = new[] {type}, IsMandatory = true});
-        }
+        public void Add(UiNodeType type) => Add(new UiNodePathElement { Types = new[] { type }, IsMandatory = true });
 
         public void Add(Wildcard wildcard)
         {
@@ -121,7 +112,6 @@ namespace Pulse.UI
             }
         }
 
-        [SuppressMessage("ReSharper", "SuspiciousTypeConversion.Global")]
         public IEnumerable<IUiLeafsAccessor> AccessToCheckedLeafs(Wildcard wildcard, bool? conversion, bool? compression)
         {
             return EnumerateCheckedLeafs(wildcard).GroupBy(a => a.Type).SelectMany(group => AcessToLeafs(group, conversion, compression));

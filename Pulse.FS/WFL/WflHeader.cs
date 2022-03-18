@@ -22,9 +22,6 @@ namespace Pulse.FS
         public int Unknown02;
         public int Unknown03;
 
-        public int SquareSize
-        {
-            get { return LineSpacing + SquareDiff; }
-        }
+        public int SquareSize => LineSpacing + SquareDiff;
     }
 }

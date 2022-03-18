@@ -39,10 +39,7 @@ namespace Pulse.UI
             InteractionService.SelectedLeafChanged += OnSelectedLeafChanged;
         }
 
-        protected override int Index
-        {
-            get { return 2; }
-        }
+        protected override int Index => 2;
 
         private void HideControls()
         {

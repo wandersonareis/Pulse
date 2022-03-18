@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -91,7 +90,7 @@ namespace Pulse.FS
                     StartInfo = new ProcessStartInfo()
                     {
                         FileName = @"Resources\Executable\ffxiiicrypt.exe",
-                        Arguments = $"-e \"{tmpProvider.FilePath}\" filelist",
+                        Arguments = "-e \"" + tmpProvider.FilePath + "\" 2",
                         CreateNoWindow = true,
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
@@ -102,7 +101,7 @@ namespace Pulse.FS
                 Task<string> erroMessage = encrypter.StandardError.ReadToEndAsync();
                 Task<string> outputMessage = encrypter.StandardOutput.ReadToEndAsync();
                 encrypter.WaitForExit();
-                if (encrypter.ExitCode != -2)
+                if (encrypter.ExitCode != 0)
                 {
                     StringBuilder sb = new StringBuilder("Decryption error! Code: ");
                     sb.AppendLine(encrypter.ExitCode.ToString());
@@ -115,8 +114,8 @@ namespace Pulse.FS
                 }
 
                 using (Stream input = tmpProvider.OpenRead())
-                using (Stream output = _accessor.RecreateListing((Int32)input.Length))
-                    input.CopyToStream(output, (Int32)input.Length, buff);
+                using (Stream output = _accessor.RecreateListing((int)input.Length))
+                    input.CopyToStream(output, (int)input.Length, buff);
             }
         }
     }

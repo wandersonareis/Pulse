@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -53,12 +52,12 @@ namespace Pulse.UI
 
         public double Maximum
         {
-            set { Update(_value, value); }
+            set => Update(_value, value);
         }
 
         public double Value
         {
-            set { Update(value, _maximum); }
+            set => Update(value, _maximum);
         }
 
         public void SetMaximum(long value)

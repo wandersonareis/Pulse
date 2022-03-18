@@ -146,14 +146,14 @@ quick brown fox jumps over the lazy dog
             movingThread.Start();
 
             Activated += OnWindowActivated;
-            Closing += (s, e) => ClosingEvent.Set();
+            Closing += (s, e) => _closingEvent.Set();
             Closing += OnWindowClosing;
 
             #endregion
         }
 
-        private readonly ManualResetEvent ClosingEvent = new ManualResetEvent(false);
-        private readonly ManualResetEvent ClosedEvent = new ManualResetEvent(true);
+        private readonly ManualResetEvent _closingEvent = new ManualResetEvent(false);
+        private readonly ManualResetEvent _closedEvent = new ManualResetEvent(true);
 
         private void ResetBurshes(RenderContainer renderContainer)
         {
@@ -177,7 +177,7 @@ quick brown fox jumps over the lazy dog
 
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
-            ClosedEvent.WaitOne();
+            _closedEvent.WaitOne();
 
             _selectedColorBrush.Dispose();
             _spacingColorBrush.Dispose();
@@ -275,7 +275,7 @@ quick brown fox jumps over the lazy dog
 
         private void MovingThread()
         {
-            while (ClosingEvent.WaitOne(200) == false)
+            while (_closingEvent.WaitOne(200) == false)
             {
                 if (_oldMovable == 0)
                     continue;
@@ -283,7 +283,7 @@ quick brown fox jumps over the lazy dog
                 int dx = Interlocked.Exchange(ref _deltaX, 0);
                 int dy = Interlocked.Exchange(ref _deltaY, 0);
 
-                _charactersControl.IncrementXY(dx, dy);
+                _charactersControl.IncrementXy(dx, dy);
                 _editViewport.Refresh();
             }
         }
@@ -291,7 +291,7 @@ quick brown fox jumps over the lazy dog
         private void OnComboBoxItemChanged(object sender, EventArgs e)
         {
             _currentSource = (UiEncodingWindowSource)_comboBox.SelectedItem;
-            _charactersControl.SetCurrent(_currentSource, new int[0], new int[0]);
+            _charactersControl.SetCurrent(_currentSource, Array.Empty<int>(), Array.Empty<int>());
             _editViewport.SetDesiredSize(_currentSource.Texture.Descriptor2D.Width, _currentSource.Texture.Descriptor2D.Height);
         }
 

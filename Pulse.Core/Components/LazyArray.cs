@@ -10,20 +10,14 @@ namespace Pulse.Core
         private readonly ConcurrentDictionary<int, T> _dic = new ConcurrentDictionary<int, T>();
         private readonly Func<int, T> _factory;
 
-        public int Count
-        {
-            get { return _dic.Count; }
-        }
+        public int Count => _dic.Count;
 
         public LazyArray(Func<int, T> factory)
         {
             _factory = Exceptions.CheckArgumentNull(factory, "factory");
         }
 
-        public T this[int index]
-        {
-            get { return _dic.GetOrAdd(index, _factory); }
-        }
+        public T this[int index] => _dic.GetOrAdd(index, _factory);
 
         public IEnumerator<KeyValuePair<int, T>> GetEnumerator()
         {

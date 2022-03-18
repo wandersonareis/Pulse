@@ -38,9 +38,6 @@ namespace Pulse.UI
                 case FFXIIIGamePart.Part2:
                     _listing = ArchiveListingReaderV2.Read(_accessor, null, null);
                     break;
-                case FFXIIIGamePart.Part3:
-                    _listing = ArchiveListingReaderV3.Read(_accessor, null, null);
-                    break;
                 default:
                     throw new NotSupportedException(InteractionService.GamePart.ToString());
             }
@@ -101,7 +98,7 @@ namespace Pulse.UI
                 {
                     UiNode node;
                     string name = parts[i];
-                    string path = String.Join(separator, parts, 0, i + 1);
+                    string path = string.Join(separator, parts, 0, i + 1);
                     if (!dic.TryGetValue(path, out node))
                     {
                         node = new UiContainerNode(name, UiNodeType.Directory);

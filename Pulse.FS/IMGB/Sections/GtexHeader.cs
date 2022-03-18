@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Pulse.Core;
 
 namespace Pulse.FS
@@ -36,10 +29,7 @@ namespace Pulse.FS
         public int LinerSize;
         public int DataOffset;
 
-        public int LayerCount
-        {
-          get { return IsCubeMap ? 6 * MipMapCount : MipMapCount; }
-        }
+        public int LayerCount => IsCubeMap ? 6 * MipMapCount : MipMapCount;
 
         public void ReadFromStream(Stream stream)
         {

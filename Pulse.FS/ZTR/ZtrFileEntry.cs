@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Pulse.FS
+﻿namespace Pulse.FS
 {
     public sealed class ZtrFileEntry
     {
-        public string Key = String.Empty;
-        public string Value = String.Empty;
+        public string Key = string.Empty;
+        public string Value = string.Empty;
         public bool IsAnimatedText;
     }
 }

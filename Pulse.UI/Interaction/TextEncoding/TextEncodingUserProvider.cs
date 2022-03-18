@@ -21,12 +21,7 @@ namespace Pulse.UI
         {
             ImgbArchiveAccessor accessor = CreateAccessor();
 
-            WpdArchiveListing listing;
-            WpdEntry[] fontEntries;
-            WflContent[] fontContent;
-            TextureSection[] textureHeaders;
-            string[] names;
-            ReadXgrContent(accessor, out listing, out fontEntries, out fontContent, out textureHeaders, out names);
+            ReadXgrContent(accessor, out WpdArchiveListing listing, out WpdEntry[] fontEntries, out WflContent[] fontContent, out TextureSection[] textureHeaders, out string[] names);
 
             DxTexture[] textures = ReadTextures(accessor, textureHeaders);
             try
@@ -67,12 +62,12 @@ namespace Pulse.UI
             UiInjectionManager manager = new UiInjectionManager();
             using (MemoryInjectionSource source = new MemoryInjectionSource())
             {
-                String injectionRoot = Path.Combine(source.ProvideRootDirectory(), listing.ExtractionSubpath);
+                string injectionRoot = Path.Combine(source.ProvideRootDirectory(), listing.ExtractionSubpath);
                 for (int i = 0; i < fontEntries.Length; i++)
                 {
                     WpdEntry entry = fontEntries[i];
                     WflContent content = fontContent[i];
-                    String injectionPath = Path.Combine(injectionRoot, entry.Name);
+                    string injectionPath = Path.Combine(injectionRoot, entry.Name);
 
                     MemoryStream stream = new MemoryStream(1024);
                     source.RegisterStream(injectionPath, stream);
@@ -245,8 +240,6 @@ namespace Pulse.UI
                     return CreateAccessorV1();
                 case FFXIIIGamePart.Part2:
                     return CreateAccessorV2();
-                case FFXIIIGamePart.Part3:
-                    return CreateAccessorV3();
                 default:
                     throw new NotSupportedException(InteractionService.GamePart.ToString());
             }
@@ -279,7 +272,6 @@ namespace Pulse.UI
 
             return new ImgbArchiveAccessor(listing, xgrEntry, imgbEntry);
         }
-
         private ImgbArchiveAccessor CreateAccessorV3()
         {
             GameLocationInfo gameLocation = InteractionService.GameLocation.Provide();
@@ -287,18 +279,18 @@ namespace Pulse.UI
             string listingPath = Path.Combine(gameLocation.SystemDirectory, "filelist2a.win32.bin");
 
             ArchiveAccessor accessor = new ArchiveAccessor(binaryPath, listingPath);
-            ArchiveListing listing = ArchiveListingReaderV3.Read(accessor, null, null);
-            ArchiveEntry xgrEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system_jp.win32.xgr"));
-            ArchiveEntry imgbEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system_jp.win32.imgb"));
+            ArchiveListing listing = ArchiveListingReaderV1.Read(accessor, null, null);
+            ArchiveEntry xgrEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.xgr"));
+            ArchiveEntry imgbEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.imgb"));
 
             return new ImgbArchiveAccessor(listing, xgrEntry, imgbEntry);
         }
+
         private void ReadXgrContent(ImgbArchiveAccessor accessor, out WpdArchiveListing listing, out WpdEntry[] fontEntries, out WflContent[] fontContent, out TextureSection[] textureHeaders, out string[] names)
         {
             using (Stream indices = accessor.ExtractHeaders())
             {
-                WpdEntry[] textureEntries;
-                ReadFontIndices(accessor, out listing, out textureEntries, out fontEntries, out names);
+                ReadFontIndices(accessor, out listing, out WpdEntry[] textureEntries, out fontEntries, out names);
 
                 fontContent = ReadFontContent(indices, fontEntries);
                 textureHeaders = ReadTextureHeaders(indices, textureEntries);
@@ -337,13 +329,12 @@ namespace Pulse.UI
 
         private static string[] SortAndExcludeNotPaired(List<WpdEntry> textures, List<WpdEntry> fonts)
         {
-            var dic = new Dictionary<String, Pair<WpdEntry, WpdEntry>>(Math.Max(textures.Count, fonts.Count));
+            Dictionary<string, Pair<WpdEntry, WpdEntry>> dic = new Dictionary<string, Pair<WpdEntry, WpdEntry>>(Math.Max(textures.Count, fonts.Count));
 
             foreach (WpdEntry entry in textures)
             {
-                Pair<WpdEntry, WpdEntry> pair;
                 string name = entry.NameWithoutExtension.Substring(0, 6);
-                if (!dic.TryGetValue(name, out pair))
+                if (!dic.TryGetValue(name, out Pair<WpdEntry, WpdEntry> pair))
                 {
                     pair = new Pair<WpdEntry, WpdEntry>();
                     dic.Add(name, pair);
@@ -353,9 +344,8 @@ namespace Pulse.UI
 
             foreach (WpdEntry entry in fonts)
             {
-                Pair<WpdEntry, WpdEntry> pair;
                 string name = entry.NameWithoutExtension.Substring(0, 6);
-                if (!dic.TryGetValue(name, out pair))
+                if (!dic.TryGetValue(name, out Pair<WpdEntry, WpdEntry> pair))
                 {
                     pair = new Pair<WpdEntry, WpdEntry>();
                     dic.Add(name, pair);
@@ -367,7 +357,7 @@ namespace Pulse.UI
             fonts.Clear();
 
             List<string> names = new List<string>(dic.Count);
-            foreach (var pair in dic.Where(p => !p.Value.IsAnyEmpty).OrderBy(p => p.Key))
+            foreach (KeyValuePair<string, Pair<WpdEntry, WpdEntry>> pair in dic.Where(p => !p.Value.IsAnyEmpty).OrderBy(p => p.Key))
             {
                 names.Add(pair.Key);
                 textures.Add(pair.Value.Item1);

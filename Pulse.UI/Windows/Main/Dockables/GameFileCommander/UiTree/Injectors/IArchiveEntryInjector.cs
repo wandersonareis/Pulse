@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using Pulse.FS;
+﻿using Pulse.FS;
 
 namespace Pulse.UI
 {

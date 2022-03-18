@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using System.Windows.Forms;
 
 namespace NAudioDemo.AudioPlaybackDemo
@@ -41,23 +37,14 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         public UserControl CreateSettingsPanel()
         {
-            this._waveOutSettingsPanel = new WaveOutSettingsPanel();
+            _waveOutSettingsPanel = new WaveOutSettingsPanel();
             return _waveOutSettingsPanel;
         }
 
-        public string Name
-        {
-            get { return "WaveOut"; }
-        }
+        public string Name => "WaveOut";
 
-        public bool IsAvailable
-        {
-            get { return WaveOut.DeviceCount > 0; }
-        }
+        public bool IsAvailable => WaveOut.DeviceCount > 0;
 
-        public int Priority
-        {
-            get { return 1; } 
-        }
+        public int Priority => 1;
     }
 }

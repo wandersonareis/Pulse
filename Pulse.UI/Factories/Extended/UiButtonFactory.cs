@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-using System.Windows.Media;
-using Pulse.Core;
+﻿using Pulse.Core;
 
 namespace Pulse.UI
 {

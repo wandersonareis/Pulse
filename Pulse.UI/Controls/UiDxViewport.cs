@@ -58,13 +58,13 @@ namespace Pulse.UI
         public event UiDxControl.DrawSpritesDelegate DrawSprites
         {
             add { DxControl.DrawSprites += (device, spriteBatch, clipRectangle) => value(device, spriteBatch, new Rectangle(X, Y, clipRectangle.Width, clipRectangle.Height)); }
-            remove { throw new NotSupportedException(); }
+            remove => throw new NotSupportedException();
         }
 
         public event UiDxControl.DrawPrimitivesDelegate DrawPrimitives
         {
             add { DxControl.DrawPrimitives += (device, primitivesBatch, clipRectangle) => value(device, primitivesBatch, new Rectangle(X, Y, clipRectangle.Width, clipRectangle.Height)); }
-            remove { throw new NotSupportedException(); }
+            remove => throw new NotSupportedException();
         }
 
         public void GetDesiredSize(out double width, out double height)

@@ -21,14 +21,8 @@ namespace Pulse.UI
             }
         }
 
-        public string Title
-        {
-            get { return Lang.InfoProvider.WorkingLocation.UserTitle; }
-        }
+        public string Title => Lang.InfoProvider.WorkingLocation.UserTitle;
 
-        public string Description
-        {
-            get { return Lang.InfoProvider.WorkingLocation.UserDescription; }
-        }
+        public string Description => Lang.InfoProvider.WorkingLocation.UserDescription;
     }
 }

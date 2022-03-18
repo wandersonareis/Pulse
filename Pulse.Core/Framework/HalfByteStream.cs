@@ -17,30 +17,18 @@ namespace Pulse.Core
             BaseStream = stream;
         }
 
-        public override bool CanRead
-        {
-            get { return BaseStream.CanRead; }
-        }
+        public override bool CanRead => BaseStream.CanRead;
 
-        public override bool CanSeek
-        {
-            get { return BaseStream.CanSeek; }
-        }
+        public override bool CanSeek => BaseStream.CanSeek;
 
-        public override bool CanWrite
-        {
-            get { return BaseStream.CanWrite; }
-        }
+        public override bool CanWrite => BaseStream.CanWrite;
 
-        public override long Length
-        {
-            get { return BaseStream.Length * 2; }
-        }
+        public override long Length => BaseStream.Length * 2;
 
         public override long Position
         {
-            get { return _position; }
-            set { _position += value; }
+            get => _position;
+            set => _position += value;
         }
 
         public override void Flush()

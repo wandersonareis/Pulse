@@ -60,7 +60,7 @@ namespace Pulse.Core
             if (blockOffset < GetReadableSize(offset))
                 return new FluteWriter(this, offset, size);
 
-            String error = $"Запись по смещению {offset} невозможна, так как блок данных содержит пустоты.";
+            string error = $"Запись по смещению {offset} невозможна, так как блок данных содержит пустоты.";
             throw new NotSupportedException(error);
         }
 
@@ -181,8 +181,8 @@ namespace Pulse.Core
 
             public override long Position
             {
-                get { return _output.Position; }
-                set { throw new NotSupportedException("Поток не поддерживает поиск."); }
+                get => _output.Position;
+                set => throw new NotSupportedException("Поток не поддерживает поиск.");
             }
 
             public override long Length => _output.Length;
@@ -262,8 +262,8 @@ namespace Pulse.Core
 
             public override long Position
             {
-                get { return _input.Position; }
-                set { _input.Position = value; }
+                get => _input.Position;
+                set => _input.Position = value;
             }
 
             public override long Length => _input.Length;

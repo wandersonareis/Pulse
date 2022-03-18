@@ -6,8 +6,8 @@ namespace Pulse.FS
 {
     public sealed class ZtrFileKeysUnpacker
     {
-        private Stream _input;
-        private ZtrFileEntry[] _output;
+        private readonly Stream _input;
+        private readonly ZtrFileEntry[] _output;
 
         public ZtrFileKeysUnpacker(Stream input, ZtrFileEntry[] output)
         {
@@ -35,17 +35,15 @@ namespace Pulse.FS
                     uncompressedSize -= replace.Length;
                 }
 
-                // Выбираем полные строки
+                // Select full lines
                 Array.Copy(readBuff, 0, codeBuff, lastOffset, offset);
 
                 int initial = 0, length = offset + lastOffset;
                 for (int i = lastOffset; i < length; i++)
                 {
-                    if (codeBuff[i] == 0)
-                    {
-                        _output[index++].Key = Encoding.ASCII.GetString(codeBuff, initial, i - initial);
-                        initial = i + 1;
-                    }
+                    if (codeBuff[i] != 0) continue;
+                    _output[index++].Key = Encoding.ASCII.GetString(codeBuff, initial, i - initial);
+                    initial = i + 1;
                 }
 
                 if (initial == 0) throw new NotImplementedException();

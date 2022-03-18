@@ -11,12 +11,12 @@ namespace Pulse.UI
         private readonly WpdArchiveListing _listing;
         private readonly WpdEntry[] _leafs;
         private readonly IUiInjectionSource _source;
-        private readonly Boolean? _conversion;
+        private readonly bool? _conversion;
         private readonly Dictionary<string, IWpdEntryInjector> _injectors;
         private readonly Lazy<Stream> _headers;
         private readonly Lazy<Stream> _content;
-        private readonly Byte[] _buff = new Byte[32 * 1024];
-        private Boolean _injected;
+        private readonly byte[] _buff = new byte[32 * 1024];
+        private bool _injected;
 
         public UiWpdInjector(WpdArchiveListing listing, WpdEntry[] leafs, bool? conversion, IUiInjectionSource source)
         {
@@ -40,14 +40,14 @@ namespace Pulse.UI
             if (_leafs.Length == 0)
                 return;
 
-            String root = _source.ProvideRootDirectory();
-            String targetDirectory = Path.Combine(root, _listing.ExtractionSubpath);
+            string root = _source.ProvideRootDirectory();
+            string targetDirectory = Path.Combine(root, _listing.ExtractionSubpath);
             if (!_source.DirectoryIsExists(targetDirectory))
                 return;
 
             foreach (WpdEntry entry  in _leafs)
             {
-                String targetPath = Path.Combine(targetDirectory, entry.NameWithoutExtension);
+                string targetPath = Path.Combine(targetDirectory, entry.NameWithoutExtension);
                 Inject(entry, targetPath);
             }
 
@@ -75,7 +75,7 @@ namespace Pulse.UI
             }
         }
 
-        private void Inject(WpdEntry entry, String targetPath)
+        private void Inject(WpdEntry entry, string targetPath)
         {
             string targetExtension = entry.Extension.ToLowerInvariant();
 
@@ -108,7 +108,7 @@ namespace Pulse.UI
             }
         }
 
-        private Dictionary<String, IWpdEntryInjector> ProvideInjectors()
+        private Dictionary<string, IWpdEntryInjector> ProvideInjectors()
         {
             return _conversion != false ? Converters : Emptry;
         }
@@ -138,17 +138,17 @@ namespace Pulse.UI
         #region Static
 
         private static readonly IWpdEntryInjector DefaultInjector = ProvideDefaultInjector();
-        private static readonly Dictionary<String, IWpdEntryInjector> Emptry = new Dictionary<String, IWpdEntryInjector>(0);
-        private static readonly Dictionary<String, IWpdEntryInjector> Converters = RegisterConverters();
+        private static readonly Dictionary<string, IWpdEntryInjector> Emptry = new Dictionary<string, IWpdEntryInjector>(0);
+        private static readonly Dictionary<string, IWpdEntryInjector> Converters = RegisterConverters();
 
         private static IWpdEntryInjector ProvideDefaultInjector()
         {
             return new DefaultWpdEntryInjector();
         }
 
-        private static Dictionary<String, IWpdEntryInjector> RegisterConverters()
+        private static Dictionary<string, IWpdEntryInjector> RegisterConverters()
         {
-            return new Dictionary<String, IWpdEntryInjector>
+            return new Dictionary<string, IWpdEntryInjector>
             {
                 {"txbh", new DdsToTxbhWpdEntryInjector()},
                 {"vtex", new DdsToVtexWpdEntryInjector()}
@@ -161,7 +161,7 @@ namespace Pulse.UI
         {
             using (MemoryInjectionSource source = new MemoryInjectionSource())
             {
-                source.RegisterStream(String.Empty, output);
+                source.RegisterStream(string.Empty, output);
                 UiWpdInjector injector = new UiWpdInjector(listing, new[] {entry}, false, source);
 
                 UiInjectionManager manager = new UiInjectionManager();

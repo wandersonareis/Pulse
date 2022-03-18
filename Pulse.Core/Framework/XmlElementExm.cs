@@ -96,7 +96,7 @@ namespace Pulse.Core
             return attr;
         }
 
-        public static Boolean? FindBoolean(this XmlElement self, string name)
+        public static bool? FindBoolean(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -108,7 +108,7 @@ namespace Pulse.Core
             return Convert.ToBoolean(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static Char? FindChar(this XmlElement self, string name)
+        public static char? FindChar(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -120,7 +120,7 @@ namespace Pulse.Core
             return Convert.ToChar(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static SByte? FindSByte(this XmlElement self, string name)
+        public static sbyte? FindSByte(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -132,7 +132,7 @@ namespace Pulse.Core
             return Convert.ToSByte(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static Byte? FindByte(this XmlElement self, string name)
+        public static byte? FindByte(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -144,7 +144,7 @@ namespace Pulse.Core
             return Convert.ToByte(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static Int16? FindInt16(this XmlElement self, string name)
+        public static short? FindInt16(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -156,7 +156,7 @@ namespace Pulse.Core
             return Convert.ToInt16(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static UInt16? FindUInt16(this XmlElement self, string name)
+        public static ushort? FindUInt16(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -168,7 +168,7 @@ namespace Pulse.Core
             return Convert.ToUInt16(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static Int32? FindInt32(this XmlElement self, string name)
+        public static int? FindInt32(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -180,7 +180,7 @@ namespace Pulse.Core
             return Convert.ToInt32(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static UInt32? FindUInt32(this XmlElement self, string name)
+        public static uint? FindUInt32(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -192,7 +192,7 @@ namespace Pulse.Core
             return Convert.ToUInt32(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static Int64? FindInt64(this XmlElement self, string name)
+        public static long? FindInt64(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -204,7 +204,7 @@ namespace Pulse.Core
             return Convert.ToInt64(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static UInt64? FindUInt64(this XmlElement self, string name)
+        public static ulong? FindUInt64(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -216,7 +216,7 @@ namespace Pulse.Core
             return Convert.ToUInt64(arg.Value, CultureInfo.InvariantCulture);
         }
 
-        public static Double? FindDouble(this XmlElement self, string name)
+        public static double? FindDouble(this XmlElement self, string name)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -237,99 +237,99 @@ namespace Pulse.Core
             return arg?.Value;
         }
 
-        public static Boolean GetBoolean(this XmlElement self, string name)
+        public static bool GetBoolean(this XmlElement self, string name)
         {
-            Boolean? value = FindBoolean(self, name);
+            bool? value = FindBoolean(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static Char GetChar(this XmlElement self, string name)
+        public static char GetChar(this XmlElement self, string name)
         {
-            Char? value = FindChar(self, name);
+            char? value = FindChar(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static SByte GetSByte(this XmlElement self, string name)
+        public static sbyte GetSByte(this XmlElement self, string name)
         {
-            SByte? value = FindSByte(self, name);
+            sbyte? value = FindSByte(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static Byte GetByte(this XmlElement self, string name)
+        public static byte GetByte(this XmlElement self, string name)
         {
-            Byte? value = FindByte(self, name);
+            byte? value = FindByte(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static Int16 GetInt16(this XmlElement self, string name)
+        public static short GetInt16(this XmlElement self, string name)
         {
-            Int16? value = FindInt16(self, name);
+            short? value = FindInt16(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static UInt16 GetUInt16(this XmlElement self, string name)
+        public static ushort GetUInt16(this XmlElement self, string name)
         {
-            UInt16? value = FindUInt16(self, name);
+            ushort? value = FindUInt16(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static Int32 GetInt32(this XmlElement self, string name)
+        public static int GetInt32(this XmlElement self, string name)
         {
-            Int32? value = FindInt32(self, name);
+            int? value = FindInt32(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static UInt32 GetUInt32(this XmlElement self, string name)
+        public static uint GetUInt32(this XmlElement self, string name)
         {
-            UInt32? value = FindUInt32(self, name);
+            uint? value = FindUInt32(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static Int64 GetInt64(this XmlElement self, string name)
+        public static long GetInt64(this XmlElement self, string name)
         {
-            Int64? value = FindInt64(self, name);
+            long? value = FindInt64(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static UInt64 GetUInt64(this XmlElement self, string name)
+        public static ulong GetUInt64(this XmlElement self, string name)
         {
-            UInt64? value = FindUInt64(self, name);
+            ulong? value = FindUInt64(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
             return value.Value;
         }
 
-        public static Double GetDouble(this XmlElement self, string name)
+        public static double GetDouble(this XmlElement self, string name)
         {
-            Double? value = FindDouble(self, name);
+            double? value = FindDouble(self, name);
             if (value == null)
                 throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
 
@@ -345,7 +345,7 @@ namespace Pulse.Core
             return value;
         }
 
-        public static void SetBoolean(this XmlElement self, string name, Boolean value)
+        public static void SetBoolean(this XmlElement self, string name, bool value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -354,7 +354,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetChar(this XmlElement self, string name, Char value)
+        public static void SetChar(this XmlElement self, string name, char value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -363,7 +363,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetSByte(this XmlElement self, string name, SByte value)
+        public static void SetSByte(this XmlElement self, string name, sbyte value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -372,7 +372,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetByte(this XmlElement self, string name, Byte value)
+        public static void SetByte(this XmlElement self, string name, byte value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -381,7 +381,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetInt16(this XmlElement self, string name, Int16 value)
+        public static void SetInt16(this XmlElement self, string name, short value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -390,7 +390,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetUInt16(this XmlElement self, string name, UInt16 value)
+        public static void SetUInt16(this XmlElement self, string name, ushort value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -399,7 +399,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetInt32(this XmlElement self, string name, Int32 value)
+        public static void SetInt32(this XmlElement self, string name, int value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -408,7 +408,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetUInt32(this XmlElement self, string name, UInt32 value)
+        public static void SetUInt32(this XmlElement self, string name, uint value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -417,7 +417,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetInt64(this XmlElement self, string name, Int64 value)
+        public static void SetInt64(this XmlElement self, string name, long value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -426,7 +426,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetUInt64(this XmlElement self, string name, UInt64 value)
+        public static void SetUInt64(this XmlElement self, string name, ulong value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");
@@ -435,7 +435,7 @@ namespace Pulse.Core
             attr.Value = Convert.ToString(value, CultureInfo.InvariantCulture);
         }
 
-        public static void SetDouble(this XmlElement self, string name, Double value)
+        public static void SetDouble(this XmlElement self, string name, double value)
         {
             Exceptions.CheckArgumentNull(self, "self");
             Exceptions.CheckArgumentNullOrEmprty(name, "name");

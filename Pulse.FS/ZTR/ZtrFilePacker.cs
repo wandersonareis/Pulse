@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 using Pulse.Core;
 
@@ -33,27 +32,28 @@ namespace Pulse.FS
         private void PackLittleEndianUncompressedDictionary(ZtrFileEntry[] entries)
         {
             int count = entries.Length;
-            byte[][] keys = new byte[count][];
-            byte[][] values = new byte[count][];
-            int[] offsets = new int[count * 2];
+            var keys = new byte[count][];
+            var values = new byte[count][];
+            var offsets = new int[count * 2];
 
-            int index = 0;
+            var index = 0;
             offsets[0] = 4 + count * 2 * 4;
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 ZtrFileEntry entry = entries[i];
                 keys[i] = Encoding.ASCII.GetBytes(entry.Key);
                 values[i] = (entry.IsAnimatedText ? FFXIIITextEncodingFactory.DefaultEuroEncoding.Value : _encoding).GetBytes(entry.Value);
+                var teste = Encoding.UTF8.GetString(values[i]);
                 offsets[index + 1] = offsets[index++] + keys[i].Length + 1;
                 if (index + 1 < offsets.Length)
                     offsets[index + 1] = offsets[index++] + values[i].Length + 2;
             }
 
             _bw.Write(count);
-            for (int i = 0; i < count * 2; i++)
+            for (var i = 0; i < count * 2; i++)
                 _bw.Write(offsets[i]);
 
-            for (int i = 0; i < count; i++)
+            for (var i = 0; i < count; i++)
             {
                 _bw.Write(keys[i], 0, keys[i].Length);
                 _bw.Write((byte)0);
@@ -82,18 +82,18 @@ namespace Pulse.FS
         {
             _bw.Write((int)ZtrFileType.BigEndianCompressedDictionary);
 
-            ZtrFileHeader header = new ZtrFileHeader
+            var header = new ZtrFileHeader
             {
                 Version = 1,
                 Count = entries.Length
             };
 
-            using (MemoryStream ms = new MemoryStream(32 * 1024))
+            using (var ms = new MemoryStream(32 * 1024))
             {
-                ZtrFileKeysPacker keyPacker = new ZtrFileKeysPacker(ms, entries);
+                var keyPacker = new ZtrFileKeysPacker(ms, entries);
                 keyPacker.Pack(header);
 
-                ZtrFileTextPacker textPacker = new ZtrFileTextPacker(ms, entries, _encoding);
+                var textPacker = new ZtrFileTextPacker(ms, entries, _encoding);
                 textPacker.Pack(header);
 
                 header.WriteToStream(_output);

@@ -2,9 +2,6 @@
 {
     public static class UiContextMenuFactory
     {
-        public static UiContextMenu Create()
-        {
-            return new UiContextMenu();
-        }
+        public static UiContextMenu Create() => new UiContextMenu();
     }
 }

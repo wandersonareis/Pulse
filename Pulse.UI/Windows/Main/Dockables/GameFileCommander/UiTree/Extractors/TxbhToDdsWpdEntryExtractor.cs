@@ -8,12 +8,9 @@ namespace Pulse.UI
 {
     public sealed class TxbhToDdsWpdEntryExtractor : IWpdEntryExtractor
     {
-        public string TargetExtension
-        {
-            get { return "dds"; }
-        }
+        public string TargetExtension => "dds";
 
-        public void Extract(WpdEntry entry, Stream output, Lazy<Stream> headers, Lazy<Stream> content, Byte[] buff)
+        public void Extract(WpdEntry entry, Stream output, Lazy<Stream> headers, Lazy<Stream> content, byte[] buff)
         {
             headers.Value.Position = entry.Offset;
 

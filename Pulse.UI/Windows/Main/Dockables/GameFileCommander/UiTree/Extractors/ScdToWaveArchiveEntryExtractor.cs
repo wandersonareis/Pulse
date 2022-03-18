@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using NAudio.Wave;
 using Pulse.Core;
 using Pulse.FS;
@@ -8,12 +7,9 @@ namespace Pulse.UI
 {
     public sealed class ScdToWaveArchiveEntryExtractor : IArchiveEntryExtractor
     {
-        public string TargetExtension
-        {
-            get { return ".wav"; }
-        }
+        public string TargetExtension => ".wav";
 
-        public void Extract(ArchiveEntry entry, StreamSequence output, Stream input, Byte[] buff)
+        public void Extract(ArchiveEntry entry, StreamSequence output, Stream input, byte[] buff)
         {
             int size = (int)entry.UncompressedSize;
             if (size == 0)

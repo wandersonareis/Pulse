@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using NAudio.Wave;
 
 namespace NAudioDemo.AudioPlaybackDemo
@@ -23,20 +16,16 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         class CallbackComboItem
         {
-            public CallbackComboItem(string text, WaveCallbackStrategy strategy)
-            {
-                this.Text = text;
-                this.Strategy = strategy;
-            }
-            public string Text { get; private set; }
-            public WaveCallbackStrategy Strategy { get; private set; }
+            public CallbackComboItem(string text, WaveCallbackStrategy strategy) => Strategy = strategy;
+
+            public WaveCallbackStrategy Strategy { get; }
         }
 
         private void InitialiseDeviceCombo()
         {
             for (int deviceId = 0; deviceId < WaveOut.DeviceCount; deviceId++)
             {
-                var capabilities = WaveOut.GetCapabilities(deviceId);
+                WaveOutCapabilities capabilities = WaveOut.GetCapabilities(deviceId);
                 comboBoxWaveOutDevice.Items.Add($"Device {deviceId} ({capabilities.ProductName})");
             }
             if (comboBoxWaveOutDevice.Items.Count > 0)
@@ -55,8 +44,8 @@ namespace NAudioDemo.AudioPlaybackDemo
             comboBoxCallback.SelectedIndex = 0;
         }
 
-        public int SelectedDeviceNumber { get { return comboBoxWaveOutDevice.SelectedIndex; } }
+        public int SelectedDeviceNumber => comboBoxWaveOutDevice.SelectedIndex;
 
-        public WaveCallbackStrategy CallbackStrategy { get { return ((CallbackComboItem)comboBoxCallback.SelectedItem).Strategy; } }
+        public WaveCallbackStrategy CallbackStrategy => ((CallbackComboItem)comboBoxCallback.SelectedItem).Strategy;
     }
 }

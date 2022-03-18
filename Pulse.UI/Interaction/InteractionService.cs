@@ -8,12 +8,12 @@ namespace Pulse.UI
     public static class InteractionService
     {
         public static FFXIIIGamePart GamePart { get; private set; }
-        public static ApplicationConfigProviders Configuration { get; private set; }
-        public static AudioSettingsProviders AudioSettings { get; private set; }
-        public static GameLocationProviders GameLocation { get; private set; }
-        public static WorkingLocationProviders WorkingLocation { get; private set; }
-        public static TextEncodingProviders TextEncoding { get; private set; }
-        public static LocalizatorEnvironmentProviders LocalizatorEnvironment { get; private set; }
+        public static ApplicationConfigProviders Configuration { get; }
+        public static AudioSettingsProviders AudioSettings { get; }
+        public static GameLocationProviders GameLocation { get; }
+        public static WorkingLocationProviders WorkingLocation { get; }
+        public static TextEncodingProviders TextEncoding { get; }
+        public static LocalizatorEnvironmentProviders LocalizatorEnvironment { get; }
 
         public static event Action<IUiLeaf> SelectedLeafChanged;
 

@@ -15,15 +15,9 @@ namespace Pulse.FS
         public int Unknown1;
         public int Unknown2;
 
-        public override YkdResourceViewportType Type
-        {
-            get { return YkdResourceViewportType.Full; }
-        }
+        public override YkdResourceViewportType Type => YkdResourceViewportType.Full;
 
-        public override int Size
-        {
-            get { return 48; }
-        }
+        public override int Size => 48;
 
         public override void ReadFromStream(Stream stream)
         {

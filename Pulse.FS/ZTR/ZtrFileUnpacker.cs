@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Net.Sockets;
 using System.Text;
 using Pulse.Core;
 
@@ -24,7 +23,7 @@ namespace Pulse.FS
         public ZtrFileEntry[] Unpack()
         {
             if (_input.Length < 5)
-                return new ZtrFileEntry[0];
+                return Array.Empty<ZtrFileEntry>();
 
             Type = (ZtrFileType)_br.ReadInt32();
             switch (Type)

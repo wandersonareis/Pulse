@@ -9,14 +9,8 @@
             return value;
         }
 
-        public string Title
-        {
-            get { return "LocalizatorEnvironmentConfigurationProvider"; }
-        }
+        public string Title => "LocalizatorEnvironmentConfigurationProvider";
 
-        public string Description
-        {
-            get { return string.Empty; }
-        }
+        public string Description => string.Empty;
     }
 }

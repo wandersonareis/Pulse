@@ -15,8 +15,8 @@ namespace Pulse.FS
 
         public YkdBlockOptionalTail this[int index]
         {
-            get { return Tails[index]; }
-            set { Tails[index] = value; }
+            get => Tails[index];
+            set => Tails[index] = value;
         }
 
         public int CalcSize()

@@ -5,14 +5,8 @@ namespace Pulse.UI
 {
     public class WrapTextBoxEditor : TypeEditor<TextBox>
     {
-        protected override TextBox CreateEditor()
-        {
-            return new TextBox {TextWrapping = System.Windows.TextWrapping.WrapWithOverflow};
-        }
+        protected override TextBox CreateEditor() => new TextBox {TextWrapping = System.Windows.TextWrapping.WrapWithOverflow};
 
-        protected override void SetValueDependencyProperty()
-        {
-            this.ValueProperty = TextBox.TextProperty;
-        }
+        protected override void SetValueDependencyProperty() => ValueProperty = TextBox.TextProperty;
     }
 }

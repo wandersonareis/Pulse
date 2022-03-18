@@ -1,22 +1,20 @@
-using System;
 using System.IO;
-using System.Runtime.InteropServices;
 using Pulse.Core;
 
 namespace Pulse.FS
 {
     public sealed class WdbMovieEntry : IArchiveEntry, IStreamingContent
     {
-        public const Int32 StructSize = 16;
+        public const int StructSize = 16;
 
-        public Int32 PackageNameOffset;
-        public Int32 Length;
-        public Int32 Dummy;
-        public UInt32 Offset;
+        public int PackageNameOffset;
+        public int Length;
+        public int Dummy;
+        public uint Offset;
 
         public WpdEntry Entry { get; set; }
-        public String PackageName  { get; set; }
-        public String Name => $"[{PackageName}] {Entry.Name}";
+        public string PackageName  { get; set; }
+        public string Name => $"[{PackageName}] {Entry.Name}";
 
         public unsafe void ReadFromStream(Stream stream)
         {

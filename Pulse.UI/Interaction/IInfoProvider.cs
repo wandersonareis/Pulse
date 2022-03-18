@@ -1,6 +1,4 @@
-﻿using System.Threading;
-
-namespace Pulse.UI
+﻿namespace Pulse.UI
 {
     public interface IInfoProvider<out T> where T : class
     {

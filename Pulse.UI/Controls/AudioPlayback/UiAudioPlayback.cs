@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms.Integration;
 using NAudio.Wave;
 using NAudioDemo.AudioPlaybackDemo;
 using Pulse.FS;
@@ -64,12 +61,10 @@ namespace Pulse.UI
 
         private sealed class ListItem
         {
-            public string Title { get; private set; }
-            public WaveStream Provider { get; private set; }
+            public WaveStream Provider { get; }
 
             public ListItem(string title, WaveStream provider)
             {
-                Title = title;
                 Provider = provider;
             }
         }

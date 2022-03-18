@@ -12,9 +12,9 @@ namespace Pulse.UI
 {
     public abstract class UiNode : INotifyPropertyChanged
     {
-        protected static readonly UiNode[] EmptyChilds = new UiNode[0];
+        protected static readonly UiNode[] EmptyChilds = Array.Empty<UiNode>();
 
-        public UiNodeType Type  { get; private set; }
+        public UiNodeType Type  { get; }
         public string Name { get; protected internal set; }
         public UiNode Parent { get; internal set; }
 
@@ -25,10 +25,7 @@ namespace Pulse.UI
         }
 
         // Binding
-        public virtual ImageSource Icon
-        {
-            get { return null; }
-        }
+        public virtual ImageSource Icon => null;
 
         #region Childs
 
@@ -44,7 +41,7 @@ namespace Pulse.UI
 
         public bool IsSelected
         {
-            get { return _isSelected; }
+            get => _isSelected;
             set
             {
                 _isSelected = value;
@@ -84,7 +81,7 @@ namespace Pulse.UI
 
         public bool IsExpanded
         {
-            get { return _isExpanded; }
+            get => _isExpanded;
             set
             {
                 _isExpanded = value;
@@ -110,7 +107,7 @@ namespace Pulse.UI
 
         public bool? IsChecked
         {
-            get { return _isChecked; }
+            get => _isChecked;
             set
             {
                 try

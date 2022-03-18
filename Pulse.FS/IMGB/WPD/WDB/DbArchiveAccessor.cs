@@ -13,10 +13,7 @@ namespace Pulse.FS
             HeadersEntry = headersEntry;
         }
 
-        public string Name
-        {
-            get { return HeadersEntry.Name; }
-        }
+        public string Name => HeadersEntry.Name;
 
         public Stream ExtractHeaders()
         {

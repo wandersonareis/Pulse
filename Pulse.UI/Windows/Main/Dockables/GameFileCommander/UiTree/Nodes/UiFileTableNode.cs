@@ -37,7 +37,7 @@ namespace Pulse.UI
                     throw new NotImplementedException(_extension.ToString());
             }
         }
-
+        
         private UiNode[] ExpandWpdChilds()
         {
             ImgbArchiveAccessor imgbAccessor = new ImgbArchiveAccessor(_listing, _indices, _binary);
@@ -65,10 +65,9 @@ namespace Pulse.UI
                 for (int i = 0; i < result.Length; i++)
                 {
                     SeDbResEntry entry = sedbListing[i];
-                    String name = entry.Index.ToString();
+                    string name = entry.Index.ToString();
 
-                    SectionType type;
-                    if (TryReadSectionType(br, offset, entry, out type))
+                    if (TryReadSectionType(br, offset, entry, out SectionType type))
                         name = name + "." + type.ToString().ToLower();
 
                     result[i] = new UiSeDbTableLeaf(name, entry, sedbListing) {Parent = this};

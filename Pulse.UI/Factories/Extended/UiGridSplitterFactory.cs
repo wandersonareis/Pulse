@@ -1,7 +1,4 @@
-﻿using System.Windows.Controls;
-using Pulse.Core;
-
-namespace Pulse.UI
+﻿namespace Pulse.UI
 {
     public static class UiGridSplitterFactory
     {

@@ -9,7 +9,7 @@ namespace Pulse.UI
     {
         public string TargetExtension => ".strings";
 
-        public void Extract(ArchiveEntry entry, StreamSequence output, Stream input, Byte[] buff)
+        public void Extract(ArchiveEntry entry, StreamSequence output, Stream input, byte[] buff)
         {
             int size = (int)entry.UncompressedSize;
             if (size == 0)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace Pulse.FS
 {
@@ -10,9 +9,6 @@ namespace Pulse.FS
         public int InfoOffset { get; set; }
         public int EntriesCount { get; set; }
 
-        public int BlocksCount
-        {
-            get { return (InfoOffset - BlockOffset) / 12; }
-        }
+        public int BlocksCount => (InfoOffset - BlockOffset) / 12;
     }
 }

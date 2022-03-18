@@ -1,32 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms.Integration;
 using Be.Windows.Forms;
-using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 
 namespace Pulse.UI
 {
     public class HexTypeEditor : TypeEditor<UiHexControl>
     {
-        protected override UiHexControl CreateEditor()
-        {
-            return (UiHexControl)new UiHexControl();
-        }
+        protected override UiHexControl CreateEditor() => new UiHexControl();
 
         protected override void SetControlProperties()
         {
         }
 
-        protected override void SetValueDependencyProperty()
-        {
-            this.ValueProperty = UiHexControl.ValueProperty;
-        }
+        protected override void SetValueDependencyProperty() => ValueProperty = UiHexControl.ValueProperty;
     }
 
     public sealed class UiHexControl : WindowsFormsHost
@@ -44,8 +34,8 @@ namespace Pulse.UI
 
         public byte[] Value
         {
-            get { return (byte[])GetValue(ValueProperty); }
-            set { SetValue(ValueProperty, value); }
+            get => (byte[])GetValue(ValueProperty);
+            set => SetValue(ValueProperty, value);
         }
 
         public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(byte[]), typeof(UiHexControl), new PropertyMetadata(null, OnValueChanged));
@@ -115,19 +105,13 @@ namespace Pulse.UI
         /// Gets the byte collection.
         /// 
         /// </summary>
-        public List<byte> Bytes
-        {
-            get { return this._bytes; }
-        }
+        public List<byte> Bytes => _bytes;
 
         /// <summary>
         /// Gets the length of the bytes in the byte collection.
         /// 
         /// </summary>
-        public long Length
-        {
-            get { return (long)this._bytes.Count; }
-        }
+        public long Length => _bytes.Count;
 
         /// <summary>
         /// Occurs, when the write buffer contains new changes.
@@ -147,7 +131,7 @@ namespace Pulse.UI
         /// </summary>
         /// <param name="data"/>
         public FixedByteProvider(byte[] data)
-            : this(new List<byte>((IEnumerable<byte>)data))
+            : this(new List<byte>(data))
         {
         }
 
@@ -158,7 +142,7 @@ namespace Pulse.UI
         /// <param name="bytes"/>
         public FixedByteProvider(List<byte> bytes)
         {
-            this._bytes = bytes;
+            _bytes = bytes;
         }
 
         /// <summary>
@@ -186,7 +170,7 @@ namespace Pulse.UI
         /// </summary>
         public bool HasChanges()
         {
-            return this._hasChanges;
+            return _hasChanges;
         }
 
         /// <summary>
@@ -195,7 +179,7 @@ namespace Pulse.UI
         /// </summary>
         public void ApplyChanges()
         {
-            this._hasChanges = false;
+            _hasChanges = false;
         }
 
         /// <summary>
@@ -208,7 +192,7 @@ namespace Pulse.UI
         /// </returns>
         public byte ReadByte(long index)
         {
-            return this._bytes[(int)index];
+            return _bytes[(int)index];
         }
 
         /// <summary>
@@ -218,8 +202,8 @@ namespace Pulse.UI
         /// <param name="index">the index of the byte to write.</param><param name="value">the byte</param>
         public void WriteByte(long index, byte value)
         {
-            this._bytes[(int)index] = value;
-            this.OnChanged(EventArgs.Empty);
+            _bytes[(int)index] = value;
+            OnChanged(EventArgs.Empty);
         }
 
         /// <summary>

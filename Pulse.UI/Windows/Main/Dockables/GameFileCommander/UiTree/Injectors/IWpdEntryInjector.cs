@@ -7,6 +7,6 @@ namespace Pulse.UI
     public interface IWpdEntryInjector
     {
         string SourceExtension { get; }
-        void Inject(WpdEntry entry, Stream input, Lazy<Stream> headers, Lazy<Stream> content, Byte[] buff);
+        void Inject(WpdEntry entry, Stream input, Lazy<Stream> headers, Lazy<Stream> content, byte[] buff);
     }
 }

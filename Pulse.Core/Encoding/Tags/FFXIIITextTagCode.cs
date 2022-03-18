@@ -19,6 +19,7 @@
         //Var84 = 0x84, // Other chars
         //Var85 = 0x85, // Old
         //Var91 = 0x91, // Other chars
+        Accents = 0x85,
         VarF4 = 0xF4,
         VarF6 = 0xF6,
         VarF7 = 0xF7,

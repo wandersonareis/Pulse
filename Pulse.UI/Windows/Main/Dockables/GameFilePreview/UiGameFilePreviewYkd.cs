@@ -28,9 +28,6 @@ namespace Pulse.UI
         private readonly Tree _treeView;
         private readonly PropertyGrid _propertyGrid;
         private readonly UiDxViewport _viewer;
-        private UiButton _rollbackButton;
-        private UiButton _injectButton;
-        private UiButton _saveAsButton;
 
         public UiGameFilePreviewYkd()
         {
@@ -56,34 +53,34 @@ namespace Pulse.UI
             _viewer.DrawSprites += DrawSprites;
             AddUiElement(_viewer, 1, 1);
 
-            _rollbackButton = UiButtonFactory.Create(Lang.Button.Rollback);
+            UiButton rollbackButton = UiButtonFactory.Create(Lang.Button.Rollback);
             {
-                _rollbackButton.Width = 200;
-                _rollbackButton.Margin = new Thickness(5);
-                _rollbackButton.HorizontalAlignment = HorizontalAlignment.Left;
-                _rollbackButton.VerticalAlignment = VerticalAlignment.Center;
-                _rollbackButton.Click += OnRolbackButtonClick;
-                AddUiElement(_rollbackButton, 2, 0, 0, 2);
+                rollbackButton.Width = 200;
+                rollbackButton.Margin = new Thickness(5);
+                rollbackButton.HorizontalAlignment = HorizontalAlignment.Left;
+                rollbackButton.VerticalAlignment = VerticalAlignment.Center;
+                rollbackButton.Click += OnRolbackButtonClick;
+                AddUiElement(rollbackButton, 2, 0, 0, 2);
             }
 
-            _injectButton = UiButtonFactory.Create(Lang.Button.Inject);
+            UiButton injectButton = UiButtonFactory.Create(Lang.Button.Inject);
             {
-                _injectButton.Width = 200;
-                _injectButton.Margin = new Thickness(5, 5, 210, 5);
-                _injectButton.HorizontalAlignment = HorizontalAlignment.Right;
-                _injectButton.VerticalAlignment = VerticalAlignment.Center;
-                _injectButton.Click += OnInjectButtonClick;
-                AddUiElement(_injectButton, 2, 0, 0, 2);
+                injectButton.Width = 200;
+                injectButton.Margin = new Thickness(5, 5, 210, 5);
+                injectButton.HorizontalAlignment = HorizontalAlignment.Right;
+                injectButton.VerticalAlignment = VerticalAlignment.Center;
+                injectButton.Click += OnInjectButtonClick;
+                AddUiElement(injectButton, 2, 0, 0, 2);
             }
 
-            _saveAsButton = UiButtonFactory.Create(Lang.Button.SaveAs);
+            UiButton saveAsButton = UiButtonFactory.Create(Lang.Button.SaveAs);
             {
-                _saveAsButton.Width = 200;
-                _saveAsButton.Margin = new Thickness(5);
-                _saveAsButton.HorizontalAlignment = HorizontalAlignment.Right;
-                _saveAsButton.VerticalAlignment = VerticalAlignment.Center;
-                _saveAsButton.Click += OnSaveAsButtonClick;
-                AddUiElement(_saveAsButton, 2, 0, 0, 2);
+                saveAsButton.Width = 200;
+                saveAsButton.Margin = new Thickness(5);
+                saveAsButton.HorizontalAlignment = HorizontalAlignment.Right;
+                saveAsButton.VerticalAlignment = VerticalAlignment.Center;
+                saveAsButton.Click += OnSaveAsButtonClick;
+                AddUiElement(saveAsButton, 2, 0, 0, 2);
             }
 
             #endregion
@@ -178,6 +175,10 @@ namespace Pulse.UI
                         w += extra.SourceWidth;
                         h = Math.Max(h, extra.SourceHeight);
                         break;
+                    case YkdResourceViewportType.Empty:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
             finally
@@ -233,7 +234,7 @@ namespace Pulse.UI
                 if (_ykdFile == null)
                     return;
 
-                String targetPath;
+                string targetPath;
                 using (CommonSaveFileDialog dlg = new CommonSaveFileDialog(Lang.Dialogue.SaveAs.Title))
                 {
                     dlg.DefaultFileName = _entry.Name;
@@ -283,17 +284,14 @@ namespace Pulse.UI
 
             protected abstract IEnumerable<View> EnumerateChilds();
 
-            protected delegate Boolean StringToValueConverter<T>(String value, out T result);
+            protected delegate bool StringToValueConverter<T>(string value, out T result);
 
-            private String ReadArrayAsString<T>(T[] array, Func<T, String> valueToString)
+            private string ReadArrayAsString<T>(T[] array, Func<T, string> valueToString)
             {
-                if (array == null)
-                    return null;
-
-                return String.Join(", ", array.Select(valueToString));
+                return array == null ? null : string.Join(", ", array.Select(valueToString));
             }
 
-            protected void WriteArrayFromString<T>(T[] array, String value, StringToValueConverter<T> stringToValue)
+            protected void WriteArrayFromString<T>(T[] array, string value, StringToValueConverter<T> stringToValue)
             {
                 if (array == null)
                     return;
@@ -304,8 +302,7 @@ namespace Pulse.UI
                     if (index >= array.Length)
                         break;
 
-                    T number;
-                    if (stringToValue(val, out number))
+                    if (stringToValue(val, out T number))
                         array[index] = number;
 
                     index++;
@@ -317,22 +314,20 @@ namespace Pulse.UI
                 return ReadArrayAsString(array, v => v.ToString("X8"));
             }
 
-            protected void WriteInt32ArrayFromString(int[] array, String value)
+            protected void WriteInt32ArrayFromString(int[] array, string value)
             {
                 WriteArrayFromString(array, value, TryParseInt32);
             }
 
-            private static bool TryParseInt32(string value, out int result)
-            {
-                return int.TryParse(value, NumberStyles.HexNumber, CultureInfo.InvariantCulture, out result);
-            }
+            private static bool TryParseInt32(string value, out int result) =>
+                int.TryParse(value,
+                    NumberStyles.HexNumber, CultureInfo.InvariantCulture, out result);
 
             public event PropertyChangedEventHandler PropertyChanged;
 
-            protected internal void RaisePropertyChanged(string propertyName)
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            }
+            protected internal void RaisePropertyChanged(string propertyName) =>
+                PropertyChanged?.Invoke(this,
+                    new PropertyChangedEventArgs(propertyName));
         }
 
         private abstract class View<TView, TNative> : View
@@ -346,21 +341,12 @@ namespace Pulse.UI
 
             // Binding
             // ReSharper disable once MemberCanBeProtected.Global
-            public virtual String Title
-            {
-                get { return TypeCache<TNative>.Type.Name; }
-            }
+            public virtual string Title => TypeCache<TNative>.Type.Name;
 
-            public virtual ContextMenu ContextMenu
-            {
-                get { return null; }
-            }
+            public virtual ContextMenu ContextMenu => null;
 
             [Browsable(false)]
-            public override DataTemplate TreeViewTemplate
-            {
-                get { return LazyTreeViewTemplate.Value; }
-            }
+            public override DataTemplate TreeViewTemplate => LazyTreeViewTemplate.Value;
 
             // ReSharper disable once StaticMemberInGenericType
             private static readonly Lazy<DataTemplate> LazyTreeViewTemplate = new Lazy<DataTemplate>(CreateTemplate);
@@ -381,10 +367,7 @@ namespace Pulse.UI
                 return template;
             }
 
-            public override string ToString()
-            {
-                return Title;
-            }
+            public override string ToString() => Title;
         }
 
         private sealed class YkdFileView : View<YkdFileView, YkdFile>
@@ -402,54 +385,54 @@ namespace Pulse.UI
                 yield return new YkdResourcesView(Native.Resources);
             }
 
-            [Category("Заголовок")]
-            [DisplayName("Неизвестно 1")]
-            [Description("Неизвестное значение.")]
+            [Category("Título")]
+            [DisplayName("Desconhecido 1")]
+            [Description("Valor desconhecido.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int HeaderUnknown1
             {
-                get { return Native.Header.Unknown1; }
-                set { Native.Header.Unknown1 = value; }
+                get => Native.Header.Unknown1;
+                set => Native.Header.Unknown1 = value;
             }
 
-            [Category("Заголовок")]
-            [DisplayName("Неизвестно 2")]
-            [Description("Неизвестное значение.")]
+            [Category("Título")]
+            [DisplayName("Desconhecido 2")]
+            [Description("Valor desconhecido.")]
             [Editor(typeof(ByteUpDownEditor), typeof(ByteUpDownEditor))]
             public byte HeaderUnknown2
             {
-                get { return Native.Header.Unknown2; }
-                set { Native.Header.Unknown2 = value; }
+                get => Native.Header.Unknown2;
+                set => Native.Header.Unknown2 = value;
             }
 
-            [Category("Заголовок")]
-            [DisplayName("Неизвестно 3")]
-            [Description("Неизвестное значение.")]
+            [Category("Título")]
+            [DisplayName("Desconhecido 3")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(ByteUpDownEditor), typeof(ByteUpDownEditor))]
             public byte HeaderUnknown3
             {
-                get { return Native.Header.Unknown3; }
-                set { Native.Header.Unknown3 = value; }
+                get => Native.Header.Unknown3;
+                set => Native.Header.Unknown3 = value;
             }
 
-            [Category("Заголовок")]
-            [DisplayName("Неизвестно 4")]
-            [Description("Неизвестное значение.")]
+            [Category("Título")]
+            [DisplayName("Desconhecido 4")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(ByteUpDownEditor), typeof(ByteUpDownEditor))]
             public byte HeaderUnknown4
             {
-                get { return Native.Header.Unknown4; }
-                set { Native.Header.Unknown4 = value; }
+                get => Native.Header.Unknown4;
+                set => Native.Header.Unknown4 = value;
             }
 
-            [Category("Заголовок")]
-            [DisplayName("Неизвестно 5")]
-            [Description("Неизвестное значение.")]
+            [Category("Título")]
+            [DisplayName("Desconhecido 5")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(ByteUpDownEditor), typeof(ByteUpDownEditor))]
             public byte HeaderUnknown5
             {
-                get { return Native.Header.Unknown5; }
-                set { Native.Header.Unknown5 = value; }
+                get => Native.Header.Unknown5;
+                set => Native.Header.Unknown5 = value;
             }
 
             public override string Title => $"{base.Title} (Count: {Native.Blocks.Length})";
@@ -473,62 +456,59 @@ namespace Pulse.UI
 
             public override string Title => $"{base.Title} (Count: {Native.Entries.Length})";
 
-            [Category("Заголовок")]
-            [DisplayName("Тип")]
-            [Description("Тип блока.")]
-            public uint Type
-            {
-                get { return Native.Type; }
-            }
+            [Category("Título")]
+            [DisplayName("Tipo")]
+            [Description("Tipo bloco.")]
+            public uint Type => Native.Type;
 
-            [Category("Заголовок")]
+            [Category("Título")]
             [DisplayName("Индекс")]
-            [Description("Нечто, похожее на уникальный номер блока.")]
+            [Description("Нечто, похожее на уникальный номер bloco.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Index
             {
-                get { return (int)Native.Index; }
-                set { Native.Index = (uint)value; }
+                get => (int)Native.Index;
+                set => Native.Index = (uint)value;
             }
 
-            [Category("Заголовок")]
-            [DisplayName("Связанный блок")]
-            [Description("Индекс связанного блока.")]
+            [Category("Título")]
+            [DisplayName("Bloco de encadernação")]
+            [Description("Índice de Encadernação bloco.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int AssociatedIndex
             {
-                get { return (int)Native.AssociatedIndex; }
-                set { Native.AssociatedIndex = (uint)value; }
+                get => (int)Native.AssociatedIndex;
+                set => Native.AssociatedIndex = (uint)value;
             }
 
-            [Category("Заголовок")]
-            [DisplayName("Неизвестно")]
-            [Description("Неизвестное значение.")]
+            [Category("Título")]
+            [DisplayName("Desconhecido")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown4
             {
-                get { return (int)Native.Unknown; }
-                set { Native.Unknown = (uint)value; }
+                get => (int)Native.Unknown;
+                set => Native.Unknown = (uint)value;
             }
 
             [Category("Отображение")]
             [DisplayName("Матрица преобразования")]
             [Description("Массив 4-байтовых чисел, описывающих трансформирование изображения.")]
             [Editor(typeof(WrapTextBoxEditor), typeof(WrapTextBoxEditor))]
-            public String TransformationMatrix
+            public string TransformationMatrix
             {
-                get { return ReadInt32ArrayAsString(Native.TransformationMatrix); }
-                set { WriteInt32ArrayFromString(Native.TransformationMatrix, value); }
+                get => ReadInt32ArrayAsString(Native.TransformationMatrix);
+                set => WriteInt32ArrayFromString(Native.TransformationMatrix, value);
             }
 
             [Category("Хвост")]
-            [DisplayName("Хвост (Типы 5,6)")]
+            [DisplayName("Хвост (Tipoы 5,6)")]
             [Description("Константный массив из 48 байт.")]
             [Editor(typeof(WrapTextBoxEditor), typeof(WrapTextBoxEditor))]
-            public String Tail56
+            public string Tail56
             {
-                get { return ReadInt32ArrayAsString(Native.Tail56); }
-                set { WriteInt32ArrayFromString(Native.Tail56, value); }
+                get => ReadInt32ArrayAsString(Native.Tail56);
+                set => WriteInt32ArrayFromString(Native.Tail56, value);
             }
         }
 
@@ -545,43 +525,43 @@ namespace Pulse.UI
             }
 
             [Category("Неизвестные")]
-            [DisplayName("Неизвестно1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown1
             {
-                get { return Native.Unknown1; }
-                set { Native.Unknown1 = value; }
+                get => Native.Unknown1;
+                set => Native.Unknown1 = value;
             }
 
             [Category("Неизвестные")]
-            [DisplayName("Неизвестно1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown2
             {
-                get { return Native.Unknown2; }
-                set { Native.Unknown2 = value; }
+                get => Native.Unknown2;
+                set => Native.Unknown2 = value;
             }
 
             [Category("Неизвестные")]
-            [DisplayName("Неизвестно1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown3
             {
-                get { return Native.Unknown3; }
-                set { Native.Unknown3 = value; }
+                get => Native.Unknown3;
+                set => Native.Unknown3 = value;
             }
 
             [Category("Неизвестные")]
-            [DisplayName("Неизвестно1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown4
             {
-                get { return Native.Unknown4; }
-                set { Native.Unknown4 = value; }
+                get => Native.Unknown4;
+                set => Native.Unknown4 = value;
             }
         }
 
@@ -594,40 +574,40 @@ namespace Pulse.UI
 
             protected override IEnumerable<View> EnumerateChilds()
             {
-                foreach (var tail in Native.Tails)
+                foreach (YkdBlockOptionalTail tail in Native.Tails)
                     yield return new YkdBlockOptionalTailView(tail);
             }
 
             public override string Title => $"{base.Title} (Count: {Native.Tails.Length})";
 
             [Category("Неизвестные")]
-            [DisplayName("Неизвестно1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown1
             {
-                get { return Native.Unknown1; }
-                set { Native.Unknown1 = value; }
+                get => Native.Unknown1;
+                set => Native.Unknown1 = value;
             }
 
             [Category("Неизвестные")]
-            [DisplayName("Неизвестно1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown2
             {
-                get { return Native.Unknown2; }
-                set { Native.Unknown2 = value; }
+                get => Native.Unknown2;
+                set => Native.Unknown2 = value;
             }
 
             [Category("Неизвестные")]
-            [DisplayName("Неизвестно1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown3
             {
-                get { return Native.Unknown3; }
-                set { Native.Unknown3 = value; }
+                get => Native.Unknown3;
+                set => Native.Unknown3 = value;
             }
         }
 
@@ -644,39 +624,36 @@ namespace Pulse.UI
                     yield return new YkdFramesView(frame);
             }
 
-            public override string Title
-            {
-                get { return String.IsNullOrEmpty(Native.Name) ? "<empty>" : Native.Name; }
-            }
+            public override string Title => string.IsNullOrEmpty(Native.Name) ? "<empty>" : Native.Name;
 
             [Category("Описание")]
             [DisplayName("Имя")]
             [Description("Имя события. Вероятно, не несёт смысловой нагрузки.")]
             [Editor(typeof(TextBoxEditor), typeof(TextBoxEditor))]
-            public String Name
+            public string Name
             {
-                get { return Native.Name; }
-                set { Native.Name = value; }
+                get => Native.Name;
+                set => Native.Name = value;
             }
 
             [Category("События")]
-            [DisplayName("Неизвестно 1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido 1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown1
             {
-                get { return Native.Offsets.Unknown1; }
-                set { Native.Offsets.Unknown1 = value; }
+                get => Native.Offsets.Unknown1;
+                set => Native.Offsets.Unknown1 = value;
             }
 
             [Category("События")]
-            [DisplayName("Неизвестно 2")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido 2")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown2
             {
-                get { return Native.Offsets.Unknown2; }
-                set { Native.Offsets.Unknown2 = value; }
+                get => Native.Offsets.Unknown2;
+                set => Native.Offsets.Unknown2 = value;
             }
 
             [Category("События")]
@@ -685,8 +662,8 @@ namespace Pulse.UI
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown3
             {
-                get { return Native.Offsets.Unknown3; }
-                set { Native.Offsets.Unknown3 = value; }
+                get => Native.Offsets.Unknown3;
+                set => Native.Offsets.Unknown3 = value;
             }
         }
 
@@ -705,34 +682,34 @@ namespace Pulse.UI
 
             public override string Title => $"{base.Title} (Count: {Native.Count})";
 
-            [Category("Заголовок")]
-            [DisplayName("Неизвестно 1")]
-            [Description("Неизвестное значение.")]
+            [Category("Título")]
+            [DisplayName("Desconhecido 1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int HUnknown1
             {
-                get { return Native.Unknown1; }
-                set { Native.Unknown1 = value; }
+                get => Native.Unknown1;
+                set => Native.Unknown1 = value;
             }
 
-            [Category("Заголовок")]
+            [Category("Título")]
             [DisplayName("Флаги?")]
             [Description("Разворачивает анимацию колебания курсора.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int HUnknown2
             {
-                get { return Native.Unknown2; }
-                set { Native.Unknown2 = value; }
+                get => Native.Unknown2;
+                set => Native.Unknown2 = value;
             }
 
-            [Category("Заголовок")]
-            [DisplayName("Неизвестно 3")]
-            [Description("Неизвестное значение.")]
+            [Category("Título")]
+            [DisplayName("Desconhecido 3")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int HUnknown3
             {
-                get { return Native.Unknown3; }
-                set { Native.Unknown3 = value; }
+                get => Native.Unknown3;
+                set => Native.Unknown3 = value;
             }
         }
 
@@ -756,8 +733,8 @@ namespace Pulse.UI
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float X
             {
-                get { return Native.X; }
-                set { Native.X = value; }
+                get => Native.X;
+                set => Native.X = value;
             }
 
             [Category("Расположение")]
@@ -766,68 +743,68 @@ namespace Pulse.UI
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float Y
             {
-                get { return Native.Y; }
-                set { Native.Y = value; }
+                get => Native.Y;
+                set => Native.Y = value;
             }
 
-            [Category("Неизвестно")]
-            [DisplayName("Неизвестно 1")]
-            [Description("Неизвестное значение.")]
+            [Category("Desconhecido")]
+            [DisplayName("Desconhecido 1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown1
             {
-                get { return Native.Unknown1; }
-                set { Native.Unknown1 = value; }
+                get => Native.Unknown1;
+                set => Native.Unknown1 = value;
             }
 
-            [Category("Неизвестно")]
-            [DisplayName("Неизвестно 2")]
-            [Description("Неизвестное значение.")]
+            [Category("Desconhecido")]
+            [DisplayName("Desconhecido 2")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float Unknown2
             {
-                get { return Native.Unknown2; }
-                set { Native.Unknown2 = value; }
+                get => Native.Unknown2;
+                set => Native.Unknown2 = value;
             }
 
-            [Category("Неизвестно")]
-            [DisplayName("Неизвестно 3")]
-            [Description("Неизвестное значение.")]
+            [Category("Desconhecido")]
+            [DisplayName("Desconhecido 3")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown3
             {
-                get { return Native.Unknown3; }
-                set { Native.Unknown3 = value; }
+                get => Native.Unknown3;
+                set => Native.Unknown3 = value;
             }
 
-            [Category("Неизвестно")]
-            [DisplayName("Неизвестно 4")]
-            [Description("Неизвестное значение.")]
+            [Category("Desconhecido")]
+            [DisplayName("Desconhecido 4")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown4
             {
-                get { return Native.Unknown4; }
-                set { Native.Unknown4 = value; }
+                get => Native.Unknown4;
+                set => Native.Unknown4 = value;
             }
 
-            [Category("Неизвестно")]
-            [DisplayName("Неизвестно 5")]
-            [Description("Неизвестное значение.")]
+            [Category("Desconhecido")]
+            [DisplayName("Desconhecido 5")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float Unknown5
             {
-                get { return Native.Unknown5; }
-                set { Native.Unknown5 = value; }
+                get => Native.Unknown5;
+                set => Native.Unknown5 = value;
             }
 
-            [Category("Неизвестно")]
-            [DisplayName("Неизвестно 6")]
-            [Description("Неизвестное значение.")]
+            [Category("Desconhecido")]
+            [DisplayName("Desconhecido 6")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float Unknown6
             {
-                get { return Native.Unknown6; }
-                set { Native.Unknown6 = value; }
+                get => Native.Unknown6;
+                set => Native.Unknown6 = value;
             }
         }
 
@@ -847,23 +824,23 @@ namespace Pulse.UI
             public override string Title => $"{base.Title} (Count: {Native.Count})";
 
             [Category("События")]
-            [DisplayName("Неизвестно 1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido 1")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown1
             {
-                get { return Native.Offsets.Unknown1; }
-                set { Native.Offsets.Unknown1 = value; }
+                get => Native.Offsets.Unknown1;
+                set => Native.Offsets.Unknown1 = value;
             }
 
             [Category("События")]
-            [DisplayName("Неизвестно 2")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido 2")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown2
             {
-                get { return Native.Offsets.Unknown2; }
-                set { Native.Offsets.Unknown2 = value; }
+                get => Native.Offsets.Unknown2;
+                set => Native.Offsets.Unknown2 = value;
             }
 
             [Category("События")]
@@ -872,8 +849,8 @@ namespace Pulse.UI
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown3
             {
-                get { return Native.Offsets.Unknown3; }
-                set { Native.Offsets.Unknown3 = value; }
+                get => Native.Offsets.Unknown3;
+                set => Native.Offsets.Unknown3 = value;
             }
         }
 
@@ -892,7 +869,7 @@ namespace Pulse.UI
                 yield break;
             }
 
-            public override string Title => $"{Native.Index:D3} {Native.Type} {(String.IsNullOrEmpty(Native.Name) ? "<empty>" : Native.Name)}";
+            public override string Title => $"{Native.Index:D3} {Native.Type} {(string.IsNullOrEmpty(Native.Name) ? "<empty>" : Native.Name)}";
 
             public override ContextMenu ContextMenu
             {
@@ -967,27 +944,24 @@ namespace Pulse.UI
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Index
             {
-                get { return Native.Index; }
-                set { Native.Index = value; }
+                get => Native.Index;
+                set => Native.Index = value;
             }
 
             [Category("Текстура")]
             [DisplayName("Название")]
             [Description("Название файла текстуры с расширением .txbh из этого же архива.")]
             [Editor(typeof(TextBoxEditor), typeof(TextBoxEditor))]
-            public String Name
+            public string Name
             {
-                get { return Native.Name; }
-                set { Native.Name = value; }
+                get => Native.Name;
+                set => Native.Name = value;
             }
 
             [Category("Текстура")]
-            [DisplayName("Тип")]
-            [Description("Тип ресурса.")]
-            public String Type
-            {
-                get { return Native.Type.ToString(); }
-            }
+            [DisplayName("Tipo")]
+            [Description("Tipo ресурса.")]
+            public string Type => Native.Type.ToString();
 
             public static YkdResourceView FromResource(YkdResource resource, YkdResourcesView parent)
             {
@@ -1019,10 +993,7 @@ namespace Pulse.UI
                 yield break;
             }
 
-            private EmptyYkdResourceViewport Viewport
-            {
-                get { return (EmptyYkdResourceViewport)Native.Viewport; }
-            }
+            private EmptyYkdResourceViewport Viewport => (EmptyYkdResourceViewport)Native.Viewport;
         }
 
         private class FragmentYkdResourceView : YkdResourceView
@@ -1037,10 +1008,7 @@ namespace Pulse.UI
                 yield break;
             }
 
-            private FragmentYkdResourceViewport Viewport
-            {
-                get { return (FragmentYkdResourceViewport)Native.Viewport; }
-            }
+            private FragmentYkdResourceViewport Viewport => (FragmentYkdResourceViewport)Native.Viewport;
 
             [Category("Текстура")]
             [DisplayName("X")]
@@ -1048,8 +1016,8 @@ namespace Pulse.UI
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceX
             {
-                get { return Viewport.SourceX; }
-                set { Viewport.SourceX = value; }
+                get => Viewport.SourceX;
+                set => Viewport.SourceX = value;
             }
 
             [Category("Текстура")]
@@ -1057,8 +1025,8 @@ namespace Pulse.UI
             [Description("Координата Y верхнего-левого угла фрагмента текстуры.")]
             public int SourceY
             {
-                get { return Viewport.SourceY; }
-                set { Viewport.SourceY = value; }
+                get => Viewport.SourceY;
+                set => Viewport.SourceY = value;
             }
 
             [Category("Текстура")]
@@ -1067,8 +1035,8 @@ namespace Pulse.UI
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceWidth
             {
-                get { return Viewport.SourceWidth; }
-                set { Viewport.SourceWidth = value; }
+                get => Viewport.SourceWidth;
+                set => Viewport.SourceWidth = value;
             }
 
             [Category("Текстура")]
@@ -1076,8 +1044,8 @@ namespace Pulse.UI
             [Description("Высота фрагмента текстуры.")]
             public int SourceHeight
             {
-                get { return Viewport.SourceHeight; }
-                set { Viewport.SourceHeight = value; }
+                get => Viewport.SourceHeight;
+                set => Viewport.SourceHeight = value;
             }
 
             [Category("Отображение")]
@@ -1085,8 +1053,8 @@ namespace Pulse.UI
             [Description("Ширина отображения.")]
             public int ViewportWidth
             {
-                get { return Viewport.ViewportWidth; }
-                set { Viewport.ViewportWidth = value; }
+                get => Viewport.ViewportWidth;
+                set => Viewport.ViewportWidth = value;
             }
 
             [Category("Отображение")]
@@ -1094,8 +1062,8 @@ namespace Pulse.UI
             [Description("Высота отображения.")]
             public int ViewportHeight
             {
-                get { return Viewport.ViewportHeight; }
-                set { Viewport.ViewportHeight = value; }
+                get => Viewport.ViewportHeight;
+                set => Viewport.ViewportHeight = value;
             }
 
             [Category("Отображение")]
@@ -1104,18 +1072,18 @@ namespace Pulse.UI
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Flags
             {
-                get { return (int)Viewport.Flags; }
-                set { Viewport.Flags = (YkdResourceFlags)value; }
+                get => (int)Viewport.Flags;
+                set => Viewport.Flags = (YkdResourceFlags)value;
             }
 
             [Category("Неизвестные")]
-            [DisplayName("Неизвестно 5")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido 5")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown5
             {
-                get { return Viewport.Unknown5; }
-                set { Viewport.Unknown5 = value; }
+                get => Viewport.Unknown5;
+                set => Viewport.Unknown5 = value;
             }
 
             [Category("Градиент")]
@@ -1124,8 +1092,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperLeftColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.UpperLeftColor); }
-                set { Viewport.UpperLeftColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.UpperLeftColor);
+                set => Viewport.UpperLeftColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Градиент")]
@@ -1134,8 +1102,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomLeftColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.BottomLeftColor); }
-                set { Viewport.BottomLeftColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.BottomLeftColor);
+                set => Viewport.BottomLeftColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Градиент")]
@@ -1144,8 +1112,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperRightColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.UpperRightColor); }
-                set { Viewport.UpperRightColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.UpperRightColor);
+                set => Viewport.UpperRightColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Градиент")]
@@ -1154,8 +1122,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomRightColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.BottomRightColor); }
-                set { Viewport.BottomRightColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.BottomRightColor);
+                set => Viewport.BottomRightColor = ColorsHelper.GetBgra(value);
             }
         }
 
@@ -1171,18 +1139,15 @@ namespace Pulse.UI
                 yield break;
             }
 
-            private FullYkdResourceViewport Viewport
-            {
-                get { return (FullYkdResourceViewport)Native.Viewport; }
-            }
+            private FullYkdResourceViewport Viewport => (FullYkdResourceViewport)Native.Viewport;
 
             [Category("Отображение")]
             [DisplayName("Ширина")]
             [Description("Ширина отображения.")]
             public int ViewportWidth
             {
-                get { return Viewport.ViewportWidth; }
-                set { Viewport.ViewportWidth = value; }
+                get => Viewport.ViewportWidth;
+                set => Viewport.ViewportWidth = value;
             }
 
             [Category("Отображение")]
@@ -1190,8 +1155,8 @@ namespace Pulse.UI
             [Description("Высота отображения.")]
             public int ViewportHeight
             {
-                get { return Viewport.ViewportHeight; }
-                set { Viewport.ViewportHeight = value; }
+                get => Viewport.ViewportHeight;
+                set => Viewport.ViewportHeight = value;
             }
 
             [Category("Градиент")]
@@ -1200,8 +1165,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperLeftColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.UpperLeftColor); }
-                set { Viewport.UpperLeftColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.UpperLeftColor);
+                set => Viewport.UpperLeftColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Градиент")]
@@ -1210,8 +1175,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomLeftColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.BottomLeftColor); }
-                set { Viewport.BottomLeftColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.BottomLeftColor);
+                set => Viewport.BottomLeftColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Градиент")]
@@ -1220,8 +1185,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperRightColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.UpperRightColor); }
-                set { Viewport.UpperRightColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.UpperRightColor);
+                set => Viewport.UpperRightColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Градиент")]
@@ -1230,26 +1195,26 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomRightColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.BottomRightColor); }
-                set { Viewport.BottomRightColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.BottomRightColor);
+                set => Viewport.BottomRightColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Отображение")]
-            [DisplayName("Неизвестно 1")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido 1")]
+            [Description("Desconhecidoе valor.")]
             public int Unknown1
             {
-                get { return Viewport.Unknown1; }
-                set { Viewport.Unknown1 = value; }
+                get => Viewport.Unknown1;
+                set => Viewport.Unknown1 = value;
             }
 
             [Category("Отображение")]
-            [DisplayName("Неизвестно 2")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido 2")]
+            [Description("Desconhecidoе valor.")]
             public int Unknown2
             {
-                get { return Viewport.Unknown2; }
-                set { Viewport.Unknown2 = value; }
+                get => Viewport.Unknown2;
+                set => Viewport.Unknown2 = value;
             }
         }
 
@@ -1265,10 +1230,7 @@ namespace Pulse.UI
                 yield break;
             }
 
-            private ExtraYkdResourceViewport Viewport
-            {
-                get { return (ExtraYkdResourceViewport)Native.Viewport; }
-            }
+            private ExtraYkdResourceViewport Viewport => (ExtraYkdResourceViewport)Native.Viewport;
 
             [Category("Текстура")]
             [DisplayName("X")]
@@ -1276,8 +1238,8 @@ namespace Pulse.UI
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceX
             {
-                get { return Viewport.SourceX; }
-                set { Viewport.SourceX = value; }
+                get => Viewport.SourceX;
+                set => Viewport.SourceX = value;
             }
 
             [Category("Текстура")]
@@ -1285,8 +1247,8 @@ namespace Pulse.UI
             [Description("Координата Y верхнего-левого угла фрагмента текстуры.")]
             public int SourceY
             {
-                get { return Viewport.SourceY; }
-                set { Viewport.SourceY = value; }
+                get => Viewport.SourceY;
+                set => Viewport.SourceY = value;
             }
 
             [Category("Текстура")]
@@ -1295,8 +1257,8 @@ namespace Pulse.UI
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceWidth
             {
-                get { return Viewport.SourceWidth; }
-                set { Viewport.SourceWidth = value; }
+                get => Viewport.SourceWidth;
+                set => Viewport.SourceWidth = value;
             }
 
             [Category("Текстура")]
@@ -1304,8 +1266,8 @@ namespace Pulse.UI
             [Description("Высота фрагмента текстуры.")]
             public int SourceHeight
             {
-                get { return Viewport.SourceHeight; }
-                set { Viewport.SourceHeight = value; }
+                get => Viewport.SourceHeight;
+                set => Viewport.SourceHeight = value;
             }
 
             [Category("Отображение")]
@@ -1313,8 +1275,8 @@ namespace Pulse.UI
             [Description("Ширина отображения.")]
             public int ViewportWidth
             {
-                get { return Viewport.ViewportWidth; }
-                set { Viewport.ViewportWidth = value; }
+                get => Viewport.ViewportWidth;
+                set => Viewport.ViewportWidth = value;
             }
 
             [Category("Отображение")]
@@ -1322,8 +1284,8 @@ namespace Pulse.UI
             [Description("Высота отображения.")]
             public int ViewportHeight
             {
-                get { return Viewport.ViewportHeight; }
-                set { Viewport.ViewportHeight = value; }
+                get => Viewport.ViewportHeight;
+                set => Viewport.ViewportHeight = value;
             }
 
             [Category("Отображение")]
@@ -1332,18 +1294,18 @@ namespace Pulse.UI
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Flags
             {
-                get { return (int)Viewport.Flags; }
-                set { Viewport.Flags = (YkdResourceFlags)value; }
+                get => (int)Viewport.Flags;
+                set => Viewport.Flags = (YkdResourceFlags)value;
             }
 
             [Category("Неизвестные")]
-            [DisplayName("Неизвестно 5")]
-            [Description("Неизвестное значение.")]
+            [DisplayName("Desconhecido 5")]
+            [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown5
             {
-                get { return Viewport.Unknown5; }
-                set { Viewport.Unknown5 = value; }
+                get => Viewport.Unknown5;
+                set => Viewport.Unknown5 = value;
             }
 
             [Category("Градиент")]
@@ -1352,8 +1314,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperLeftColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.UpperLeftColor); }
-                set { Viewport.UpperLeftColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.UpperLeftColor);
+                set => Viewport.UpperLeftColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Градиент")]
@@ -1362,8 +1324,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomLeftColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.BottomLeftColor); }
-                set { Viewport.BottomLeftColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.BottomLeftColor);
+                set => Viewport.BottomLeftColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Градиент")]
@@ -1372,8 +1334,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperRightColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.UpperRightColor); }
-                set { Viewport.UpperRightColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.UpperRightColor);
+                set => Viewport.UpperRightColor = ColorsHelper.GetBgra(value);
             }
 
             [Category("Градиент")]
@@ -1382,8 +1344,8 @@ namespace Pulse.UI
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomRightColor
             {
-                get { return ColorsHelper.GetBGRA(Viewport.BottomRightColor); }
-                set { Viewport.BottomRightColor = ColorsHelper.GetBGRA(value); }
+                get => ColorsHelper.GetBgra(Viewport.BottomRightColor);
+                set => Viewport.BottomRightColor = ColorsHelper.GetBgra(value);
             }
         }
     }
@@ -1406,7 +1368,7 @@ namespace Pulse.UI
                 case 3:
                     return ReadB8G8R8Color(input, buff);
                 case 4:
-                    return ReadBGRAColor(input, buff);
+                    return ReadBgraColor(input, buff);
                 default:
                     throw new NotSupportedException(buff.Length.ToString(CultureInfo.InvariantCulture));
             }
@@ -1430,13 +1392,13 @@ namespace Pulse.UI
             return Color.FromArgb(255, buff[2], buff[1], buff[0]);
         }
 
-        private static Color ReadBGRAColor(Stream input, byte[] buff)
+        private static Color ReadBgraColor(Stream input, byte[] buff)
         {
             input.EnsureRead(buff, 0, 4);
             return Color.FromArgb(buff[3], buff[2], buff[1], buff[0]);
         }
 
-        public static Color GetBGRA(int value)
+        public static Color GetBgra(int value)
         {
             unsafe
             {
@@ -1448,7 +1410,7 @@ namespace Pulse.UI
             }
         }
 
-        public static int GetBGRA(Color value)
+        public static int GetBgra(Color value)
         {
             return (value.A << 24) | (value.R << 16) | (value.G << 8) | value.B;
         }

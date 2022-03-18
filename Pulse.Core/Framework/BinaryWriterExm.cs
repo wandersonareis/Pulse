@@ -15,29 +15,29 @@ namespace Pulse.Core
             self.Write(buff, 0, buff.Length);
         }
 
-        public static void WriteBig(this BinaryWriter self, Int16 value)
+        public static void WriteBig(this BinaryWriter self, short value)
         {
             self.Write(Endian.SwapInt16(value));
         }
 
-        public static void WriteBig(this BinaryWriter self, UInt16 value)
+        public static void WriteBig(this BinaryWriter self, ushort value)
         {
             self.Write(Endian.SwapUInt16(value));
         }
 
-        public static void WriteBig(this BinaryWriter self, Int32 value)
+        public static void WriteBig(this BinaryWriter self, int value)
         {
             self.Write(Endian.SwapInt32(value));
         }
 
-        public static void WriteBig(this BinaryWriter self, UInt32 value)
+        public static void WriteBig(this BinaryWriter self, uint value)
         {
             self.Write(Endian.SwapUInt32(value));
         }
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBig(byte[] array, int offset, Int32 value)
+        public static unsafe void WriteBig(byte[] array, int offset, int value)
         {
             fixed (byte* numPtr = &array[offset])
                 WriteBig(numPtr, value);
@@ -45,7 +45,7 @@ namespace Pulse.Core
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static unsafe void WriteBig(byte* numPtr, Int32 value)
+        public static unsafe void WriteBig(byte* numPtr, int value)
         {
             *(int*)numPtr = Endian.SwapInt32(value);
         }

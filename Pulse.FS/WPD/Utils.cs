@@ -17,15 +17,15 @@ namespace Pulse.FS
             processStartInfo.UseShellExecute = false;
             using (Process process = Process.Start(processStartInfo))
             {
-                string value = process.StandardOutput.ReadToEnd();
+                string value = process?.StandardOutput.ReadToEnd();
                 StreamWriter streamWriter = new StreamWriter(Application.StartupPath + "\\ls.txt");
                 streamWriter.WriteLine(value);
                 streamWriter.Close();
-                process.WaitForExit();
+                process?.WaitForExit();
             }
         }
 
-        public void runFfxiiiCrypt(string args)
+        public void RunFfxiiiCrypt(string args)
         {
             ProcessStartInfo processStartInfo = new ProcessStartInfo();
             processStartInfo.FileName = Application.StartupPath + "\\ffxiiicrypt.exe";
@@ -33,7 +33,7 @@ namespace Pulse.FS
             processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             using (Process process = Process.Start(processStartInfo))
             {
-                process.WaitForExit();
+                process?.WaitForExit();
             }
         }
     }

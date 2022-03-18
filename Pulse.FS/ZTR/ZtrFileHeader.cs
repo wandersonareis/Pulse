@@ -4,7 +4,7 @@ using Pulse.Core;
 
 namespace Pulse.FS
 {
-    public sealed class ZtrFileHeader
+    public sealed class ZtrFileHeader : IStreamingContent
     {
         public int Version;
         public int Count;
@@ -39,7 +39,7 @@ namespace Pulse.FS
             }
 
             TextLinesTable = new ZtrFileHeaderLineInfo[Count];
-            if (Count > 0)
+            if (Count <= 0) return;
             {
                 buff = input.EnsureRead(Count * 4);
                 fixed (byte* b = &buff[0])

@@ -19,10 +19,7 @@ namespace Pulse.FS
         public int FormatHeaderLength { get; set; }
         public int AuxChunkCount { get; set; }
 
-        public long DataOffset
-        {
-            get { return _inputOffset + StructSize + FormatHeaderLength; }
-        }
+        public long DataOffset => _inputOffset + StructSize + FormatHeaderLength;
 
         public void ReadFromStream(Stream stream)
         {

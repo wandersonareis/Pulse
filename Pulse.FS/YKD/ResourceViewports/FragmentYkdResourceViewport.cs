@@ -17,15 +17,9 @@ namespace Pulse.FS
         public int UpperRightColor;
         public int BottomRightColor;
 
-        public override YkdResourceViewportType Type
-        {
-            get { return YkdResourceViewportType.Fragment; }
-        }
+        public override YkdResourceViewportType Type => YkdResourceViewportType.Fragment;
 
-        public override int Size
-        {
-            get { return 48; }
-        }
+        public override int Size => 48;
 
         public override void ReadFromStream(Stream stream)
         {

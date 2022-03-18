@@ -1,47 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NAudio.Wave;
 using System.Windows.Forms;
-using NAudio.CoreAudioApi;
 
 namespace NAudioDemo.AudioPlaybackDemo
 {
     class WasapiOutFactory : IOutputAudioDeviceFactory
     {
-        WasapiOutSettingsPanel settingsPanel;
+        WasapiOutSettingsPanel _settingsPanel;
 
         public IWavePlayer CreateDevice(int latency)
         {
-            var wasapi = new WasapiOut(
-                settingsPanel.SelectedDevice,
-                settingsPanel.ShareMode,
-                settingsPanel.UseEventCallback,
+            WasapiOut wasapi = new WasapiOut(
+                _settingsPanel.SelectedDevice,
+                _settingsPanel.ShareMode,
+                _settingsPanel.UseEventCallback,
                 latency);
             return wasapi;
         }
 
         public UserControl CreateSettingsPanel()
         {
-            this.settingsPanel = new WasapiOutSettingsPanel();
-            return settingsPanel;
+            _settingsPanel = new WasapiOutSettingsPanel();
+            return _settingsPanel;
         }
 
-        public string Name
-        {
-            get { return "WasapiOut"; }
-        }
+        public string Name => "WasapiOut";
 
-        public bool IsAvailable
-        {
+        public bool IsAvailable =>
             // supported on Vista and above
-            get { return Environment.OSVersion.Version.Major >= 6; }
-        }
+            Environment.OSVersion.Version.Major >= 6;
 
-        public int Priority
-        {
-            get { return 3; }
-        }
+        public int Priority => 3;
     }
 }

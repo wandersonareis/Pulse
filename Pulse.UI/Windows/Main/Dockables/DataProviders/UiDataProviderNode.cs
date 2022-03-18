@@ -9,13 +9,13 @@ namespace Pulse.UI
     {
         private DrawingImage _icon = Icons.PendingIcon;
 
-        public string Title { get; private set; }
-        public string Description { get; private set; }
-        public UiContextMenu ContextMenu { get; private set; }
+        public string Title { get; }
+        public string Description { get; }
+        public UiContextMenu ContextMenu { get; }
 
         public DrawingImage Icon
         {
-            get { return _icon; }
+            get => _icon;
             set
             {
                 _icon = value;

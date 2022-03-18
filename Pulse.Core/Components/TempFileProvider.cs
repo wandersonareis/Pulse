@@ -9,9 +9,8 @@ namespace Pulse.Core
         public readonly string FilePath;
         public readonly string FilePrefix;
         public readonly string Extension;
-        private long _counter;
 
-        public long Size { get; set; }
+        private long _counter;
 
         public TempFileProvider()
             : this(string.Empty, string.Empty)

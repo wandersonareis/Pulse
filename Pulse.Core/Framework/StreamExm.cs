@@ -35,7 +35,7 @@ namespace Pulse.Core
             }
 
             if (size != 0)
-                throw new Exception("Неожиданный конец потока.");
+                throw new Exception("The unexpected end of the stream.");
         }
 
         public static byte[] EnsureRead(this Stream self, int size)
@@ -108,7 +108,7 @@ namespace Pulse.Core
                 return new T[0];
 
             Array result = new T[count];
-            Int32 entrySize = UnsafeTypeCache<T>.UnsafeSize;
+            int entrySize = UnsafeTypeCache<T>.UnsafeSize;
             using (UnsafeTypeCache<byte>.ChangeArrayType(result, entrySize))
                 input.EnsureRead((byte[])result, 0, result.Length);
 
@@ -234,7 +234,7 @@ namespace Pulse.Core
             }
         }
 
-        public static void WriteFixedSizeString(this Stream output, String str, int size, Encoding encoding)
+        public static void WriteFixedSizeString(this Stream output, string str, int size, Encoding encoding)
         {
             byte[] name = new byte[size];
             encoding.GetBytes(str, 0, str.Length, name, 0);

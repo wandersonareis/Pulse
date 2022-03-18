@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using Pulse.Core;
-using Pulse.FS;
 
 namespace Pulse.UI
 {
@@ -13,15 +12,9 @@ namespace Pulse.UI
 
         public event EventHandler CanExecuteChanged;
 
-        public UiGameFileCommanderExtractCommand(Func<UiArchives> archivesProvider)
-        {
-            _archivesProvider = Exceptions.CheckArgumentNull(archivesProvider, "archivesProvider");
-        }
+        public UiGameFileCommanderExtractCommand(Func<UiArchives> archivesProvider) => _archivesProvider = Exceptions.CheckArgumentNull(archivesProvider, "archivesProvider");
 
-        public bool CanExecute(object parameter)
-        {
-            return true;
-        }
+        public bool CanExecute(object parameter) => true;
 
         public void Execute(object parameter)
         {
@@ -48,7 +41,7 @@ namespace Pulse.UI
                 
                 sw.Stop();
                 if (sw.ElapsedMilliseconds / 1000 > 2)
-                    MessageBox.Show(String.Format(Lang.Message.Done.ExtractionCompleteFormat, sw.Elapsed), Lang.Message.Done.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(string.Format(Lang.Message.Done.ExtractionCompleteFormat, sw.Elapsed), Lang.Message.Done.Title, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

@@ -37,8 +37,8 @@ namespace Pulse.UI.Encoding
 
         public int? Value
         {
-            get { return NumberControl.Value; }
-            set { NumberControl.Value = value; }
+            get => NumberControl.Value;
+            set => NumberControl.Value = value;
         }
 
         private void OnValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

@@ -18,7 +18,7 @@ namespace Pulse.Core
 
         private Stream _current;
 
-        public bool TryCreateNextStream(String key)
+        public bool TryCreateNextStream(string key)
         {
             _current.NullSafeDispose();
 
@@ -56,30 +56,18 @@ namespace Pulse.Core
             _current.Write(buffer, offset, count);
         }
 
-        public override bool CanRead
-        {
-            get { return _current.CanRead; }
-        }
+        public override bool CanRead => _current.CanRead;
 
-        public override bool CanSeek
-        {
-            get { return _current.CanSeek; }
-        }
+        public override bool CanSeek => _current.CanSeek;
 
-        public override bool CanWrite
-        {
-            get { return _current.CanWrite; }
-        }
+        public override bool CanWrite => _current.CanWrite;
 
-        public override long Length
-        {
-            get { return _current.Length; }
-        }
+        public override long Length => _current.Length;
 
         public override long Position
         {
-            get { return _current.Position; }
-            set { _current.Position = value; }
+            get => _current.Position;
+            set => _current.Position = value;
         }
     }
 }

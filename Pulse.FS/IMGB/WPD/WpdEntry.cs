@@ -2,7 +2,7 @@
 {
     public sealed class WpdEntry : IArchiveEntry
     {
-        public int Index { get; private set; }
+        public int Index { get; }
         public string NameWithoutExtension { get; }
         public readonly string Extension;
         public int Offset;

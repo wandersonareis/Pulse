@@ -78,7 +78,7 @@ namespace Pulse.UI
         {
             return _listing.Accessor.ExtractHeaders();
         }
-
+        
         private Stream AcquireContent()
         {
             return _listing.Accessor.ExtractContent();

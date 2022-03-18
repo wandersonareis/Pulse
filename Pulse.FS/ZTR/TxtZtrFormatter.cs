@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -8,16 +9,16 @@ namespace Pulse.FS
     {
         private static readonly Lazy<TxtZtrFormatter> LazyInstance = new Lazy<TxtZtrFormatter>();
 
-        public static TxtZtrFormatter Instance
-        {
-            get { return LazyInstance.Value; }
-        }
+        public static TxtZtrFormatter Instance => LazyInstance.Value;
 
         public void Write(StreamWriter sw, ZtrFileEntry entry, int index)
         {
             sw.WriteLine("{0}║{1}║{2}", index.ToString("D4", CultureInfo.InvariantCulture), entry.Key, entry.Value);
         }
-
+        public void Write(StreamWriter sw, KeyValuePair<string, string> entry, int index)
+        {
+            sw.WriteLine("{0}║{1}║{2}", index.ToString("D4", CultureInfo.InvariantCulture), entry.Key, entry.Value);
+        }
         public ZtrFileEntry Read(StreamReader sr, out int index)
         {
             string str = sr.ReadLine();
@@ -31,5 +32,7 @@ namespace Pulse.FS
             index = int.Parse(line[0], CultureInfo.InvariantCulture);
             return new ZtrFileEntry {Key = line[1], Value = line[2]};
         }
+
+        
     }
 }

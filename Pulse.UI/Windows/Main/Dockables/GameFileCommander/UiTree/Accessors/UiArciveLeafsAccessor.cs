@@ -9,10 +9,7 @@ namespace Pulse.UI
         private readonly bool? _conversion;
         private readonly bool? _compression;
 
-        public UiNodeType Type
-        {
-            get { return UiNodeType.Archive; }
-        }
+        public UiNodeType Type => UiNodeType.Archive;
 
         public UiArciveLeafsAccessor(ArchiveListing listing, bool? conversion, bool? compression, params ArchiveEntry[] leafs)
         {

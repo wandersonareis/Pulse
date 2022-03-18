@@ -4,7 +4,7 @@
     {
         private const int SectorSize = 0x800;
 
-        public string Name { get; private set; }
+        public string Name { get; }
         public long Sector;
         public long Size;
         public long UncompressedSize;
@@ -18,15 +18,9 @@
             UncompressedSize = uncompressedSize;
         }
 
-        public long Offset
-        {
-            get { return Sector * SectorSize; }
-        }
+        public long Offset => Sector * SectorSize;
 
-        public bool IsCompressed
-        {
-            get { return Size > 0 && Size != UncompressedSize; }
-        }
+        public bool IsCompressed => Size > 0 && Size != UncompressedSize;
 
         public override string ToString()
         {

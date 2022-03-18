@@ -11,14 +11,8 @@ namespace Pulse.UI
             return value;
         }
 
-        public string Title
-        {
-            get { return Lang.InfoProvider.GameLocation.ConfigurationTitle; }
-        }
+        public string Title => Lang.InfoProvider.GameLocation.ConfigurationTitle;
 
-        public string Description
-        {
-            get { return Lang.InfoProvider.GameLocation.ConfigurationDescription; }
-        }
+        public string Description => Lang.InfoProvider.GameLocation.ConfigurationDescription;
     }
 }

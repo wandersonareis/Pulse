@@ -69,7 +69,7 @@ namespace Pulse.UI
                 {
                     UiContainerNode directory;
                     string directoryName = path[i];
-                    string directoryPath = String.Join(separator, path, 0, i + 1);
+                    string directoryPath = string.Join(separator, path, 0, i + 1);
                     if (!dirs.TryGetValue(directoryPath, out directory))
                     {
                         directory = new UiContainerNode(directoryName, UiNodeType.Directory) {Parent = parent};
@@ -115,8 +115,8 @@ namespace Pulse.UI
 
         private bool TryAddDbFiles(ArchiveListing listing, ArchiveEntry entry, string entryPath, string entryName)
         {
-            if (!entryPath.StartsWith("db/ai/npc/pack")) return false;
-
+            if (!entryPath.Contains("db/ai/npc/pack")) return false;
+            
             UiArchiveExtension extension = UiArchiveExtension.Bin;
 
             UiFileTableNode node = new UiFileTableNode(listing, extension, entry, entry);
@@ -124,7 +124,6 @@ namespace Pulse.UI
             container.Add(node);
             return true;
         }
-
         private bool TryAddZoneListing(ArchiveListing parentListing, ArchiveEntry entry, string entryPath)
         {
             if (_areasDirectory == null)
@@ -161,7 +160,7 @@ namespace Pulse.UI
             return true;
         }
 
-        private bool TryAddMoviesListing(ArchiveListing parentListing, ArchiveEntry entry, String entryName)
+        private bool TryAddMoviesListing(ArchiveListing parentListing, ArchiveEntry entry, string entryName)
         {
             switch (entryName)
             {
@@ -209,24 +208,27 @@ namespace Pulse.UI
         {
             Pair<ArchiveEntry, ArchiveEntry> pair = ProvidePair(longName);
 
-            if (ext == ".win32.imgb")
-                pair.Item2 = entry;
-            else
-                pair.Item1 = entry;
-
-            if (!pair.IsAnyEmpty)
+            switch (ext)
             {
-                UiArchiveExtension extension = GetArchiveExtension(pair.Item1);
-
-                UiFileTableNode node = new UiFileTableNode(listing, extension, pair.Item1, pair.Item2);
-                ConcurrentBag<UiNode> container = ProvideRootNodeChilds(extension);
-                container.Add(node);
+                case ".win32.imgb":
+                    pair.Item2 = entry;
+                    break;
+                default:
+                    pair.Item1 = entry;
+                    break;
             }
+
+            if (pair.IsAnyEmpty) return true;
+            UiArchiveExtension extension = GetArchiveExtension(pair.Item1);
+
+            UiFileTableNode node = new UiFileTableNode(listing, extension, pair.Item1, pair.Item2);
+            ConcurrentBag<UiNode> container = ProvideRootNodeChilds(extension);
+            container.Add(node);
 
             return true;
         }
 
-        private UiArchiveExtension GetArchiveExtension(ArchiveEntry indices)
+        private static UiArchiveExtension GetArchiveExtension(ArchiveEntry indices)
         {
             string ext = PathEx.GetMultiDotComparableExtension(indices.Name);
 
@@ -235,7 +237,7 @@ namespace Pulse.UI
             return EnumCache<UiArchiveExtension>.Parse(ext);
         }
 
-        private bool IsUnexpectedEntry(string listingName, string longName)
+        private static bool IsUnexpectedEntry(string listingName, string longName)
         {
             if (InteractionService.GamePart != FFXIIIGamePart.Part1)
                 return false;

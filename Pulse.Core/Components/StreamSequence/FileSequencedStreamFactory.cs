@@ -10,7 +10,7 @@ namespace Pulse.Core
         private FileMode _mode;
         private FileAccess _access;
 
-        public FileSequencedStreamFactory(String filePath, FileMode mode, FileAccess access)
+        public FileSequencedStreamFactory(string filePath, FileMode mode, FileAccess access)
         {
             _extension = Path.GetExtension(filePath);
             _filePath = filePath;
@@ -25,7 +25,7 @@ namespace Pulse.Core
         {
             try
             {
-                String path = string.IsNullOrEmpty(key) ? _filePath + _extension : $"{_filePath}_{key}{_extension}";
+                string path = string.IsNullOrEmpty(key) ? _filePath + _extension : $"{_filePath}_{key}{_extension}";
                 result = new FileStream(path, _mode, _access);
                 
                 exception = null;

@@ -6,8 +6,8 @@ namespace Pulse.UI
 {
     public class InfoProviderGroup<T> : List<IInfoProvider<T>>, IInfoProvider<T> where T : class
     {
-        public string Title { get; private set; }
-        public string Description { get; private set; }
+        public string Title { get; }
+        public string Description { get; }
 
         private readonly object _lock = new object();
         private T _current;

@@ -83,9 +83,6 @@ namespace Pulse.UI
             }
         }
 
-        protected override int Index
-        {
-            get { return 0; }
-        }
+        protected override int Index => 0;
     }
 }

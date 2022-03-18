@@ -8,7 +8,6 @@ namespace Pulse.UI
     {
         public const string SteamRegistyPart1Path = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 292120";
         public const string SteamRegistyPart2Path = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 292140";
-        public const string SteamRegistyPart3Path = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 345350";
         public const string SteamGamePathTag = @"InstallLocation";
 
         public GameLocationInfo Provide()
@@ -36,22 +35,14 @@ namespace Pulse.UI
                         return SteamRegistyPart1Path;
                     case FFXIIIGamePart.Part2:
                         return SteamRegistyPart2Path;
-                    case FFXIIIGamePart.Part3:
-                        return SteamRegistyPart3Path;
                     default:
                         throw new NotImplementedException();
                 }
             }
         }
 
-        public string Title
-        {
-            get { return Lang.InfoProvider.GameLocation.SteamRegistryTitle; }
-        }
+        public string Title => Lang.InfoProvider.GameLocation.SteamRegistryTitle;
 
-        public string Description
-        {
-            get { return Lang.InfoProvider.GameLocation.SteamRegistryDescription; }
-        }
+        public string Description => Lang.InfoProvider.GameLocation.SteamRegistryDescription;
     }
 }

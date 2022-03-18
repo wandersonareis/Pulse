@@ -1,40 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NAudio.Wave;
+﻿using NAudio.Wave;
 using System.Windows.Forms;
 
 namespace NAudioDemo.AudioPlaybackDemo
 {
     class AsioOutFactory : IOutputAudioDeviceFactory
     {
-        AsioOutSettingsPanel settingsPanel;
+        AsioOutSettingsPanel _settingsPanel;
 
-        public IWavePlayer CreateDevice(int latency)
-        {
-            return new AsioOut(settingsPanel.SelectedDeviceName);
-        }
+        public IWavePlayer CreateDevice(int latency) => new AsioOut(_settingsPanel.SelectedDeviceName);
 
         public UserControl CreateSettingsPanel()
         {
-            this.settingsPanel = new AsioOutSettingsPanel();
-            return settingsPanel;
+            _settingsPanel = new AsioOutSettingsPanel();
+            return _settingsPanel;
         }
 
-        public string Name
-        {
-            get { return "AsioOut"; }
-        }
+        public string Name => "AsioOut";
 
-        public bool IsAvailable
-        {
-            get { return AsioOut.isSupported(); }
-        }
+        public bool IsAvailable => AsioOut.isSupported();
 
-        public int Priority
-        {
-            get { return 4; }
-        }
+        public int Priority => 4;
     }
 }

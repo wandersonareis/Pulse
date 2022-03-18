@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Pulse.Core;
 
 namespace Pulse.FS
@@ -9,10 +8,10 @@ namespace Pulse.FS
         private const int KeyDataSize = 32;
 
         // Streaming Data
-        public readonly Byte[] KeyData = new byte[KeyDataSize];
-        public Int32 RawBlockOffset;
-        public Int32 RawInfoOffset;
-        public Int32 EntriesCount { get; set; }
+        public readonly byte[] KeyData = new byte[KeyDataSize];
+        public int RawBlockOffset;
+        public int RawInfoOffset;
+        public int EntriesCount { get; set; }
 
         public bool IsEncrypted;
         public int BlockOffset => RawBlockOffset + KeyDataSize;

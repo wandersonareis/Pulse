@@ -17,23 +17,20 @@ namespace NAudioDemo.AudioPlaybackDemo
             LoadOutputDevicePlugins(outputDevicePlugins);
         }
 
-        public void SetWave(WaveStream waveProvider)
-        {
-            this._waveProvider = waveProvider;
-        }
+        public void SetWave(WaveStream waveProvider) => _waveProvider = waveProvider;
 
         private void LoadOutputDevicePlugins(IEnumerable<IOutputAudioDeviceFactory> outputDevicePlugins)
         {
             comboBoxOutputDevice.DisplayMember = "Name";
             comboBoxOutputDevice.SelectedIndexChanged += comboBoxOutputDevice_SelectedIndexChanged;
-            foreach (var outputDevicePlugin in outputDevicePlugins.OrderBy(p => p.Priority))
+            foreach (IOutputAudioDeviceFactory outputDevicePlugin in outputDevicePlugins.OrderBy(p => p.Priority))
             {
                 comboBoxOutputDevice.Items.Add(outputDevicePlugin);
             }
             comboBoxOutputDevice.SelectedIndex = 0;
         }
 
-        void comboBoxOutputDevice_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxOutputDevice_SelectedIndexChanged(object sender, EventArgs e)
         {
             panelOutputDeviceSettings.Controls.Clear();
             Control settingsPanel;
@@ -48,10 +45,7 @@ namespace NAudioDemo.AudioPlaybackDemo
             panelOutputDeviceSettings.Controls.Add(settingsPanel);
         }
 
-        private IOutputAudioDeviceFactory SelectedOutputAudioDeviceFactory
-        {
-            get { return (IOutputAudioDeviceFactory)comboBoxOutputDevice.SelectedItem; }
-        }
+        private IOutputAudioDeviceFactory SelectedOutputAudioDeviceFactory => (IOutputAudioDeviceFactory)comboBoxOutputDevice.SelectedItem;
 
         private void OnButtonPlayClick(object sender, EventArgs e)
         {
@@ -147,10 +141,7 @@ namespace NAudioDemo.AudioPlaybackDemo
                 _waveOut.Pause();
         }
 
-        private void OnButtonStopClick(object sender, EventArgs e)
-        {
-            _waveOut?.Stop();
-        }
+        private void OnButtonStopClick(object sender, EventArgs e) => _waveOut?.Stop();
 
         private void OnTimerTick(object sender, EventArgs e)
         {

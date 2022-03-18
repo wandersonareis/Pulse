@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using Pulse.Core;
 using Pulse.FS;
 
@@ -8,8 +6,8 @@ namespace Pulse.UI
 {
     public sealed class UiArchiveLeaf : UiNode, IUiLeaf
     {
-        public ArchiveEntry Entry { get; private set; }
-        public ArchiveListing Listing { get; private set; }
+        public ArchiveEntry Entry { get; }
+        public ArchiveListing Listing { get; }
 
         public UiArchiveLeaf(string name, ArchiveEntry entry, ArchiveListing listing)
             : base(name, UiNodeType.ArchiveLeaf)

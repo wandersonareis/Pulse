@@ -28,7 +28,7 @@ namespace Pulse.Core
 
             for (int i = 0; i < xParts.Length; i++)
             {
-                if (String.Compare(xParts[i], yParts[i], true, CultureInfo.InvariantCulture) != 0)
+                if (string.Compare(xParts[i], yParts[i], true, CultureInfo.InvariantCulture) != 0)
                     return false;
             }
             

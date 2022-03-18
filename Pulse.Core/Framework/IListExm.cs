@@ -46,9 +46,7 @@ namespace Pulse.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void Swap<T>(this IList<T> list, int firstIndex, int secondIndex)
         {
-            T tmp = list[firstIndex];
-            list[firstIndex] = list[secondIndex];
-            list[secondIndex] = tmp;
+            (list[firstIndex], list[secondIndex]) = (list[secondIndex], list[firstIndex]);
         }
 
         public static T GetOrCreate<T>(this IList<T> list, int index, Func<int, T> fabric) where T : class

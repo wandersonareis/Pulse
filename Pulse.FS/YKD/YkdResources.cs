@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using Pulse.Core;
 
 namespace Pulse.FS
@@ -9,15 +8,12 @@ namespace Pulse.FS
         public YkdOffsets Offsets;
         public YkdResource[] Resources;
 
-        public int Count
-        {
-            get { return Resources.Length; }
-        }
+        public int Count => Resources.Length;
 
         public YkdResource this[int index]
         {
-            get { return Resources[index]; }
-            set { Resources[index] = value; }
+            get => Resources[index];
+            set => Resources[index] = value;
         }
 
         public void ReadFromStream(Stream stream)

@@ -10,75 +10,33 @@ namespace Pulse.UI
 {
     public static class Icons
     {
-        public static DrawingImage OkIcon
-        {
-            get { return LazyOkIcon.Value; }
-        }
+        public static DrawingImage OkIcon => LazyOkIcon.Value;
 
-        public static DrawingImage CrossIcon
-        {
-            get { return LazyCrossIcon.Value; }
-        }
+        public static DrawingImage CrossIcon => LazyCrossIcon.Value;
 
-        public static DrawingImage PendingIcon
-        {
-            get { return LazyPendingIcon.Value; }
-        }
+        public static DrawingImage PendingIcon => LazyPendingIcon.Value;
 
-        public static DrawingImage PlayIcon
-        {
-            get { return LazyPlayIcon.Value; }
-        }
+        public static DrawingImage PlayIcon => LazyPlayIcon.Value;
 
-        public static DrawingImage PauseIcon
-        {
-            get { return LazyPauseIcon.Value; }
-        }
+        public static DrawingImage PauseIcon => LazyPauseIcon.Value;
 
-        public static DrawingImage StopIcon
-        {
-            get { return LazyStopIcon.Value; }
-        }
+        public static DrawingImage StopIcon => LazyStopIcon.Value;
 
-        public static DrawingImage EnabledMusicIcon
-        {
-            get { return LazyEnabledMusicIcon.Value; }
-        }
+        public static DrawingImage EnabledMusicIcon => LazyEnabledMusicIcon.Value;
 
-        public static DrawingImage DisabledMusicIcon
-        {
-            get { return LazyDisabledMusicIcon.Value; }
-        }
+        public static DrawingImage DisabledMusicIcon => LazyDisabledMusicIcon.Value;
 
-        public static DrawingImage EnabledSwitchIcon
-        {
-            get { return LazyEnabledSwitchIcon.Value; }
-        }
+        public static DrawingImage EnabledSwitchIcon => LazyEnabledSwitchIcon.Value;
 
-        public static DrawingImage DisabledSwitchIcon
-        {
-            get { return LazyDisabledSwitchIcon.Value; }
-        }
+        public static DrawingImage DisabledSwitchIcon => LazyDisabledSwitchIcon.Value;
 
-        public static DrawingImage PackageIcon
-        {
-            get { return LazyPackageIcon.Value; }
-        }
+        public static DrawingImage PackageIcon => LazyPackageIcon.Value;
 
-        public static BitmapSource DiskIcon
-        {
-            get { return LazyDiskIcon.Value; }
-        }
+        public static BitmapSource DiskIcon => LazyDiskIcon.Value;
 
-        public static BitmapSource FolderIcon
-        {
-            get { return LazyFolderIcon.Value; }
-        }
+        public static BitmapSource FolderIcon => LazyFolderIcon.Value;
 
-        public static BitmapSource TxtFileIcon
-        {
-            get { return LazyTxtFileIcon.Value; }
-        }
+        public static BitmapSource TxtFileIcon => LazyTxtFileIcon.Value;
 
         private static readonly Lazy<DrawingImage> LazyOkIcon = new Lazy<DrawingImage>(CreateGreenOkIcon);
         private static readonly Lazy<DrawingImage> LazyCrossIcon = new Lazy<DrawingImage>(CreateRedCrossIcon);

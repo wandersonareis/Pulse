@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace Pulse.Core
@@ -7,16 +6,16 @@ namespace Pulse.Core
     public sealed class FFXIIITextReference
     {
         public const int MaxTagLength = 32;
-        public readonly String Content;
+        public readonly string Content;
 
-        public const Byte Mark = 0x24; // $
-        public const Byte OpenBracket = 0x28; // (
-        public const Byte CloseBracket = 0x29; // )
+        public const byte Mark = 0x24; // $
+        public const byte OpenBracket = 0x28; // (
+        public const byte CloseBracket = 0x29; // )
 
-        public Int32 SizeInBytes => Content?.Length ?? 0;
-        public Int32 SizeInChars => Content?.Length ?? 0;
+        public int SizeInBytes => Content?.Length ?? 0;
+        public int SizeInChars => Content?.Length ?? 0;
 
-        public FFXIIITextReference(String content)
+        public FFXIIITextReference(string content)
         {
             Content = content;
         }
@@ -55,7 +54,7 @@ namespace Pulse.Core
             if (index >= MaxTagLength)
                 throw new InvalidDataException();
 
-            String content = Encoding.ASCII.GetString(result, 0, index + 1);
+            string content = Encoding.ASCII.GetString(result, 0, index + 1);
             return new FFXIIITextReference(content);
         }
 
@@ -79,7 +78,7 @@ namespace Pulse.Core
             if (index >= MaxTagLength)
                 throw new InvalidDataException();
 
-            String content = new string(result, 0, index + 1);
+            string content = new string(result, 0, index + 1);
             return new FFXIIITextReference(content);
         }
 

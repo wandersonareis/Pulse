@@ -137,9 +137,9 @@ namespace Pulse.UI
             TimeSpan left = TimeSpan.FromSeconds((_totalCount - _processedCount) / speed);
 
             _progressTextBlock.Text = $"{percents:F2}%";
-            _elapsedTextBlock.Text = String.Format("{1}: {0:mm\\:ss}", elapsed, Lang.Measurement.Elapsed);
+            _elapsedTextBlock.Text = string.Format("{1}: {0:mm\\:ss}", elapsed, Lang.Measurement.Elapsed);
             _processedTextBlock.Text = $"{FormatValue(_processedCount)} / {FormatValue(_totalCount)}";
-            _remainingTextBlock.Text = String.Format("{1}: {0:mm\\:ss}", left, Lang.Measurement.Remaining);
+            _remainingTextBlock.Text = string.Format("{1}: {0:mm\\:ss}", left, Lang.Measurement.Remaining);
 
             _timer.Elapsed += OnTimer;
         }

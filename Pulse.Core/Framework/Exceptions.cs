@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Runtime;
 using System.Runtime.CompilerServices;
@@ -14,14 +13,14 @@ namespace Pulse.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception CreateException(string message, params object[] args)
         {
-            return new Exception(String.Format(message, args));
+            return new Exception(string.Format(message, args));
         }
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception CreateArgumentException(string paramName, string message, params object[] args)
         {
-            return new ArgumentException(String.Format(message, args), paramName);
+            return new ArgumentException(string.Format(message, args), paramName);
         }
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]

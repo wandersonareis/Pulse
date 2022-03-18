@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using NAudio.Wave;
 
@@ -21,7 +15,7 @@ namespace NAudioDemo.AudioPlaybackDemo
         private void InitialiseAsioControls()
         {
             // Just fill the comboBox AsioDriver with available driver names
-            var asioDriverNames = AsioOut.GetDriverNames();
+            string[] asioDriverNames = AsioOut.GetDriverNames();
             foreach (string driverName in asioDriverNames)
             {
                 comboBoxAsioDriver.Items.Add(driverName);
@@ -29,13 +23,13 @@ namespace NAudioDemo.AudioPlaybackDemo
             comboBoxAsioDriver.SelectedIndex = 0;
         }
 
-        public string SelectedDeviceName { get { return (string)comboBoxAsioDriver.SelectedItem; } }
+        public string SelectedDeviceName => (string)comboBoxAsioDriver.SelectedItem;
 
         private void buttonControlPanel_Click(object sender, EventArgs args)
         {
             try
             {
-                using (var asio = new AsioOut(SelectedDeviceName))
+                using (AsioOut asio = new AsioOut(SelectedDeviceName))
                 {
                     asio.ShowControlPanel();
                 }

@@ -9,14 +9,8 @@ namespace Pulse.UI
             return TextEncodingInfo.CreateDefault();
         }
 
-        public string Title
-        {
-            get { return Lang.InfoProvider.TextEncoding.NewTitle; }
-        }
+        public string Title => Lang.InfoProvider.TextEncoding.NewTitle;
 
-        public string Description
-        {
-            get { return Lang.InfoProvider.TextEncoding.NewDescription; }
-        }
+        public string Description => Lang.InfoProvider.TextEncoding.NewDescription;
     }
 }

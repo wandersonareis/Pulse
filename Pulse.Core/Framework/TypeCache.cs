@@ -11,18 +11,18 @@ namespace Pulse.Core
 
     public static class UnsafeTypeCache<T>
     {
-        public static readonly Int32 UnsafeSize = GetSize();
+        public static readonly int UnsafeSize = GetSize();
         public static readonly UIntPtr ArrayTypePointer = GetArrayTypePointer();
 
-        private static Int32 GetSize()
+        private static int GetSize()
         {
-            DynamicMethod dynamicMethod = new DynamicMethod("SizeOf", typeof(Int32), Type.EmptyTypes);
+            DynamicMethod dynamicMethod = new DynamicMethod("SizeOf", typeof(int), Type.EmptyTypes);
             ILGenerator generator = dynamicMethod.GetILGenerator();
 
             generator.Emit(OpCodes.Sizeof, TypeCache<T>.Type);
             generator.Emit(OpCodes.Ret);
 
-            return ((Func<int>)dynamicMethod.CreateDelegate(typeof(Func<Int32>)))();
+            return ((Func<int>)dynamicMethod.CreateDelegate(typeof(Func<int>)))();
         }
 
         private static unsafe UIntPtr GetArrayTypePointer()
@@ -32,7 +32,7 @@ namespace Pulse.Core
                 return *(((UIntPtr*)handle.AddrOfPinnedObject().ToPointer()) - 2);
         }
 
-        public static IDisposable ChangeArrayType(Array array, Int32 oldElementSize)
+        public static IDisposable ChangeArrayType(Array array, int oldElementSize)
         {
             unsafe
             {
@@ -41,7 +41,7 @@ namespace Pulse.Core
             }
         }
 
-        public static unsafe IDisposable ChangeArrayType(Array array, Int32 oldElementSize, out void* pointer)
+        public static unsafe IDisposable ChangeArrayType(Array array, int oldElementSize, out void* pointer)
         {
             if (array.Length < 1)
                 throw new NotSupportedException();
@@ -53,14 +53,14 @@ namespace Pulse.Core
                 UIntPtr* arrayPointer = (UIntPtr*)pointer;
                 UIntPtr arrayLength = *(arrayPointer - 1);
                 UIntPtr arrayType = *(arrayPointer - 2);
-                UInt64 arraySize = ((UInt64)arrayLength * (UInt64)oldElementSize);
+                ulong arraySize = ((ulong)arrayLength * (ulong)oldElementSize);
 
-                if (arraySize % (UInt64)UnsafeSize != 0)
+                if (arraySize % (ulong)UnsafeSize != 0)
                     throw new InvalidCastException();
 
                 try
                 {
-                    *(arrayPointer - 1) = new UIntPtr(arraySize / (UInt64)UnsafeSize);
+                    *(arrayPointer - 1) = new UIntPtr(arraySize / (ulong)UnsafeSize);
                     *(arrayPointer - 2) = ArrayTypePointer;
 
                     return new DisposableAction(() =>

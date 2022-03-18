@@ -48,7 +48,7 @@ namespace Pulse.UI
                 manager.WriteListings();
 
                 if (sw.ElapsedMilliseconds / 1000 > 2)
-                    MessageBox.Show(String.Format(Lang.Message.Done.InjectionCompleteFormat, sw.Elapsed), Lang.Message.Done.Title, MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show(string.Format(Lang.Message.Done.InjectionCompleteFormat, sw.Elapsed), Lang.Message.Done.Title, MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {

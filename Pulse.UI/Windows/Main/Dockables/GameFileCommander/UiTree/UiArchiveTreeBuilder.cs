@@ -1,5 +1,5 @@
-﻿using System.Collections.Concurrent;
-using System.Diagnostics;
+﻿using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,14 +30,14 @@ namespace Pulse.UI
             return new UiArchives(nodes.OrderBy(n=>n.Name).ToArray());
         }
 
-        private string GetBinaryFilePath(string filePath)
+        private static string GetBinaryFilePath(string filePath)
         {
-            string directory = Path.GetDirectoryName(filePath);
+            string directory = Path.GetDirectoryName(filePath) ?? throw new ArgumentNullException("filePath");
             string fileName = Path.GetFileName(filePath);
 
-            if (fileName.StartsWith("filelist_scr", System.StringComparison.InvariantCultureIgnoreCase))
+            if (fileName.StartsWith("filelist_scr", StringComparison.InvariantCultureIgnoreCase))
                 return Path.Combine(directory, fileName.Replace("filelist_scr", "white_scr"));
-            if (fileName.StartsWith("filelist_patch", System.StringComparison.InvariantCultureIgnoreCase))
+            if (fileName.StartsWith("filelist_patch", StringComparison.InvariantCultureIgnoreCase))
                 return Path.Combine(directory, fileName.Replace("filelist_patch", "white_patch"));
 
             return Path.Combine(directory, fileName.Replace("filelist", "white_img"));

@@ -19,7 +19,7 @@ namespace Pulse.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static int SwapInt32(int v)
         {
-            return (int)(((SwapInt16((short)v) & 0xffff) << 0x10) | (SwapInt16((short)(v >> 0x10)) & 0xffff));
+            return ((SwapInt16((short)v) & 0xffff) << 0x10) | (SwapInt16((short)(v >> 0x10)) & 0xffff);
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]

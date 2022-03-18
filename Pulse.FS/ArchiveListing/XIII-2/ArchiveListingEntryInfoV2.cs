@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Runtime.InteropServices;
+﻿using System.IO;
 using Pulse.Core;
 
 namespace Pulse.FS
@@ -18,9 +16,9 @@ namespace Pulse.FS
 
         public short BlockNumber;
 
-        public Boolean Flag
+        public bool Flag
         {
-            get { return (RawOffset & 0x8000) == 0x8000; }
+            get => (RawOffset & 0x8000) == 0x8000;
             set
             {
                 if (value)
@@ -32,8 +30,8 @@ namespace Pulse.FS
 
         public short Offset
         {
-            get { return (short)(RawOffset & 0x7FFF); }
-            set { RawOffset = (short)((value & 0x7FFF) | (RawOffset & 0x8000)); }
+            get => (short)(RawOffset & 0x7FFF);
+            set => RawOffset = (short)((value & 0x7FFF) | (RawOffset & 0x8000));
         }
 
         public void ReadFromStream(Stream stream)

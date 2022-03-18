@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Windows.Forms;
 using NAudio.CoreAudioApi;
 
@@ -43,18 +37,13 @@ namespace NAudioDemo.AudioPlaybackDemo
             comboBoxWaspai.DataSource = comboItems;
         }
 
-        public MMDevice SelectedDevice { get { return (MMDevice)comboBoxWaspai.SelectedValue; } }
+        public MMDevice SelectedDevice => (MMDevice)comboBoxWaspai.SelectedValue;
 
-        public AudioClientShareMode ShareMode
-        {
-            get
-            {
-                return checkBoxWasapiExclusiveMode.Checked ?
-                    AudioClientShareMode.Exclusive :
-                    AudioClientShareMode.Shared;
-            }
-        }
+        public AudioClientShareMode ShareMode =>
+            checkBoxWasapiExclusiveMode.Checked ?
+                AudioClientShareMode.Exclusive :
+                AudioClientShareMode.Shared;
 
-        public bool UseEventCallback { get { return checkBoxWasapiEventCallback.Checked; } }
+        public bool UseEventCallback => checkBoxWasapiEventCallback.Checked;
     }
 }

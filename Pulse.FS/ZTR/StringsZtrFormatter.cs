@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -10,12 +11,16 @@ namespace Pulse.FS
     {
         private static readonly Lazy<StringsZtrFormatter> LazyInstance = new Lazy<StringsZtrFormatter>();
 
-        public static StringsZtrFormatter Instance
-        {
-            get { return LazyInstance.Value; }
-        }
+        public static StringsZtrFormatter Instance => LazyInstance.Value;
 
         public void Write(StreamWriter sw, ZtrFileEntry entry, int index)
+        {
+            sw.WriteLine("\"{0}║{1}\" = \"{2}\";",
+                index.ToString("D4", CultureInfo.InvariantCulture),
+                entry.Key,
+                entry.Value.Replace("\\", "\\\\").Replace("\"", "\\\""));
+        }
+        public void Write(StreamWriter sw, KeyValuePair<string, string> entry, int index)
         {
             sw.WriteLine("\"{0}║{1}\" = \"{2}\";",
                 index.ToString("D4", CultureInfo.InvariantCulture),
@@ -41,7 +46,7 @@ namespace Pulse.FS
                     if (sb.Length == 0)
                         return null;
 
-                    throw Exceptions.CreateException("Неожиданный конец потока.");
+                    throw Exceptions.CreateException("The unexpected end of the stream.");
                 }
 
                 char ch = (char)value;
