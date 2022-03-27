@@ -83,84 +83,84 @@ namespace Pulse.FS
 
         private void RecreateEncryptedListing(MemoryStream headerBuff, int hederSize, MemoryStream textBuff, int blocksSize, byte[] buff)
         {
-            using (TempFileProvider tmpProvider = new TempFileProvider("filelist", ".win32.bin"))
-            {
-                using (Stream output = tmpProvider.Create())
-                {
-                    headerBuff.CopyToStream(output, hederSize, buff);
-                    textBuff.CopyToStream(output, blocksSize, buff);
-                }
+            //using (TempFileProvider tmpProvider = new TempFileProvider("filelist", ".win32.bin"))
+            //{
+            //    using (Stream output = tmpProvider.Create())
+            //    {
+            //        headerBuff.CopyToStream(output, hederSize, buff);
+            //        textBuff.CopyToStream(output, blocksSize, buff);
+            //    }
 
-                Stream stream = tmpProvider.OpenRead();
-                tmpProvider.Size = hederSize + blocksSize + 11;
+            //    Stream stream = tmpProvider.OpenRead();
+            //    tmpProvider.Size = hederSize + blocksSize + 11;
 
-                long size = new FileInfo(tmpProvider.FilePath).Length;
-                string num = (hederSize + blocksSize + 11).ToString("X8");
-                string hex = tmpProvider.Size.ToString("x8");
-                //WriteChecksum(tmpProvider);
+            //    long size = new FileInfo(tmpProvider.FilePath).Length;
+            //    string num = (hederSize + blocksSize + 11).ToString("X8");
+            //    string hex = tmpProvider.Size.ToString("x8");
+            //    //WriteChecksum(tmpProvider);
 
-                Process encrypter = new Process
-                {
-                    StartInfo = new ProcessStartInfo()
-                    {
-                        FileName = @"Resources\Executable\ffxiiicrypt.exe",
-                        Arguments = $"-e \"{tmpProvider.FilePath}\" filelist",
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true
-                    }
-                };
-                encrypter.Start();
-                Task<string> erroMessage = encrypter.StandardError.ReadToEndAsync();
-                Task<string> outputMessage = encrypter.StandardOutput.ReadToEndAsync();
-                encrypter.WaitForExit();
-                if (encrypter.ExitCode != -2)
-                {
-                    StringBuilder sb = new StringBuilder("Decryption error! Code: ");
-                    sb.AppendLine(encrypter.ExitCode.ToString());
-                    sb.AppendLine("Error: ");
-                    sb.AppendLine(erroMessage.Result);
-                    sb.AppendLine("Output: ");
-                    sb.AppendLine(outputMessage.Result);
+            //    Process encrypter = new Process
+            //    {
+            //        StartInfo = new ProcessStartInfo()
+            //        {
+            //            FileName = @"Resources\Executable\ffxiiicrypt.exe",
+            //            Arguments = $"-e \"{tmpProvider.FilePath}\" filelist",
+            //            CreateNoWindow = true,
+            //            UseShellExecute = false,
+            //            RedirectStandardOutput = true,
+            //            RedirectStandardError = true
+            //        }
+            //    };
+            //    encrypter.Start();
+            //    Task<string> erroMessage = encrypter.StandardError.ReadToEndAsync();
+            //    Task<string> outputMessage = encrypter.StandardOutput.ReadToEndAsync();
+            //    encrypter.WaitForExit();
+            //    if (encrypter.ExitCode != -2)
+            //    {
+            //        StringBuilder sb = new StringBuilder("Decryption error! Code: ");
+            //        sb.AppendLine(encrypter.ExitCode.ToString());
+            //        sb.AppendLine("Error: ");
+            //        sb.AppendLine(erroMessage.Result);
+            //        sb.AppendLine("Output: ");
+            //        sb.AppendLine(outputMessage.Result);
 
-                    throw new InvalidDataException(sb.ToString());
-                }
+            //        throw new InvalidDataException(sb.ToString());
+            //    }
 
-                using (Stream input = tmpProvider.OpenRead())
-                using (Stream output = _accessor.RecreateListing((int)input.Length))
-                    input.CopyToStream(output, (int)input.Length, buff);
-            }
+            //    using (Stream input = tmpProvider.OpenRead())
+            //    using (Stream output = _accessor.RecreateListing((int)input.Length))
+            //        input.CopyToStream(output, (int)input.Length, buff);
+            //}
         }
-        public static void WriteChecksum(TempFileProvider tmpProvider)
-        {
-            Process encrypter = new Process
-            {
-                StartInfo = new ProcessStartInfo()
-                {
-                    FileName = @"Resources\Executable\ffxiiicrypt.exe",
-                    Arguments = $"-c \"{tmpProvider.FilePath}\" {tmpProvider.Size:x8} write",
-                    CreateNoWindow = true,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
-                }
-            };
-            encrypter.Start();
-            Task<string> erroMessage = encrypter.StandardError.ReadToEndAsync();
-            Task<string> outputMessage = encrypter.StandardOutput.ReadToEndAsync();
-            encrypter.WaitForExit();
-            if (encrypter.ExitCode != -2)
-            {
-                StringBuilder sb = new StringBuilder("Checksum error! Code: ");
-                sb.AppendLine(encrypter.ExitCode.ToString());
-                sb.AppendLine("Error: ");
-                sb.AppendLine(erroMessage.Result);
-                sb.AppendLine("Output: ");
-                sb.AppendLine(outputMessage.Result);
+        //public static void WriteChecksum(TempFileProvider tmpProvider)
+        //{
+        //    Process encrypter = new Process
+        //    {
+        //        StartInfo = new ProcessStartInfo()
+        //        {
+        //            FileName = @"Resources\Executable\ffxiiicrypt.exe",
+        //            Arguments = $"-c \"{tmpProvider.FilePath}\" {tmpProvider.Size:x8} write",
+        //            CreateNoWindow = true,
+        //            UseShellExecute = false,
+        //            RedirectStandardOutput = true,
+        //            RedirectStandardError = true
+        //        }
+        //    };
+        //    encrypter.Start();
+        //    Task<string> erroMessage = encrypter.StandardError.ReadToEndAsync();
+        //    Task<string> outputMessage = encrypter.StandardOutput.ReadToEndAsync();
+        //    encrypter.WaitForExit();
+        //    if (encrypter.ExitCode != -2)
+        //    {
+        //        StringBuilder sb = new StringBuilder("Checksum error! Code: ");
+        //        sb.AppendLine(encrypter.ExitCode.ToString());
+        //        sb.AppendLine("Error: ");
+        //        sb.AppendLine(erroMessage.Result);
+        //        sb.AppendLine("Output: ");
+        //        sb.AppendLine(outputMessage.Result);
 
-                throw new InvalidDataException(sb.ToString());
-            }
-        }
+        //        throw new InvalidDataException(sb.ToString());
+        //    }
+        //}
     }
 }

@@ -240,6 +240,8 @@ namespace Pulse.UI
                     return CreateAccessorV1();
                 case FFXIIIGamePart.Part2:
                     return CreateAccessorV2();
+                case FFXIIIGamePart.Part3:
+                    return CreateAccessorV3();
                 default:
                     throw new NotSupportedException(InteractionService.GamePart.ToString());
             }

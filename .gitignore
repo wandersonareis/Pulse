@@ -5,6 +5,9 @@
 bin/
 obj/
 /packages/
+.vs
+.git
+.idea
 *.suo
 *.user
 *.DotSettings*

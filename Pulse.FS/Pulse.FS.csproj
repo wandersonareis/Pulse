@@ -128,6 +128,7 @@
   <ItemGroup>
     <Compile Include="ArchiveListing\ArchiveListingCompressedData.cs" />
     <Compile Include="ArchiveListing\XIII-2\ArchiveListingEntryInfoV2.cs" />
+    <Compile Include="ArchiveListing\XIII-3\ArchiveListingEntryInfoV3.cs" />
     <Compile Include="ArchiveListing\ArchiveAccessor.cs" />
     <Compile Include="ArchiveListing\ArchiveListing.cs" />
     <Compile Include="ArchiveListing\ArchiveEntry.cs" />
@@ -144,6 +145,10 @@
     <Compile Include="ArchiveListing\IArchiveEntry.cs" />
     <Compile Include="ArchiveListing\IArchiveListing.cs" />
     <Compile Include="ArchiveListing\IArchiveListingHeader.cs" />
+    <Compile Include="ArchiveListing\XIII-3\ArchiveListingHeaderV3.cs" />
+    <Compile Include="ArchiveListing\XIII-3\ArchiveListingReaderV3.cs" />
+    <Compile Include="ArchiveListing\XIII-3\ArchiveListingTextWriterV3.cs" />
+    <Compile Include="ArchiveListing\XIII-3\ArchiveListingWriterV3.cs" />
     <Compile Include="IMGB\WPD\WDB\Movies\WdbMovieArchiveListingReader.cs" />
     <Compile Include="IMGB\WPD\WDB\Movies\WdbMovieArchiveListing.cs" />
     <Compile Include="IMGB\WPD\WDB\DbArchiveAccessor.cs" />

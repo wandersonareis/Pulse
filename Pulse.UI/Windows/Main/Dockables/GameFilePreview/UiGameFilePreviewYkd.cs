@@ -462,8 +462,8 @@ namespace Pulse.UI
             public uint Type => Native.Type;
 
             [Category("Título")]
-            [DisplayName("Индекс")]
-            [Description("Нечто, похожее на уникальный номер bloco.")]
+            [DisplayName("Índice")]
+            [Description("Algo que se parece com um número de bloco único.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Index
             {
@@ -491,9 +491,9 @@ namespace Pulse.UI
                 set => Native.Unknown = (uint)value;
             }
 
-            [Category("Отображение")]
-            [DisplayName("Матрица преобразования")]
-            [Description("Массив 4-байтовых чисел, описывающих трансформирование изображения.")]
+            [Category("Mostrar")]
+            [DisplayName("Matriz de conversão")]
+            [Description("Um conjunto de números de 4 bytes descrevendo a transformação da imagem.")]
             [Editor(typeof(WrapTextBoxEditor), typeof(WrapTextBoxEditor))]
             public string TransformationMatrix
             {
@@ -501,9 +501,9 @@ namespace Pulse.UI
                 set => WriteInt32ArrayFromString(Native.TransformationMatrix, value);
             }
 
-            [Category("Хвост")]
-            [DisplayName("Хвост (Tipoы 5,6)")]
-            [Description("Константный массив из 48 байт.")]
+            [Category("A cauda")]
+            [DisplayName("A cauda (Tipoы 5,6)")]
+            [Description("Um conjunto constante de 48 bytes.")]
             [Editor(typeof(WrapTextBoxEditor), typeof(WrapTextBoxEditor))]
             public string Tail56
             {
@@ -524,7 +524,7 @@ namespace Pulse.UI
                 yield break;
             }
 
-            [Category("Неизвестные")]
+            [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -534,7 +534,7 @@ namespace Pulse.UI
                 set => Native.Unknown1 = value;
             }
 
-            [Category("Неизвестные")]
+            [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -544,7 +544,7 @@ namespace Pulse.UI
                 set => Native.Unknown2 = value;
             }
 
-            [Category("Неизвестные")]
+            [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -554,7 +554,7 @@ namespace Pulse.UI
                 set => Native.Unknown3 = value;
             }
 
-            [Category("Неизвестные")]
+            [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -580,7 +580,7 @@ namespace Pulse.UI
 
             public override string Title => $"{base.Title} (Count: {Native.Tails.Length})";
 
-            [Category("Неизвестные")]
+            [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -590,7 +590,7 @@ namespace Pulse.UI
                 set => Native.Unknown1 = value;
             }
 
-            [Category("Неизвестные")]
+            [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -600,7 +600,7 @@ namespace Pulse.UI
                 set => Native.Unknown2 = value;
             }
 
-            [Category("Неизвестные")]
+            [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -626,9 +626,9 @@ namespace Pulse.UI
 
             public override string Title => string.IsNullOrEmpty(Native.Name) ? "<empty>" : Native.Name;
 
-            [Category("Описание")]
-            [DisplayName("Имя")]
-            [Description("Имя события. Вероятно, не несёт смысловой нагрузки.")]
+            [Category("Descrição")]
+            [DisplayName("Nome")]
+            [Description("O nome do evento. Provavelmente não tem nenhum significado.")]
             [Editor(typeof(TextBoxEditor), typeof(TextBoxEditor))]
             public string Name
             {
@@ -636,7 +636,7 @@ namespace Pulse.UI
                 set => Native.Name = value;
             }
 
-            [Category("События")]
+            [Category("Eventos")]
             [DisplayName("Desconhecido 1")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -646,7 +646,7 @@ namespace Pulse.UI
                 set => Native.Offsets.Unknown1 = value;
             }
 
-            [Category("События")]
+            [Category("Eventos")]
             [DisplayName("Desconhecido 2")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -656,9 +656,9 @@ namespace Pulse.UI
                 set => Native.Offsets.Unknown2 = value;
             }
 
-            [Category("События")]
-            [DisplayName("Анимация?")]
-            [Description("Каким-то образом влияет на анимацию.")]
+            [Category("Eventos")]
+            [DisplayName("Animação?")]
+            [Description("De alguma forma, a animação é afetada.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown3
             {
@@ -693,7 +693,7 @@ namespace Pulse.UI
             }
 
             [Category("Título")]
-            [DisplayName("Флаги?")]
+            [DisplayName("Bandeiras?")]
             [Description("Разворачивает анимацию колебания курсора.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int HUnknown2
@@ -727,9 +727,9 @@ namespace Pulse.UI
 
             public override string Title => $"{base.Title} (X: {Native.X}, Y:{Native.Y})";
 
-            [Category("Расположение")]
+            [Category("Localização")]
             [DisplayName("X")]
-            [Description("Координата на оси OX.")]
+            [Description("A coordenada dos eixos OX.")]
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float X
             {
@@ -737,9 +737,9 @@ namespace Pulse.UI
                 set => Native.X = value;
             }
 
-            [Category("Расположение")]
+            [Category("Localização")]
             [DisplayName("Y")]
-            [Description("Координата на оси OY.")]
+            [Description("Coordenadas dos eixos OY.")]
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float Y
             {
@@ -823,7 +823,7 @@ namespace Pulse.UI
 
             public override string Title => $"{base.Title} (Count: {Native.Count})";
 
-            [Category("События")]
+            [Category("Eventos")]
             [DisplayName("Desconhecido 1")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -833,7 +833,7 @@ namespace Pulse.UI
                 set => Native.Offsets.Unknown1 = value;
             }
 
-            [Category("События")]
+            [Category("Eventos")]
             [DisplayName("Desconhecido 2")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -843,7 +843,7 @@ namespace Pulse.UI
                 set => Native.Offsets.Unknown2 = value;
             }
 
-            [Category("События")]
+            [Category("Eventos")]
             [DisplayName("Анимация?")]
             [Description("Каким-то образом влияет на анимацию.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -938,7 +938,7 @@ namespace Pulse.UI
                 public event EventHandler CanExecuteChanged;
             }
 
-            [Category("Текстура")]
+            [Category("Textura")]
             [DisplayName("Индекс")]
             [Description("Какой-то номер.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -948,9 +948,9 @@ namespace Pulse.UI
                 set => Native.Index = value;
             }
 
-            [Category("Текстура")]
-            [DisplayName("Название")]
-            [Description("Название файла текстуры с расширением .txbh из этого же архива.")]
+            [Category("Textura")]
+            [DisplayName("Título")]
+            [Description("Título arquivo de textura com uma extensão .txbh do mesmo arquivo.")]
             [Editor(typeof(TextBoxEditor), typeof(TextBoxEditor))]
             public string Name
             {
@@ -958,9 +958,9 @@ namespace Pulse.UI
                 set => Native.Name = value;
             }
 
-            [Category("Текстура")]
+            [Category("Textura")]
             [DisplayName("Tipo")]
-            [Description("Tipo ресурса.")]
+            [Description("Tipo de.")]
             public string Type => Native.Type.ToString();
 
             public static YkdResourceView FromResource(YkdResource resource, YkdResourcesView parent)
@@ -1010,9 +1010,9 @@ namespace Pulse.UI
 
             private FragmentYkdResourceViewport Viewport => (FragmentYkdResourceViewport)Native.Viewport;
 
-            [Category("Текстура")]
+            [Category("Textura")]
             [DisplayName("X")]
-            [Description("Координата X верхнего-левого угла фрагмента текстуры.")]
+            [Description("Координата X верхнего-левого угла fragmento de textura.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceX
             {
@@ -1020,18 +1020,18 @@ namespace Pulse.UI
                 set => Viewport.SourceX = value;
             }
 
-            [Category("Текстура")]
+            [Category("Textura")]
             [DisplayName("Y")]
-            [Description("Координата Y верхнего-левого угла фрагмента текстуры.")]
+            [Description("Координата Y верхнего-левого угла fragmento de textura.")]
             public int SourceY
             {
                 get => Viewport.SourceY;
                 set => Viewport.SourceY = value;
             }
 
-            [Category("Текстура")]
-            [DisplayName("Ширина")]
-            [Description("Ширина фрагмента текстуры.")]
+            [Category("Textura")]
+            [DisplayName("Largura")]
+            [Description("Largura fragmento de textura.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceWidth
             {
@@ -1039,36 +1039,36 @@ namespace Pulse.UI
                 set => Viewport.SourceWidth = value;
             }
 
-            [Category("Текстура")]
+            [Category("Textura")]
             [DisplayName("Высота")]
-            [Description("Высота фрагмента текстуры.")]
+            [Description("Высота fragmento de textura.")]
             public int SourceHeight
             {
                 get => Viewport.SourceHeight;
                 set => Viewport.SourceHeight = value;
             }
 
-            [Category("Отображение")]
-            [DisplayName("Ширина")]
-            [Description("Ширина отображения.")]
+            [Category("Mostrar")]
+            [DisplayName("Largura")]
+            [Description("Largura exibir.")]
             public int ViewportWidth
             {
                 get => Viewport.ViewportWidth;
                 set => Viewport.ViewportWidth = value;
             }
 
-            [Category("Отображение")]
+            [Category("Mostrar")]
             [DisplayName("Высота")]
-            [Description("Высота отображения.")]
+            [Description("Высота exibir.")]
             public int ViewportHeight
             {
                 get => Viewport.ViewportHeight;
                 set => Viewport.ViewportHeight = value;
             }
 
-            [Category("Отображение")]
+            [Category("Mostrar")]
             [DisplayName("Флаги")]
-            [Description("Различные модификаторы отображения.")]
+            [Description("Различные модификаторы exibir.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Flags
             {
@@ -1076,7 +1076,7 @@ namespace Pulse.UI
                 set => Viewport.Flags = (YkdResourceFlags)value;
             }
 
-            [Category("Неизвестные")]
+            [Category("Desconhecido")]
             [DisplayName("Desconhecido 5")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -1086,9 +1086,9 @@ namespace Pulse.UI
                 set => Viewport.Unknown5 = value;
             }
 
-            [Category("Градиент")]
+            [Category("Gradiente")]
             [DisplayName("Верхний-левый")]
-            [Description("Цвет верхнего-левого угла отображения.")]
+            [Description("Цвет верхнего-левого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperLeftColor
             {
@@ -1096,9 +1096,9 @@ namespace Pulse.UI
                 set => Viewport.UpperLeftColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Градиент")]
+            [Category("Gradiente")]
             [DisplayName("Нижний-левый")]
-            [Description("Цвет нижнего-левого угла отображения.")]
+            [Description("Цвет нижнего-левого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomLeftColor
             {
@@ -1106,9 +1106,9 @@ namespace Pulse.UI
                 set => Viewport.BottomLeftColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Градиент")]
+            [Category("Gradiente")]
             [DisplayName("Верхний-правый")]
-            [Description("Цвет верхнего-правого угла отображения.")]
+            [Description("Цвет верхнего-правого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperRightColor
             {
@@ -1116,9 +1116,9 @@ namespace Pulse.UI
                 set => Viewport.UpperRightColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Градиент")]
-            [DisplayName("Нижний-правый")]
-            [Description("Цвет нижнего-правого угла отображения.")]
+            [Category("Gradiente")]
+            [DisplayName("Bottom-right")]
+            [Description("Цвет нижнего-правого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomRightColor
             {
@@ -1141,27 +1141,27 @@ namespace Pulse.UI
 
             private FullYkdResourceViewport Viewport => (FullYkdResourceViewport)Native.Viewport;
 
-            [Category("Отображение")]
-            [DisplayName("Ширина")]
-            [Description("Ширина отображения.")]
+            [Category("Mostrar")]
+            [DisplayName("Largura")]
+            [Description("Largura exibir.")]
             public int ViewportWidth
             {
                 get => Viewport.ViewportWidth;
                 set => Viewport.ViewportWidth = value;
             }
 
-            [Category("Отображение")]
+            [Category("Mostrar")]
             [DisplayName("Высота")]
-            [Description("Высота отображения.")]
+            [Description("Высота exibir.")]
             public int ViewportHeight
             {
                 get => Viewport.ViewportHeight;
                 set => Viewport.ViewportHeight = value;
             }
 
-            [Category("Градиент")]
+            [Category("Gradiente")]
             [DisplayName("Верхний-левый")]
-            [Description("Цвет верхнего-левого угла отображения.")]
+            [Description("Цвет верхнего-левого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperLeftColor
             {
@@ -1169,9 +1169,9 @@ namespace Pulse.UI
                 set => Viewport.UpperLeftColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Градиент")]
+            [Category("Gradiente")]
             [DisplayName("Нижний-левый")]
-            [Description("Цвет нижнего-левого угла отображения.")]
+            [Description("Цвет нижнего-левого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomLeftColor
             {
@@ -1179,9 +1179,9 @@ namespace Pulse.UI
                 set => Viewport.BottomLeftColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Градиент")]
+            [Category("Gradiente")]
             [DisplayName("Верхний-правый")]
-            [Description("Цвет верхнего-правого угла отображения.")]
+            [Description("Цвет верхнего-правого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperRightColor
             {
@@ -1189,9 +1189,9 @@ namespace Pulse.UI
                 set => Viewport.UpperRightColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Градиент")]
-            [DisplayName("Нижний-правый")]
-            [Description("Цвет нижнего-правого угла отображения.")]
+            [Category("Gradiente")]
+            [DisplayName("Bottom-right")]
+            [Description("Цвет нижнего-правого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomRightColor
             {
@@ -1199,7 +1199,7 @@ namespace Pulse.UI
                 set => Viewport.BottomRightColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Отображение")]
+            [Category("Mostrar")]
             [DisplayName("Desconhecido 1")]
             [Description("Desconhecidoе valor.")]
             public int Unknown1
@@ -1208,7 +1208,7 @@ namespace Pulse.UI
                 set => Viewport.Unknown1 = value;
             }
 
-            [Category("Отображение")]
+            [Category("Mostrar")]
             [DisplayName("Desconhecido 2")]
             [Description("Desconhecidoе valor.")]
             public int Unknown2
@@ -1232,9 +1232,9 @@ namespace Pulse.UI
 
             private ExtraYkdResourceViewport Viewport => (ExtraYkdResourceViewport)Native.Viewport;
 
-            [Category("Текстура")]
+            [Category("Textura")]
             [DisplayName("X")]
-            [Description("Координата X верхнего-левого угла фрагмента текстуры.")]
+            [Description("Координата X верхнего-левого угла fragmento de textura.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceX
             {
@@ -1242,18 +1242,18 @@ namespace Pulse.UI
                 set => Viewport.SourceX = value;
             }
 
-            [Category("Текстура")]
+            [Category("Textura")]
             [DisplayName("Y")]
-            [Description("Координата Y верхнего-левого угла фрагмента текстуры.")]
+            [Description("Координата Y верхнего-левого угла fragmento de textura.")]
             public int SourceY
             {
                 get => Viewport.SourceY;
                 set => Viewport.SourceY = value;
             }
 
-            [Category("Текстура")]
-            [DisplayName("Ширина")]
-            [Description("Ширина фрагмента текстуры.")]
+            [Category("Textura")]
+            [DisplayName("Largura")]
+            [Description("Largura fragmento de textura.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceWidth
             {
@@ -1261,36 +1261,36 @@ namespace Pulse.UI
                 set => Viewport.SourceWidth = value;
             }
 
-            [Category("Текстура")]
+            [Category("Textura")]
             [DisplayName("Высота")]
-            [Description("Высота фрагмента текстуры.")]
+            [Description("Высота fragmento de textura.")]
             public int SourceHeight
             {
                 get => Viewport.SourceHeight;
                 set => Viewport.SourceHeight = value;
             }
 
-            [Category("Отображение")]
-            [DisplayName("Ширина")]
-            [Description("Ширина отображения.")]
+            [Category("Mostrar")]
+            [DisplayName("Largura")]
+            [Description("Largura exibir.")]
             public int ViewportWidth
             {
                 get => Viewport.ViewportWidth;
                 set => Viewport.ViewportWidth = value;
             }
 
-            [Category("Отображение")]
+            [Category("Mostrar")]
             [DisplayName("Высота")]
-            [Description("Высота отображения.")]
+            [Description("Высота exibir.")]
             public int ViewportHeight
             {
                 get => Viewport.ViewportHeight;
                 set => Viewport.ViewportHeight = value;
             }
 
-            [Category("Отображение")]
+            [Category("Mostrar")]
             [DisplayName("Флаги")]
-            [Description("Различные модификаторы отображения.")]
+            [Description("Различные модификаторы exibir.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Flags
             {
@@ -1298,7 +1298,7 @@ namespace Pulse.UI
                 set => Viewport.Flags = (YkdResourceFlags)value;
             }
 
-            [Category("Неизвестные")]
+            [Category("Desconhecido")]
             [DisplayName("Desconhecido 5")]
             [Description("Desconhecidoе valor.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
@@ -1308,9 +1308,9 @@ namespace Pulse.UI
                 set => Viewport.Unknown5 = value;
             }
 
-            [Category("Градиент")]
+            [Category("Gradiente")]
             [DisplayName("Верхний-левый")]
-            [Description("Цвет верхнего-левого угла отображения.")]
+            [Description("Цвет верхнего-левого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperLeftColor
             {
@@ -1318,9 +1318,9 @@ namespace Pulse.UI
                 set => Viewport.UpperLeftColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Градиент")]
+            [Category("Gradiente")]
             [DisplayName("Нижний-левый")]
-            [Description("Цвет нижнего-левого угла отображения.")]
+            [Description("Цвет нижнего-левого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomLeftColor
             {
@@ -1328,9 +1328,9 @@ namespace Pulse.UI
                 set => Viewport.BottomLeftColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Градиент")]
+            [Category("Gradiente")]
             [DisplayName("Верхний-правый")]
-            [Description("Цвет верхнего-правого угла отображения.")]
+            [Description("Цвет верхнего-правого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperRightColor
             {
@@ -1338,9 +1338,9 @@ namespace Pulse.UI
                 set => Viewport.UpperRightColor = ColorsHelper.GetBgra(value);
             }
 
-            [Category("Градиент")]
-            [DisplayName("Нижний-правый")]
-            [Description("Цвет нижнего-правого угла отображения.")]
+            [Category("Gradiente")]
+            [DisplayName("Bottom-right")]
+            [Description("Цвет нижнего-правого угла exibir.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomRightColor
             {
