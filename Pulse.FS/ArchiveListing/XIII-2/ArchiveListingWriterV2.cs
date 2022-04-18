@@ -101,7 +101,7 @@ namespace Pulse.FS
                 Task<string> erroMessage = encrypter.StandardError.ReadToEndAsync();
                 Task<string> outputMessage = encrypter.StandardOutput.ReadToEndAsync();
                 encrypter.WaitForExit();
-                if (encrypter.ExitCode != 0)
+                if (encrypter.ExitCode >= 0)
                 {
                     StringBuilder sb = new StringBuilder("Decryption error! Code: ");
                     sb.AppendLine(encrypter.ExitCode.ToString());

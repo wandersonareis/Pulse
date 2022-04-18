@@ -35,7 +35,7 @@ namespace Pulse.DirectX
         {
             try
             {
-                _device10 = device10;
+                //_device10 = device10;
                 _device11 = device11;
 
                 _backBuffer = Resource.FromSwapChain<Texture2D>(device11.SwapChain, 0);
@@ -92,7 +92,7 @@ namespace Pulse.DirectX
         private static RenderTargetProperties GetRenderTargetProperties()
         {
             PixelFormat format = new PixelFormat(Format.Unknown, AlphaMode.Premultiplied);
-            return new RenderTargetProperties(format) { MinLevel = SharpDX.Direct2D1.FeatureLevel.Level_10, };
+            return new RenderTargetProperties(format) { MinLevel = FeatureLevel.Level_10, };
         }
     }
 }

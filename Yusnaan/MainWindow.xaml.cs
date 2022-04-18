@@ -4,10 +4,14 @@ using System.IO;
 using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
+using Be.IO;
 using Pulse.Core;
+using Pulse.DirectX;
+using Pulse.FS;
 using Pulse.UI;
 using Yusnaan.Common;
 using Yusnaan.Formats;
+using Yusnaan.Formats.imgb;
 using MessageBox = System.Windows.MessageBox;
 
 namespace Yusnaan
@@ -270,6 +274,85 @@ namespace Yusnaan
             Environment.Exit(1);
         }
 
-        
+        private void unpackXvf_Click(object sender, RoutedEventArgs e)
+        {
+            string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
+            if (xfvFile == null) return;
+            using Stream xfvFileStream = File.OpenRead(xfvFile);
+            using Stream imgbFileStream = File.OpenRead(Path.ChangeExtension(xfvFile, ".imgb"));
+            WdbHeader wdbHeader = xfvFileStream.ReadContent<WdbHeader>();
+            byte[] buff = new byte[32 * 1024];
+
+            foreach (WpdEntry entry in wdbHeader.Entries.Where(e => e.Extension == "vtex"))
+            {
+                xfvFileStream.Position = entry.Offset;
+
+                var sectionHeader = xfvFileStream.ReadContent<SectionHeader>();
+                var textureHeader = xfvFileStream.ReadContent<VtexHeader>();
+                xfvFileStream.Seek(textureHeader.GtexOffset - VtexHeader.Size, SeekOrigin.Current);
+                var gtex = xfvFileStream.ReadContent<GtexData>();
+                using Stream output = File.Create(textureHeader.Name + ".dds");
+
+                DdsHeader header = DdsHeaderDecoder.FromGtexHeader(gtex.Header);
+                DdsHeaderEncoder.ToFileStream(header, output);
+
+                foreach (GtexMipMapLocation mipMap in gtex.MipMapData)
+                {
+                    imgbFileStream.Position = mipMap.Offset;
+                    imgbFileStream.CopyToStream(output, mipMap.Length, buff);
+                }
+            }
+
+        }
+
+        private void packXvf_Click(object sender, RoutedEventArgs e)
+        {
+            string? ddsFile = Dialogs.GetFile("Get Dds File", "dds file|*.dds");
+            if (ddsFile == null) return;
+            FileStream input = File.OpenRead(ddsFile);
+            string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
+            if (xfvFile == null) return;
+            using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
+            using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open, FileAccess.ReadWrite);
+
+            var xfv = new XfvInject(Path.GetFileNameWithoutExtension(ddsFile),input, xfvFileStream, imgbFileStream);
+            xfv.Inject();
+        }
+
+        private void packAllXfv_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string? ddsPath = Dialogs.GetFolder("DDS path");
+                if (ddsPath == null) return;
+                string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
+                if (xfvFile == null) return;
+                using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
+                using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open,
+                    FileAccess.ReadWrite);
+
+                var wdbHeader = xfvFileStream.ReadContent<WdbHeader>();
+                var buff = new byte[32 * 1024];
+
+                foreach (WpdEntry entry in wdbHeader.Entries)
+                {
+                    string? ddsFile = Directory.GetFiles(ddsPath, entry.NameWithoutExtension + ".dds").FirstOrDefault();
+                    if (ddsFile == null) continue;
+                    FileStream input = File.OpenRead(ddsFile);
+
+                    var xfv = new XfvInject(entry, input, xfvFileStream, imgbFileStream, buff);
+                    xfv.InjectAll();
+                }
+            }
+            catch (NotImplementedException notImplementedException)
+            {
+                MessageBox.Show($"Algo não implementado!\n{notImplementedException.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
     }
 }

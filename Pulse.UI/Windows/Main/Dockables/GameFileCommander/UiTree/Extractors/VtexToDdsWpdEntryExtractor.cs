@@ -14,10 +14,10 @@ namespace Pulse.UI
         {
             headers.Value.Position = entry.Offset;
 
-            SectionHeader sectionHeader = headers.Value.ReadContent<SectionHeader>();
-            VtexHeader textureHeader = headers.Value.ReadContent<VtexHeader>();
+            var sectionHeader = headers.Value.ReadContent<SectionHeader>();
+            var textureHeader = headers.Value.ReadContent<VtexHeader>();
             headers.Value.Seek(textureHeader.GtexOffset - VtexHeader.Size, SeekOrigin.Current);
-            GtexData gtex = headers.Value.ReadContent<GtexData>();
+            var gtex = headers.Value.ReadContent<GtexData>();
 
             DdsHeader header = DdsHeaderDecoder.FromGtexHeader(gtex.Header);
             DdsHeaderEncoder.ToFileStream(header, output);

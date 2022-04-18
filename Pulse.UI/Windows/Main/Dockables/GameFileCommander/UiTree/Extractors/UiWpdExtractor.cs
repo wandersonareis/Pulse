@@ -42,17 +42,16 @@ namespace Pulse.UI
             string targetDirectory = Path.Combine(root, _listing.ExtractionSubpath);
             _target.CreateDirectory(targetDirectory);
 
-            byte[] buff = new byte[32 * 1024];
+            var buff = new byte[32 * 1024];
             foreach (WpdEntry entry in _leafs)
             {
-                string targetExtension;
-                IWpdEntryExtractor extractor = GetExtractor(entry, out targetExtension);
+                IWpdEntryExtractor extractor = GetExtractor(entry, out string targetExtension);
                 if (extractor == null)
                     return;
 
                 string targetPath = Path.Combine(targetDirectory, entry.NameWithoutExtension + '.' + targetExtension);
-                using (Stream output = _target.Create(targetPath))
-                    extractor.Extract(entry, output, _headers, _content, buff);
+                using Stream output = _target.Create(targetPath);
+                extractor.Extract(entry, output, _headers, _content, buff);
             }
         }
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Yusnaan"
         mc:Ignorable="d"
-        Title="Yusnaan Resources" Height="450" Width="800" Closing="Window_Closing">
+        Title="Yusnaan Resources" Height="583" Width="1036" Closing="Window_Closing">
     <Window.Resources>
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#373737" />
@@ -45,7 +45,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="61*"/>
-            <RowDefinition Height="372*"/>
+            <RowDefinition Height="641*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0*"/>
@@ -53,19 +53,19 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="380" Height="56">
-            <TextBlock x:Name="tbPulse" TextWrapping="Wrap" Text="PULSE" HorizontalAlignment="Center" VerticalAlignment="Center"
+            <TextBlock x:Name="TbPulse" TextWrapping="Wrap" Text="PULSE" HorizontalAlignment="Center" VerticalAlignment="Center"
                        FontFamily="Concielian Bold" FontSize="36" Foreground="#FFFDFFFD" />
         </Grid>
-        <Grid HorizontalAlignment="Center" Height="56" VerticalAlignment="Center" Width="380" Grid.Column="1">
-            <TextBlock x:Name="tbZtrBlock" TextWrapping="Wrap" Text="ZtrCompressor" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Concielian Bold" FontSize="32" Foreground="#FFFDFFFD" />
+        <Grid HorizontalAlignment="Center" Height="56" VerticalAlignment="Center" Width="380" Grid.Row="0" Grid.Column="1">
+            <TextBlock x:Name="TbZtrBlock" TextWrapping="Wrap" Text="ZtrCompressor" HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Concielian Bold" FontSize="32" Foreground="#FFFDFFFD" />
         </Grid>
-        <Grid HorizontalAlignment="Center" Height="352" Grid.Row="1" VerticalAlignment="Center" Width="380" Grid.Column="1">
+        <Grid HorizontalAlignment="Center" Height="352" Grid.Row="1" VerticalAlignment="Top" Width="380" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="33*"/>
                 <ColumnDefinition Width="347*"/>
             </Grid.ColumnDefinitions>
             <StackPanel Grid.ColumnSpan="2">
-                <DockPanel HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,30,0,0">
+                <DockPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
                     <Button x:Name="UnpackZtrDecompressor" Content="Ztr to Strings" FontFamily="TBUDGothic Std B"
                             FontWeight="Normal" Click="ZtrDecompressor_Click"
                             Width="151" Height="35" Margin="5" Foreground="#FFFDFFFD"
@@ -75,17 +75,17 @@
                             Click="AllZtrDecompressor_Click" Width="151" Height="35" Margin="5" Foreground="#FFFDFFFD"
                             ToolTip="Converts ztr files to strings using ZtrDecompressor encoding." FontSize="13"/>
                 </DockPanel>
-                <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,30,0,0">
+                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,30,0,0">
                     <Button x:Name="PackZtrDecompressor" Content="Strings to Ztr" FontFamily="TBUDGothic Std B"
                             FontWeight="Normal" HorizontalAlignment="Center"
-                            VerticalAlignment="Center" Click="ZtrCompressor_Click" Width="151" Height="35" Margin="5"
+                            VerticalAlignment="Top" Click="ZtrCompressor_Click" Width="151" Height="35" Margin="5"
                             ToolTip="Converts strings file to ztr with compression using ZtrDecompressor encoding." FontSize="13" />
                     <Button x:Name="PackAllZtrDecompressor" Content="All Strings to Ztr" FontFamily="TBUDGothic Std B"
                             FontWeight="Normal"
                             HorizontalAlignment="Center" VerticalAlignment="Center" Click="AllZtrCompressor_Click" Width="151" Height="35" Margin="5" 
                             ToolTip="Converts strings files to ztr with compression using ZtrDecompressor encoding." FontSize="13"/>
                 </DockPanel>
-                <DockPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,30,0,0">
+                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,30,0,0">
                     <Button x:Name="PackStringsToZtrDecompressor" Content=" Wpd to Strings" FontFamily="TBUDGothic Std B"
                             FontWeight="Normal" HorizontalAlignment="Center"
                             VerticalAlignment="Center" Click="WpdToStringsDecompressor_Click" Width="151" Height="35" Margin="5"
@@ -97,44 +97,57 @@
                 </DockPanel>
             </StackPanel>
         </Grid>
-        <Grid Grid.Column="2" HorizontalAlignment="Center" Height="352" Grid.Row="1" VerticalAlignment="Center" Width="380">
-            <StackPanel>
+        <Grid Grid.Column="2" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" VerticalAlignment="Top">
                 <DockPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,30,0,0">
-                    <Button x:Name="unpackZtrPulse" Content="Unpack Ztr" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
+                    <Button x:Name="UnpackZtrPulse" Content="Unpack Ztr" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
                         VerticalAlignment="Center" Click="PulseZtrUnpack_Click" Width="151" Height="35" Margin="5"/>
-                    <Button x:Name="unpackAllZtrPulse" Content="Unpack All Ztr" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
+                    <Button x:Name="UnpackAllZtrPulse" Content="Unpack All Ztr" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
                         VerticalAlignment="Center" Click="PulseAllZtrUnpack_Click" Width="151" Height="35" Margin="5"/>
+                    <Button x:Name="PackZtrPulse" Content="Strings to Ztr" FontFamily="TBUDGothic Std B" FontWeight="Normal" Click="ZtrPulseCompressor_Click"
+                            Width="151" Height="35" Margin="5" Foreground="#FFFDFFFD" ToolTip="Converts strings file to ztr using Pulse fake compression and Pulse encoding." FontSize="13"/>
                 </DockPanel>
-                <Button x:Name="PackZtrPulse" Content="Strings to Ztr" FontFamily="TBUDGothic Std B"
-                        FontWeight="Normal" Click="ZtrPulseCompressor_Click"
-                        Width="151" Height="35" Margin="5" Foreground="#FFFDFFFD"
-                        ToolTip="Converts strings file to ztr using Pulse fake compression and Pulse encoding." FontSize="13"/>
-                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,30,0,0">
+                
+                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,10,0,0">
                     <StackPanel>
                         <DockPanel HorizontalAlignment="Center" VerticalAlignment="Top">
                             <Button x:Name="UnpackWpdPulse" Content="Unpack Wpd" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
                         VerticalAlignment="Center" Click="PulseWpdUnpack_Click" Width="151" Height="35" Margin="5"/>
                             <Button x:Name="UnpackAllWpdPulse" Content="Unpack All Wpd" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
                         VerticalAlignment="Center" Click="PulseAllWpdUnpack_Click" Width="151" Height="35" Margin="5"/>
+                            <Button x:Name="PackWpdPulse" Content="Pack Wpd" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" Click="PulseWpdPack_Click" Width="151" Height="35" Margin="5"/>
                         </DockPanel>
-                    <Button x:Name="packWpdPulse" Content="Pack Wpd" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
-                        VerticalAlignment="Center" Click="PulseWpdPack_Click" Width="151" Height="35" Margin="5"/>
+                        <DockPanel>
+                            <Button x:Name="UnpackXvf" Content="Vtex to DDS" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" Width="151" Height="35" Margin="5" Click="unpackXvf_Click"/>
+                            <Button x:Name="PackXvf" Content="DDS to Vtex" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" Width="151" Height="35" Margin="5" Click="packXvf_Click"/>
+                            <Button x:Name="PackAllXvf" Content="All DDS to Vtex" FontFamily="TBUDGothic Std B" FontWeight="Normal" HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" Width="151" Height="35" Margin="5" Click="packAllXfv_Click"/>
+                        </DockPanel>
                     </StackPanel>
                 </DockPanel>
-                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,30,0,0">
-                    <Button x:Name="pulsePt1" Click="OnPart1ButtonClick" Width="110" Height="106" Margin="5">
+                
+            </StackPanel>
+            <StackPanel Grid.Row="1" VerticalAlignment="Bottom">
+                <DockPanel HorizontalAlignment="Center" Margin="0,30,0,0">
+                    <Button x:Name="PulsePt1" Click="OnPart1ButtonClick" Width="110" Height="106" Margin="5">
                         <Button.Background>
                             <!--<ImageBrush ImageSource="pack://application:,,,/Images/LogoXIII-1.png" Stretch="Uniform"/>-->
                             <ImageBrush ImageSource="/Images/LogoXIII-1.png" />
-
                         </Button.Background>
                     </Button>
-                    <Button x:Name="pulsePt2" HorizontalAlignment="Center" Click="OnPart2ButtonClick" Width="110" Height="106" Margin="5">
+                    <Button x:Name="PulsePt2" HorizontalAlignment="Center" Click="OnPart2ButtonClick" Width="110" Height="106" Margin="5">
                         <Button.Background>
                             <ImageBrush ImageSource="pack://application:,,,/Images/LogoXIII-2.png" Stretch="Uniform"/>
                         </Button.Background>
                     </Button>
-                    <Button x:Name="pulsePt3" HorizontalAlignment="Center" Click="OnPart3ButtonClick" Width="110" Height="106" Margin="5">
+                    <Button x:Name="PulsePt3" HorizontalAlignment="Center" Click="OnPart3ButtonClick" Width="110" Height="106" Margin="5">
                         <Button.Background>
                             <ImageBrush ImageSource="pack://application:,,,/Images/LogoXIII-3.png" Stretch="Uniform"/>
                         </Button.Background>

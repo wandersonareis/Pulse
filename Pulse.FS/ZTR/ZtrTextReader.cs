@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.SymbolStore;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using Pulse.Core;
 
 namespace Pulse.FS
@@ -38,6 +40,27 @@ namespace Pulse.FS
                     ZtrFileEntry entry = _formatter.Read(sr, out int index);
                     if (entry == null)
                         continue;
+                    var vi = Regex.Escape(entry.Value);
+                    if (entry.Key.Equals("$f_con_credit"))
+                    {
+                        File.WriteAllText(@".\tabthing.txt", entry.Value);
+                        File.WriteAllText(@".\tabEscape.txt", Regex.Escape(entry.Value));
+                        File.WriteAllText(@".\tabUnescape.txt", Regex.Unescape(entry.Value));
+
+                    }
+                    if (entry.Key.Equals("$xdiskchg_err"))
+                    {
+                        File.AppendAllText(@".\tabthing.txt", entry.Value);
+                        File.AppendAllText(@".\tabEscape.txt", Regex.Escape(entry.Value));
+                        File.AppendAllText(@".\tabUnescape.txt", Regex.Unescape(entry.Value));
+                    }
+
+                    if (entry.Key.Equals("$ask_end_title"))
+                    {
+                        File.AppendAllText(@".\tabthing.txt", entry.Value);
+                        File.AppendAllText(@".\tabEscape.txt", Regex.Escape(entry.Value));
+                        File.AppendAllText(@".\tabUnescape.txt", Regex.Unescape(entry.Value));
+                    }
                     //use to avoid empty keys
                     //if (string.IsNullOrEmpty(entry.Value))
                     //    continue;

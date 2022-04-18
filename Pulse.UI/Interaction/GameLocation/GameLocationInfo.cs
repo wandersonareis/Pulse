@@ -90,7 +90,7 @@ namespace Pulse.UI
                     lock (_taskLock)
                         return _archivesBuilderTask = Task.Run(() =>
                         {
-                            UiArchiveTreeBuilder builder = new UiArchiveTreeBuilder(this);
+                            var builder = new UiArchiveTreeBuilder(this);
                             lock (_taskLock)
                                 _archives = builder.Build();
                             return _archives;

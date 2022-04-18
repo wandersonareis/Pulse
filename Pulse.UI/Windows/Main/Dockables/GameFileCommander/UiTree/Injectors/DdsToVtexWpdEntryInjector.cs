@@ -12,16 +12,16 @@ namespace Pulse.UI
 
         public void Inject(WpdEntry entry, Stream input, Lazy<Stream> headers, Lazy<Stream> content, byte[] buff)
         {
-            int sourceSize = (int)input.Length;
+            var sourceSize = (int)input.Length;
             headers.Value.Position = entry.Offset;
 
-            SectionHeader sectionHeader = headers.Value.ReadContent<SectionHeader>();
-            VtexHeader textureHeader = headers.Value.ReadContent<VtexHeader>();
+            var sectionHeader = headers.Value.ReadContent<SectionHeader>();
+            var textureHeader = headers.Value.ReadContent<VtexHeader>();
 
-            byte[] unknownData = new byte[textureHeader.GtexOffset - VtexHeader.Size];
+            var unknownData = new byte[textureHeader.GtexOffset - VtexHeader.Size];
             headers.Value.Read(unknownData, 0, unknownData.Length);
 
-            GtexData data = headers.Value.ReadContent<GtexData>();
+            var data = headers.Value.ReadContent<GtexData>();
 
             if (data.MipMapData.Length != 1)
                 throw new NotImplementedException();
@@ -54,7 +54,7 @@ namespace Pulse.UI
 
                 ms.SetPosition(0);
 
-                DefaultWpdEntryInjector defaultInjector = new DefaultWpdEntryInjector();
+                var defaultInjector = new DefaultWpdEntryInjector();
                 defaultInjector.Inject(entry, ms, headers, content, buff);
             }
         }

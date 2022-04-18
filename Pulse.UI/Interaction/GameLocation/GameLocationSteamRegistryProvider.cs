@@ -17,7 +17,7 @@ namespace Pulse.UI
             using (RegistryKey registryKey = localMachine.OpenSubKey(SteamRegistyPath))
             {
                 if (registryKey == null)
-                    throw Exceptions.CreateException("Запись в реестре не обнаружена.");
+                    throw Exceptions.CreateException("Não foi encontrada nenhuma entrada no registro.");
 
                 GameLocationInfo result = new GameLocationInfo((string)registryKey.GetValue(SteamGamePathTag));
                 result.Validate();

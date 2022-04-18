@@ -38,12 +38,12 @@ namespace Pulse.UI
             input.CopyToStream(content.Value, dataSize, buff);
             mipMapLocation.Length = dataSize;
 
-            using (MemoryStream ms = new MemoryStream(96))
+            using (MemoryStream ms = new(96))
             {
                 textureHeader.WriteToStream(ms);
                 ms.SetPosition(0);
 
-                DefaultWpdEntryInjector defaultInjector = new DefaultWpdEntryInjector();
+                DefaultWpdEntryInjector defaultInjector = new();
                 defaultInjector.Inject(entry, ms, headers, content, buff);
             }
         }

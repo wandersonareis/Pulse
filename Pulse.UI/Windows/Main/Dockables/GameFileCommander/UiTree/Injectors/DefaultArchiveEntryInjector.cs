@@ -16,7 +16,7 @@ namespace Pulse.UI
                     return false;
 
                 using (Stream output = data.OuputStreamFactory(entry))
-                input.CopyToStream(output, (int)input.Length, data.Buffer);
+                    input.CopyToStream(output, (int)input.Length, data.Buffer);
 
                 return true;
             }

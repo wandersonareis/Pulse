@@ -51,10 +51,10 @@ namespace Pulse.UI
                 Inject(entry, targetPath);
             }
 
-            if (_injected)
+            if (!_injected) return;
             {
-                List<ArchiveEntry> entries = new List<ArchiveEntry>(2);
-                MemoryInjectionSource memorySource = new MemoryInjectionSource();
+                List<ArchiveEntry> entries = new(2);
+                MemoryInjectionSource memorySource = new();
                 if (_headers.IsValueCreated)
                 {
                     ArchiveEntry entry = _listing.Accessor.HeadersEntry;
@@ -68,7 +68,7 @@ namespace Pulse.UI
                     memorySource.RegisterStream(entry.Name, _content.Value);
                 }
 
-                using (UiArchiveInjector injector = new UiArchiveInjector(_listing.Accessor.Parent, entries.ToArray(), _conversion, false, memorySource))
+                using (UiArchiveInjector injector = new(_listing.Accessor.Parent, entries.ToArray(), _conversion, false, memorySource))
                     injector.Inject(manager);
 
                 manager.Enqueue(_listing.Accessor.Parent);
@@ -79,8 +79,7 @@ namespace Pulse.UI
         {
             string targetExtension = entry.Extension.ToLowerInvariant();
 
-            IWpdEntryInjector injector;
-            if (_injectors.TryGetValue(targetExtension, out injector))
+            if (_injectors.TryGetValue(targetExtension, out IWpdEntryInjector injector))
             {
                 string targetFullPath = targetPath + '.' + injector.SourceExtension;
                 using (Stream input = _source.TryOpen(targetFullPath))
@@ -99,11 +98,9 @@ namespace Pulse.UI
                 string targetFullPath = targetPath + '.' + targetExtension;
                 using (Stream input = _source.TryOpen(targetFullPath))
                 {
-                    if (input != null)
-                    {
-                        DefaultInjector.Inject(entry, input, _headers, _content, _buff);
-                        _injected = true;
-                    }
+                    if (input == null) return;
+                    DefaultInjector.Inject(entry, input, _headers, _content, _buff);
+                    _injected = true;
                 }
             }
         }
@@ -138,7 +135,7 @@ namespace Pulse.UI
         #region Static
 
         private static readonly IWpdEntryInjector DefaultInjector = ProvideDefaultInjector();
-        private static readonly Dictionary<string, IWpdEntryInjector> Emptry = new Dictionary<string, IWpdEntryInjector>(0);
+        private static readonly Dictionary<string, IWpdEntryInjector> Emptry = new(0);
         private static readonly Dictionary<string, IWpdEntryInjector> Converters = RegisterConverters();
 
         private static IWpdEntryInjector ProvideDefaultInjector()

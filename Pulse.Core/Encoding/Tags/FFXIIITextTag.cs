@@ -147,6 +147,16 @@ namespace Pulse.Core
                             return new FFXIIITextTag(code.Value, (FFXIIITextTagParam)numArg);
                         break;
                     }
+                case FFXIIITextTagCode.Var87:
+                {
+                    byte numArg;
+                    FFXIIITextTagColor? arg = EnumCache<FFXIIITextTagColor>.TryParse(par);
+                    if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
+                        arg = (FFXIIITextTagColor)numArg;
+                    if (arg != null)
+                        return new FFXIIITextTag(code.Value, arg.Value);
+                    break;
+                }
                 case FFXIIITextTagCode.Accents:
                     {
                         byte numArg;

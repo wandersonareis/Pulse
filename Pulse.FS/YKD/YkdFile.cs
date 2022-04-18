@@ -6,7 +6,7 @@ namespace Pulse.FS
 {
     public sealed class YkdFile : IStreamingContent
     {
-        public static readonly Encoding NamesEncoding = Encoding.GetEncoding(1252);
+        public static readonly Encoding NamesEncoding = Encoding.GetEncoding("ISO-8859-1");
 
         public YkdHeader Header;
         public YkdBlock Background;

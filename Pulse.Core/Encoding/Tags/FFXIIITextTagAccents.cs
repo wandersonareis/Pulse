@@ -23,7 +23,7 @@
             OCrase      = 0xB1, //Ò
             OAcute      = 0xB2, //Ó
             OCircumflex = 0xB3, //Ô
-            OTilde      = 0xB4, //Õ
+            OTil      = 0xB4, //Õ
             //Multiplication = 0xB6, //avoid confuse
             UCrase      = 0xB8, //Ù
             UAcute      = 0xB9  //Ú
