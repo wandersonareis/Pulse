@@ -131,7 +131,7 @@ namespace Pulse.UI
 
         private Style CreateTreeViewItemContainerStyle()
         {
-            Style style = new Style();
+            Style style = new();
             style.Setters.Add(new Setter(TreeViewItem.IsSelectedProperty, new Binding("IsSelected") {Mode = BindingMode.TwoWay}));
             style.Setters.Add(new Setter(TreeViewItem.IsExpandedProperty, new Binding("IsExpanded") {Mode = BindingMode.TwoWay}));
             return style;
@@ -139,18 +139,17 @@ namespace Pulse.UI
 
         private Style CreateListViewItemContainerStyle()
         {
-            Style style = new Style();
+            Style style = new();
             style.Setters.Add(new EventSetter(MouseDoubleClickEvent, new MouseButtonEventHandler(OnListViewMouseDoubleClick)));
             return style;
         }
 
         private void OnListViewMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            ListViewItem item = sender as ListViewItem;
-            if (item == null)
+            if (sender is not ListViewItem item)
                 return;
 
-            UiNode nodeOld = (UiNode)item.Content;
+            var nodeOld = (UiNode)item.Content;
             GoToChild(nodeOld);
         }
 
@@ -167,18 +166,18 @@ namespace Pulse.UI
             else
             {
                 //template = new DataTemplate {DataType = typeof(UiArchiveNodeOld)};
-                template = new DataTemplate {DataType = typeof(UiNode)};
+                template = new() {DataType = typeof(UiNode)};
             }
 
-            FrameworkElementFactory stackPanel = new FrameworkElementFactory(typeof(StackPanel));
+            FrameworkElementFactory stackPanel = new(typeof(StackPanel));
             stackPanel.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal);
 
-            FrameworkElementFactory checkbox = new FrameworkElementFactory(typeof(CheckBox));
+            FrameworkElementFactory checkbox = new(typeof(CheckBox));
             checkbox.SetValue(ToggleButton.IsCheckedProperty, new Binding("IsChecked") {Mode = BindingMode.TwoWay});
             checkbox.SetValue(ToggleButton.IsThreeStateProperty, true);
             stackPanel.AppendChild(checkbox);
 
-            FrameworkElementFactory image = new FrameworkElementFactory(typeof(Image));
+            FrameworkElementFactory image = new(typeof(Image));
             image.SetValue(HeightProperty, 16d);
             image.SetValue(Image.SourceProperty, new Binding("Icon"));
             image.SetValue(MarginProperty, new Thickness(3));
@@ -189,7 +188,7 @@ namespace Pulse.UI
             //icon.SetValue(MarginProperty, new Thickness(3));
             //stackPanel.AppendChild(icon);
 
-            FrameworkElementFactory textBlock = new FrameworkElementFactory(typeof(TextBlock));
+            FrameworkElementFactory textBlock = new(typeof(TextBlock));
             textBlock.SetBinding(TextBlock.TextProperty, new Binding("Name"));
             textBlock.SetValue(MarginProperty, new Thickness(3));
             stackPanel.AppendChild(textBlock);

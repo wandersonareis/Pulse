@@ -17,8 +17,8 @@ namespace Pulse.UI
             if (!string.IsNullOrEmpty(directoryPath))
                 Directory.CreateDirectory(directoryPath);
 
-            FileSequencedStreamFactory factory = new FileSequencedStreamFactory(targetPath, FileMode.Create, FileAccess.Write);
-            return new StreamSequence(factory);
+            FileSequencedStreamFactory factory = new(targetPath, FileMode.Create, FileAccess.Write);
+            return new(factory);
         }
     }
 }

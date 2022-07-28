@@ -14,13 +14,13 @@ namespace Pulse.UI
             if (!dispatcher.CheckAccess())
                 return dispatcher.Invoke(() => Provide());
 
-            using (CommonOpenFileDialog dlg = new CommonOpenFileDialog("Укажите каталог Final Fantasy XIII..."))
+            using (CommonOpenFileDialog dlg = new("Укажите каталог Final Fantasy XIII..."))
             {
                 dlg.IsFolderPicker = true;
                 if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
                     throw new OperationCanceledException();
 
-                GameLocationInfo result = new GameLocationInfo(dlg.FileName);
+                GameLocationInfo result = new(dlg.FileName);
                 result.Validate();
 
                 return result;

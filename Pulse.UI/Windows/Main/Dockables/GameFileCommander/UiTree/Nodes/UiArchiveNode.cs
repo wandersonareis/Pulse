@@ -28,7 +28,7 @@ namespace Pulse.UI
 
         protected override UiNode[] ExpandChilds()
         {
-            UiChildPackageBuilder childPackages = new UiChildPackageBuilder(InteractionService.GameLocation.Provide().AreasDirectory);
+            UiChildPackageBuilder childPackages = new(InteractionService.GameLocation.Provide().AreasDirectory);
 
             switch (InteractionService.GamePart)
             {
@@ -47,8 +47,8 @@ namespace Pulse.UI
 
             _listing.Parent = _parentListing;
             
-            HashSet<string> set = new HashSet<string>();
-            Dictionary<string, UiNode> dic = new Dictionary<string, UiNode>(_listing.Count * 2);
+            HashSet<string> set = new();
+            Dictionary<string, UiNode> dic = new(_listing.Count * 2);
 
             foreach (ArchiveEntry entry in _listing)
             {

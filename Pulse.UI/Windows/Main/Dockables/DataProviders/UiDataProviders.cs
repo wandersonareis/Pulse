@@ -30,19 +30,19 @@ namespace Pulse.UI
 
         private Style CreateNodeStyle()
         {
-            Style style = new Style();
+            Style style = new();
             style.Setters.Add(new Setter(ContextMenuProperty, new Binding("ContextMenu") {Mode = BindingMode.OneWay}));
             return style;
         }
 
         private static DataTemplate CreateTemplate()
         {
-            DataTemplate template = new DataTemplate {DataType = typeof(UiDataProviderNode)};
+            DataTemplate template = new() {DataType = typeof(UiDataProviderNode)};
 
-            FrameworkElementFactory stackPanel = new FrameworkElementFactory(typeof(StackPanel));
+            FrameworkElementFactory stackPanel = new(typeof(StackPanel));
             stackPanel.SetValue(StackPanel.OrientationProperty, Orientation.Horizontal);
 
-            FrameworkElementFactory image = new FrameworkElementFactory(typeof(Image));
+            FrameworkElementFactory image = new(typeof(Image));
             image.SetValue(HeightProperty, 16d);
             image.SetValue(Image.SourceProperty, new Binding("Icon"));
             image.SetValue(MarginProperty, new Thickness(3));
@@ -54,7 +54,7 @@ namespace Pulse.UI
             //icon.SetValue(MarginProperty, new Thickness(3));
             //stackPanel.AppendChild(icon);
 
-            FrameworkElementFactory textBlock = new FrameworkElementFactory(typeof(TextBlock));
+            FrameworkElementFactory textBlock = new(typeof(TextBlock));
             textBlock.SetBinding(TextBlock.TextProperty, new Binding("Title"));
             textBlock.SetBinding(ToolTipProperty, new Binding("Description"));
             textBlock.SetValue(MarginProperty, new Thickness(3));

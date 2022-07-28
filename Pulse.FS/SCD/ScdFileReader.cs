@@ -20,7 +20,7 @@ namespace Pulse.FS
             SectionHeader sectionHeader = _input.ReadContent<SectionHeader>();
             SscfHeader sscfHeader = _input.ReadContent<SscfHeader>();
 
-            BinaryReader br = new BinaryReader(_input);
+            BinaryReader br = new(_input);
             _input.SetPosition(sscfHeader.WavesOffset);
             int[] offsets = new int[sscfHeader.NumWaves];
             for (int i = 0; i < offsets.Length; i++)
@@ -35,7 +35,7 @@ namespace Pulse.FS
                 {
                     _input.SetPosition(waveHeader.DataOffset);
                     byte[] vorbisData = _input.EnsureRead(waveHeader.DataLength);
-                    MemoryStream vorbisMs = new MemoryStream(vorbisData, 0, vorbisData.Length, false);
+                    MemoryStream vorbisMs = new(vorbisData, 0, vorbisData.Length, false);
                     result[i] = new VorbisWaveReader(vorbisMs);
                     continue;
                 }
@@ -47,7 +47,7 @@ namespace Pulse.FS
 
                 _input.SetPosition(waveHeader.DataOffset);
                 byte[] data = _input.EnsureRead(waveHeader.DataLength);
-                MemoryStream ms = new MemoryStream(data, 0, data.Length, false);
+                MemoryStream ms = new(data, 0, data.Length, false);
                 result[i] = new RawSourceWaveStream(ms, format);
             }
             return result;
@@ -96,7 +96,7 @@ namespace Pulse.FS
 
         private WaveFormat ReadMicrosoftAdPcmWaveFormat(SscfWaveHeader waveHeader)
         {
-            BinaryReader br = new BinaryReader(_input);
+            BinaryReader br = new(_input);
             return WaveFormat.FromFormatChunk(br, waveHeader.FormatHeaderLength);
         }
     }

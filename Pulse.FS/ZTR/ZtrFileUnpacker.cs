@@ -17,7 +17,7 @@ namespace Pulse.FS
         {
             _encoding = encoding;
             _input = input;
-            _br = new BinaryReader(_input);
+            _br = new(_input);
         }
 
         public ZtrFileEntry[] Unpack()
@@ -62,7 +62,7 @@ namespace Pulse.FS
 
         private ZtrFileEntry[] ExtractLittleEndianUncompressedPair()
         {
-            ZtrFileEntry result = new ZtrFileEntry();
+            ZtrFileEntry result = new();
 
             int keyOffset = _br.ReadInt32();
             int textOffset = _br.ReadInt32();
@@ -78,16 +78,16 @@ namespace Pulse.FS
 
         private ZtrFileEntry[] ExtractBigEndianCompressedDictionary()
         {
-            ZtrFileHeader header = new ZtrFileHeader();
+            ZtrFileHeader header = new();
             header.ReadFromStream(_input);
 
             ZtrFileEntry[] result = new ZtrFileEntry[header.Count];
             result.InitializeElements();
 
-            ZtrFileKeysUnpacker keysUnpacker = new ZtrFileKeysUnpacker(_input, result);
+            ZtrFileKeysUnpacker keysUnpacker = new(_input, result);
             keysUnpacker.Unpack(header.KeysUnpackedSize);
 
-            ZtrFileTextUnpacker textUnpacker = new ZtrFileTextUnpacker(_input, result, header.TextLinesTable, _encoding);
+            ZtrFileTextUnpacker textUnpacker = new(_input, result, header.TextLinesTable, _encoding);
             textUnpacker.Unpack(header.TextBlockTable[header.TextBlockTable.Length - 1]);
 
             return result;

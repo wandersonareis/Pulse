@@ -10,13 +10,13 @@ namespace Pulse.Core
 
         private const string LogFileName = "Pulse.log";
 
-        private static readonly Lazy<Log> Instance = new Lazy<Log>(Initialize, true);
+        private static readonly Lazy<Log> Instance = new(Initialize, true);
 
         private static Log Initialize()
         {
             try
             {
-                return new Log(new FileStream(LogFileName, FileMode.Create, FileAccess.Write, FileShare.Read));
+                return new(new FileStream(LogFileName, FileMode.Create, FileAccess.Write, FileShare.Read));
             }
             catch
             {
@@ -54,7 +54,7 @@ namespace Pulse.Core
 
         private static string FormatException(Exception ex, string format, params object[] args)
         {
-            StringBuilder sb = new StringBuilder(256);
+            StringBuilder sb = new(256);
             if (!string.IsNullOrEmpty(format))
             {
                 if (args.IsNullOrEmpty())
@@ -74,7 +74,7 @@ namespace Pulse.Core
         {
             Exceptions.CheckArgumentNull(stream, "stream");
 
-            _sw = new StreamWriter(stream);
+            _sw = new(stream);
         }
 
         public void Write(char type, int offset, string format, params object[] args)

@@ -37,13 +37,13 @@ namespace Pulse.UI
 
             _radius = (diameter - StrokeThickness) / 2;
 
-            _polyLine = new Polyline();
+            _polyLine = new();
             _polyLine.Loaded += (s, e) => _timer.Start();
             _polyLine.Dispatcher.ShutdownStarted += (s, e) => _timer.Stop();
             _polyLine.StrokeThickness = StrokeThickness;
             _polyLine.Stroke = StrokeBrush;
 
-            _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(15), DispatcherPriority.Render, Draw, _polyLine.Dispatcher);
+            _timer = new(TimeSpan.FromMilliseconds(15), DispatcherPriority.Render, Draw, _polyLine.Dispatcher);
             _timer.Start();
             VerticalContentAlignment = VerticalAlignment.Center;
             HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -102,7 +102,7 @@ namespace Pulse.UI
                 _oldAngle += step;
                 double x = _radius + _radius * Math.Cos(_oldAngle - Math.PI / 2);
                 double y = _radius + _radius * Math.Sin(_oldAngle - Math.PI / 2);
-                _polyLine.Points.Add(new Point(x, y));
+                _polyLine.Points.Add(new(x, y));
             }
         }
     }

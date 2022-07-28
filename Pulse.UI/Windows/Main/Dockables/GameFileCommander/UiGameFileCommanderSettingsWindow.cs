@@ -15,7 +15,7 @@ namespace Pulse.UI
 
             UiGrid root = UiGridFactory.Create(3, 1);
             {
-                Thickness margin = new Thickness(3);
+                Thickness margin = new(3);
 
                 UiStackPanel maskPanel = UiStackPanelFactory.Create(Orientation.Horizontal);
                 {

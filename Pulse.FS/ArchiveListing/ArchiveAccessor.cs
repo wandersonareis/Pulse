@@ -16,11 +16,11 @@ namespace Pulse.FS
 
         public ArchiveAccessor(string binaryFile, string listingFile)
         {
-            _binaryFile = new SharedMemoryMappedFile(binaryFile);
-            _listingFile = new SharedMemoryMappedFile(listingFile);
+            _binaryFile = new(binaryFile);
+            _listingFile = new(listingFile);
 
-            FileInfo listingFileInfo = new FileInfo(listingFile);
-            ListingEntry = new ArchiveEntry(listingFileInfo.Name, 0, listingFileInfo.Length, listingFileInfo.Length);
+            FileInfo listingFileInfo = new(listingFile);
+            ListingEntry = new(listingFileInfo.Name, 0, listingFileInfo.Length, listingFileInfo.Length);
         }
 
         private ArchiveAccessor(SharedMemoryMappedFile binaryFile, SharedMemoryMappedFile listingFile, ArchiveEntry listingEntry)
@@ -32,14 +32,16 @@ namespace Pulse.FS
 
         public ArchiveAccessor CreateDescriptor(ArchiveEntry entry)
         {
-            ArchiveAccessor result = new ArchiveAccessor(null, _binaryFile, entry);
-            result._level = _level + 1;
+            ArchiveAccessor result = new(null, _binaryFile, entry)
+            {
+                _level = _level + 1
+            };
             return result;
         }
 
         public ArchiveAccessor CreateDescriptor(string binaryFile, ArchiveEntry entry)
         {
-            ArchiveAccessor result = new ArchiveAccessor(new SharedMemoryMappedFile(binaryFile), _binaryFile, entry);
+            ArchiveAccessor result = new(new(binaryFile), _binaryFile, entry);
             result._level = _level + 1;
             return result;
         }
@@ -64,8 +66,7 @@ namespace Pulse.FS
                 if (newSize <= capacity)
                     return _listingFile.CreateViewStream(ListingEntry.Offset, newSize, MemoryMappedFileAccess.Write);
 
-                long offset;
-                Stream result = _listingFile.IncreaseSize(MathEx.RoundUp(newSize, 0x800), out offset);
+                Stream result = _listingFile.IncreaseSize(MathEx.RoundUp(newSize, 0x800), out long offset);
                 ListingEntry.Sector = (int)(offset / 0x800);
                 return result;
             }
@@ -95,8 +96,7 @@ namespace Pulse.FS
                 if (newSize <= capacity)
                     return _binaryFile.CreateViewStream(entry.Offset, newSize, MemoryMappedFileAccess.Write);
 
-                long offset;
-                Stream result = _binaryFile.IncreaseSize(MathEx.RoundUp(newSize, 0x800), out offset);
+                Stream result = _binaryFile.IncreaseSize(MathEx.RoundUp(newSize, 0x800), out long offset);
                 entry.Sector = (int)(offset / 0x800);
                 return result;
             }
@@ -115,8 +115,7 @@ namespace Pulse.FS
             if (uncompressedSize == 0)
                 return new MemoryStream(0);
 
-            Stream writer, reader;
-            Flute.CreatePipe(uncompressedSize, out writer, out reader);
+            Flute.CreatePipe(uncompressedSize, out Stream writer, out Stream reader);
 
             //if (!ThreadPool.QueueUserWorkItem((o) => ZLibHelper.UncompressAndDisposeStreams(input, writer, uncompressedSize, CancellationToken.None)))
                 ThreadHelper.StartBackground("UncompressAndDisposeSourceAsync", () => ZLibHelper.UncompressAndDisposeStreams(input, writer, uncompressedSize, CancellationToken.None));
@@ -136,7 +135,7 @@ namespace Pulse.FS
                 bool compress = uncompressedSize > 256 && (compression ?? entry.IsCompressed);
                 if (compress)
                 {
-                    using (SafeUnmanagedArray buff = new SafeUnmanagedArray(uncompressedSize + 256))
+                    using (SafeUnmanagedArray buff = new(uncompressedSize + 256))
                     using (UnmanagedMemoryStream buffStream = buff.OpenStream(FileAccess.ReadWrite))
                     {
                         compressedSize = ZLibHelper.Compress(ms, buffStream, uncompressedSize);

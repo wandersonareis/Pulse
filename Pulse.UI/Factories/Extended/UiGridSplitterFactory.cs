@@ -4,7 +4,7 @@
     {
         public static UiGridSplitter Create()
         {
-            UiGridSplitter splitter = new UiGridSplitter {Width = 5};
+            UiGridSplitter splitter = new() {Width = 5};
 
             return splitter;
         }

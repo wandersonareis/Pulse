@@ -21,7 +21,7 @@ namespace Pulse.FS
 
         public override void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
 
             UnknownData = stream.EnsureRead(16);
             ViewportWidth = br.ReadInt32();
@@ -36,7 +36,7 @@ namespace Pulse.FS
 
         public override void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
 
             bw.Write(UnknownData);
             bw.Write(ViewportWidth);

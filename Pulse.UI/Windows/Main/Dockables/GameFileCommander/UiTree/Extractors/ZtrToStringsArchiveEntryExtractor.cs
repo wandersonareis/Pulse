@@ -11,14 +11,14 @@ namespace Pulse.UI
 
         public void Extract(ArchiveEntry entry, StreamSequence output, Stream input, byte[] buff)
         {
-            int size = (int)entry.UncompressedSize;
+            var size = (int)entry.UncompressedSize;
             if (size == 0)
                 return;
 
-            ZtrFileUnpacker unpacker = new ZtrFileUnpacker(input, InteractionService.TextEncoding.Provide().Encoding);
+            ZtrFileUnpacker unpacker = new(input, InteractionService.TextEncoding.Provide().Encoding);
             ZtrFileEntry[] entries = unpacker.Unpack();
 
-            ZtrTextWriter writer = new ZtrTextWriter(output, StringsZtrFormatter.Instance);
+            ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
             writer.Write(entry.Name, entries);
         }
 
@@ -26,10 +26,10 @@ namespace Pulse.UI
         {
             headers.Value.Position = entry.Offset;
 
-            ZtrFileUnpacker unpacker = new ZtrFileUnpacker(headers.Value, InteractionService.TextEncoding.Provide().Encoding);
+            ZtrFileUnpacker unpacker = new(headers.Value, InteractionService.TextEncoding.Provide().Encoding);
             ZtrFileEntry[] entries = unpacker.Unpack();
 
-            ZtrTextWriter writer = new ZtrTextWriter(output, StringsZtrFormatter.Instance);
+            ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
             writer.Write(entry.Name, entries);
         }
     }

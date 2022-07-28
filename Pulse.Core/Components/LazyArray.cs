@@ -7,7 +7,7 @@ namespace Pulse.Core
 {
     public sealed class LazyArray<T> : IEnumerable<KeyValuePair<int, T>>
     {
-        private readonly ConcurrentDictionary<int, T> _dic = new ConcurrentDictionary<int, T>();
+        private readonly ConcurrentDictionary<int, T> _dic = new();
         private readonly Func<int, T> _factory;
 
         public int Count => _dic.Count;

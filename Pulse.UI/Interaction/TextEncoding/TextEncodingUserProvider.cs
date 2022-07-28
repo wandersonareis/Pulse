@@ -431,7 +431,7 @@ namespace Pulse.UI
         private sealed class SequencedStreamFactory : ISequencedStreamFactory
         {
             private readonly Stream _resourceStream;
-            private GtexData _data;
+            private readonly GtexData _data;
             private int _index;
 
             public SequencedStreamFactory(Stream resourceStream, GtexData data)

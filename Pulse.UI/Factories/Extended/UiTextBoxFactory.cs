@@ -4,12 +4,12 @@
     {
         public static UiTextBox Create()
         {
-            return new UiTextBox();
+            return new();
         }
 
         public static UiTextBox Create(string text)
         {
-            return new UiTextBox {Text = text};
+            return new() {Text = text};
         }
     }
 }

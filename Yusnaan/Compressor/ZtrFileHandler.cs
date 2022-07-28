@@ -60,7 +60,7 @@ namespace Yusnaan.Compressor
             TextInfo[] textInfos = new TextInfo[header.TextCount];
             for (int i = 0; i < textInfos.Length; i++)
             {
-                textInfos[i] = new TextInfo
+                textInfos[i] = new()
                 {
                     Block = reader.ReadByte(),
                     BlockOffset = reader.ReadByte(),
@@ -75,7 +75,7 @@ namespace Yusnaan.Compressor
             CompressDictionary dict = new()
             {
                 DictSize = reader.ReadInt32(),
-                Dict = new Dictionary<byte, byte[]>()
+                Dict = new()
             };
             for (int i = 0; i < dict.DictSize / 3; i++)
             {
@@ -84,7 +84,7 @@ namespace Yusnaan.Compressor
                 byte key = reader.ReadByte();
                 byte valueFirst = reader.ReadByte();
                 byte valueLast = reader.ReadByte();
-
+#nullable disable
                 if (dict.Dict.TryGetValue(valueFirst, out byte[] valueFirstKey)) { value.AddRange(valueFirstKey); }
                 else
                 {
@@ -96,7 +96,7 @@ namespace Yusnaan.Compressor
                 {
                     value.Add(valueLast);
                 }
-
+#nullable enable
                 dict.Dict.Add(key, value.ToArray());
             }
             return dict;
@@ -109,6 +109,7 @@ namespace Yusnaan.Compressor
             {
                 CompressDictionary idsDict = ReadDictionary(ref reader);
                 int blockLen = 0;
+#nullable disable
                 while (totalBytes.Count < header.KeysDecompressedSize && blockLen < 4096)
                 {
                     byte entry = reader.ReadByte();
@@ -123,6 +124,7 @@ namespace Yusnaan.Compressor
                         blockLen++;
                     }
                 }
+#nullable enable
             }
             string[] result = Encoding.ASCII.GetString(totalBytes.ToArray()).Split(new[] {(char)0});
             return result.Take(result.Length - 1).ToArray();
@@ -218,8 +220,8 @@ namespace Yusnaan.Compressor
         {
             MemoryStream result = new();
 
-            //const int maxBlockSize = 4096 * 4;
-            const int maxBlockSize = 4096;
+            const int maxBlockSize = 4096 * 4;
+            //const int maxBlockSize = 4096;
             using (BeBinaryWriter writer = new(result))
             {
                 using (FileStream ztrStream = File.OpenRead(ztr))
@@ -259,8 +261,8 @@ namespace Yusnaan.Compressor
                     writer.Write(header.KeysDecompressedSize);
                     writer.BaseStream.Position += 8;
 
-                    MemoryStream compressTextStream = new MemoryStream();
-                    BeBinaryWriter compressWr = new BeBinaryWriter(compressTextStream);
+                    MemoryStream compressTextStream = new();
+                    BeBinaryWriter compressWr = new(compressTextStream);
 
                     int textIndex = 0;
                     int blockPointer = 0;
@@ -353,9 +355,9 @@ namespace Yusnaan.Compressor
             long textCompressedPointer = reader.BaseStream.Position;
             for (int i = 0; i < idsDecompressed.Length; i++)
             {
-                if (input.TryGetValue(idsDecompressed[i], out string value))
+                if (input.TryGetValue(idsDecompressed[i], out string? value))
                 {
-                    byte[] pulse = FFXIIITextEncodingFactory.CreateEuro().GetBytes(value);
+                    byte[] pulse = FFXIIITextEncodingFactory.CreateEuro().GetBytes(value ?? throw new InvalidOperationException());
 
                     byte[] textBytes = new byte[pulse.Length + 2];
                     pulse.CopyTo(textBytes, 0);

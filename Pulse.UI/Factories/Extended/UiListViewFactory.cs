@@ -4,7 +4,7 @@
     {
         public static UiListView Create()
         {
-            return new UiListView();
+            return new();
         }
     }
 }

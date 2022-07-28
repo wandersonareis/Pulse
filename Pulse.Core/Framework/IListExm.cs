@@ -10,7 +10,7 @@ namespace Pulse.Core
         public static void InitializeElements<T>(this IList<T> list) where T : new()
         {
             for (int i = 0; i < list.Count; i++)
-                list[i] = new T();
+                list[i] = new();
         }
 
         public static bool IsNullOrEmpty<T>(this IList<T> list)

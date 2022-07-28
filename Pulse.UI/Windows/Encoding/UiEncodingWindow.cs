@@ -32,7 +32,7 @@ namespace Pulse.UI.Encoding
         private readonly UiEncodingCharactersControl _charactersControl;
         private UiEncodingWindowSource _currentSource;
 
-        private readonly AutoResetEvent _moveEvent = new AutoResetEvent(false);
+        private readonly AutoResetEvent _moveEvent = new(false);
         private long _oldMovable, _newMovable;
         private int _oldX, _oldY, _deltaX, _deltaY;
 
@@ -68,13 +68,13 @@ quick brown fox jumps over the lazy dog
                 _comboBox = UiComboBoxFactory.Create();
                 {
                     _comboBox.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
-                    _comboBox.Margin = new Thickness(3);
+                    _comboBox.Margin = new(3);
                     _comboBox.DisplayMemberPath = "DisplayName";
                     _comboBox.SelectionChanged += OnComboBoxItemChanged;
                     root.AddUiElement(_comboBox, 0, 0);
                 }
 
-                _editViewport = new UiDxViewport();
+                _editViewport = new();
                 {
                     _editViewport.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
                     _editViewport.VerticalAlignment = VerticalAlignment.Stretch;
@@ -94,7 +94,7 @@ quick brown fox jumps over the lazy dog
                     previewGroup.RowDefinitions[0].Height = GridLength.Auto;
                     previewGroup.ColumnDefinitions[1].Width = GridLength.Auto;
 
-                    _previewViewport = new UiDxViewport();
+                    _previewViewport = new();
                     {
                         _previewViewport.Height = 200;
                         _previewViewport.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
@@ -106,7 +106,7 @@ quick brown fox jumps over the lazy dog
                         previewGroup.AddUiElement(_previewViewport, 0, 0, 2);
                     }
 
-                    UiEncodingLabeledNumber scale = new UiEncodingLabeledNumber("Масштаб:", 200, 100, 400, OnScaleValueChanged);
+                    UiEncodingLabeledNumber scale = new("Масштаб:", 200, 100, 400, OnScaleValueChanged);
                     {
                         scale.Value = 100;
                         scale.NumberControl.Increment = 25;
@@ -123,7 +123,7 @@ quick brown fox jumps over the lazy dog
                     root.AddUiElement(previewGroup, 2, 0);
                 }
 
-                _charactersControl = new UiEncodingCharactersControl();
+                _charactersControl = new();
                 {
                     root.AddUiElement(_charactersControl, 3, 0);
                 }
@@ -131,7 +131,7 @@ quick brown fox jumps over the lazy dog
                 UiButton button = UiButtonFactory.Create("OK");
                 {
                     button.Width = 70;
-                    button.Margin = new Thickness(3);
+                    button.Margin = new(3);
                     button.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
                     button.Click += (s, a) => DialogResult = true;
                     root.AddUiElement(button, 3, 0);
@@ -142,7 +142,7 @@ quick brown fox jumps over the lazy dog
             _editViewport.DxControl.RenderContainer.Reseted += ResetBurshes;
             ResetBurshes(_editViewport.DxControl.RenderContainer);
 
-            Thread movingThread = new Thread(MovingThread);
+            Thread movingThread = new(MovingThread);
             movingThread.Start();
 
             Activated += OnWindowActivated;
@@ -152,8 +152,8 @@ quick brown fox jumps over the lazy dog
             #endregion
         }
 
-        private readonly ManualResetEvent _closingEvent = new ManualResetEvent(false);
-        private readonly ManualResetEvent _closedEvent = new ManualResetEvent(true);
+        private readonly ManualResetEvent _closingEvent = new(false);
+        private readonly ManualResetEvent _closedEvent = new(true);
 
         private void ResetBurshes(RenderContainer renderContainer)
         {
@@ -163,10 +163,10 @@ quick brown fox jumps over the lazy dog
             _gridColorBrush?.Dispose();
 
             RenderTarget target2D = renderContainer.BackBuffer.Target2D;
-            _selectedColorBrush = new SolidColorBrush(target2D, SelectedColor.ToColor4(), null);
-            _spacingColorBrush = new SolidColorBrush(target2D, SpacingColor.ToColor4(), null);
-            _notMappedColorBrush = new SolidColorBrush(target2D, NotMappedColor.ToColor4(), null);
-            _gridColorBrush = new SolidColorBrush(target2D, GridColor.ToColor4(), null);
+            _selectedColorBrush = new(target2D, SelectedColor.ToColor4(), null);
+            _spacingColorBrush = new(target2D, SpacingColor.ToColor4(), null);
+            _notMappedColorBrush = new(target2D, NotMappedColor.ToColor4(), null);
+            _gridColorBrush = new(target2D, GridColor.ToColor4(), null);
         }
 
         private void OnWindowActivated(object sender, EventArgs e)
@@ -210,8 +210,8 @@ quick brown fox jumps over the lazy dog
             int viewportX = _editViewport.X;
             int viewportY = _editViewport.Y;
 
-            List<int> mainIndices = new List<int>(2);
-            List<int> additionalIndices = new List<int>(2);
+            List<int> mainIndices = new(2);
+            List<int> additionalIndices = new(2);
 
             WflContent info = _currentSource.Info;
             int height = info.Header.LineHeight;
@@ -304,7 +304,7 @@ quick brown fox jumps over the lazy dog
             try
             {
                 spriteBatch.Begin();
-                current.Texture.Draw(device, spriteBatch, Vector2.Zero, new Rectangle(0, 0, current.Texture.Descriptor2D.Width, current.Texture.Descriptor2D.Height), 0, cliprectangle);
+                current.Texture.Draw(device, spriteBatch, Vector2.Zero, new(0, 0, current.Texture.Descriptor2D.Width, current.Texture.Descriptor2D.Height), 0, cliprectangle);
                 spriteBatch.End();
             }
             catch (Exception ex)
@@ -324,7 +324,7 @@ quick brown fox jumps over the lazy dog
             int viewportX = _editViewport.X;
             int viewportY = _editViewport.Y;
 
-            RectangleF rectangle = new RectangleF {Height = info.Header.LineHeight};
+            RectangleF rectangle = new() {Height = info.Header.LineHeight};
 
             target2D.BeginDraw();
 
@@ -450,7 +450,7 @@ quick brown fox jumps over the lazy dog
                             x += before;
 
                         source.Info.GetOffsets(index, out ox, out oy);
-                        source.Texture.Draw(device, spriteBatch, new Vector2(x, y), new Rectangle(ox, oy, w, h), 0, cliprectangle);
+                        source.Texture.Draw(device, spriteBatch, new(x, y), new(ox, oy, w, h), 0, cliprectangle);
 
                         if (after > 0x7F)
                             x = Math.Max(x - (0xFF - after), 0);
@@ -464,7 +464,7 @@ quick brown fox jumps over the lazy dog
                         int value = source.Info.AdditionalTable[index];
                         ox = (value & 0xFF) * squareSize;
                         oy = (value >> 8) * squareSize;
-                        source.Texture.Draw(device, spriteBatch, new Vector2(x, y), new Rectangle(ox, oy, w, h), 0, cliprectangle);
+                        source.Texture.Draw(device, spriteBatch, new(x, y), new(ox, oy, w, h), 0, cliprectangle);
                     }
 
                     x += w;

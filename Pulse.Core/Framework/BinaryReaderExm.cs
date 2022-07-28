@@ -11,7 +11,7 @@ namespace Pulse.Core
 
             byte[] buff = new byte[16];
             self.BaseStream.EnsureRead(buff, 0, buff.Length);
-            return new Guid(buff);
+            return new(buff);
         }
 
         public static short ReadBigInt16(this BinaryReader self)

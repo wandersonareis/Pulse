@@ -6,7 +6,7 @@ namespace Pulse.Core
     {
         private readonly Action _action;
         private bool _isCanceled;
-        private bool _isSafe;
+        private readonly bool _isSafe;
 
         public DisposableAction(Action action, bool isSafe = false)
         {

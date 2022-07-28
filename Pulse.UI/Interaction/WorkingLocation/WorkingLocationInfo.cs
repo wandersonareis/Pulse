@@ -39,7 +39,7 @@ namespace Pulse.UI
                 return null;
 
             string rootDirectory = xmlElement.FindString("RootDirectory");
-            return new WorkingLocationInfo(rootDirectory);
+            return new(rootDirectory);
         }
     }
 }

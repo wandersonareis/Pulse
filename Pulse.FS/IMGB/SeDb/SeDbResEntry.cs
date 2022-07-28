@@ -13,7 +13,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
 
             Index = br.ReadInt32();
             Offset = br.ReadInt32();

@@ -16,7 +16,7 @@ namespace Pulse.UI
         {
             #region Constructor
 
-            _textBox = new UiTextBox {TextWrapping = TextWrapping.Wrap, AcceptsReturn = true, IsReadOnly = true, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalScrollBarVisibility = ScrollBarVisibility.Auto};
+            _textBox = new() {TextWrapping = TextWrapping.Wrap, AcceptsReturn = true, IsReadOnly = true, HorizontalScrollBarVisibility = ScrollBarVisibility.Auto, VerticalScrollBarVisibility = ScrollBarVisibility.Auto};
             AddUiElement(_textBox, 0, 0);
 
             #endregion
@@ -41,20 +41,20 @@ namespace Pulse.UI
             ZtrFileEntry[] entries;
             using (Stream data = listing.Accessor.ExtractBinary(entry))
             {
-                ZtrFileUnpacker unpacker = new ZtrFileUnpacker(data, encoding);
+                ZtrFileUnpacker unpacker = new(data, encoding);
                 entries = unpacker.Unpack();
             }
 
             if (entries.IsNullOrEmpty())
                 return;
 
-            using (MemoryStream ms = new MemoryStream(4096))
+            using (MemoryStream ms = new(4096))
             {
-                ZtrTextWriter writer = new ZtrTextWriter(ms, StringsZtrFormatter.Instance);
+                ZtrTextWriter writer = new(ms, StringsZtrFormatter.Instance);
                 writer.Write(entry.Name, entries);
 
                 ms.Position = 0;
-                using (StreamReader sr = new StreamReader(ms, System.Text.Encoding.UTF8, false))
+                using (StreamReader sr = new(ms, System.Text.Encoding.UTF8, false))
                     _textBox.Text = sr.ReadToEnd();
             }
 

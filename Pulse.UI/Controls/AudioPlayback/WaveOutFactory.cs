@@ -13,7 +13,7 @@ namespace NAudioDemo.AudioPlaybackDemo
             WaveCallbackStrategy strategy = _waveOutSettingsPanel.CallbackStrategy;
             if (strategy == WaveCallbackStrategy.Event)
             {
-                WaveOutEvent waveOut = new WaveOutEvent
+                WaveOutEvent waveOut = new()
                 {
                     DeviceNumber = _waveOutSettingsPanel.SelectedDeviceNumber,
                     DesiredLatency = latency
@@ -23,7 +23,7 @@ namespace NAudioDemo.AudioPlaybackDemo
             else
             {
                 WaveCallbackInfo callbackInfo = strategy == WaveCallbackStrategy.NewWindow ? WaveCallbackInfo.NewWindow() : WaveCallbackInfo.FunctionCallback();
-                WaveOut outputDevice = new WaveOut(callbackInfo)
+                WaveOut outputDevice = new(callbackInfo)
                 {
                     DeviceNumber = _waveOutSettingsPanel.SelectedDeviceNumber,
                     DesiredLatency = latency
@@ -37,7 +37,7 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         public UserControl CreateSettingsPanel()
         {
-            _waveOutSettingsPanel = new WaveOutSettingsPanel();
+            _waveOutSettingsPanel = new();
             return _waveOutSettingsPanel;
         }
 

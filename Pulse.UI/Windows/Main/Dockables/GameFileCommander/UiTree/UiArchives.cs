@@ -50,12 +50,12 @@ namespace Pulse.UI
 
         public UiNodePathBuilder(int capacity = 0)
         {
-            _elements = capacity == 0 ? new List<UiNodePathElement>() : new List<UiNodePathElement>(capacity);
+            _elements = capacity == 0 ? new() : new List<UiNodePathElement>(capacity);
         }
 
         public UiNodePath Build()
         {
-            return new UiNodePath(_elements.ToArray());
+            return new(_elements.ToArray());
         }
 
         public void Add(UiNodePathElement element) => _elements.Add(element);
@@ -149,19 +149,19 @@ namespace Pulse.UI
         private IEnumerable<UiArciveLeafsAccessor> GroupArchiveLeafs(IEnumerable<UiArchiveLeaf> leafs, bool? conversion, bool? compression)
         {
             foreach (IGrouping<ArchiveListing, UiArchiveLeaf> group in leafs.GroupBy(l => l.Listing))
-                yield return new UiArciveLeafsAccessor(group.Key, conversion, compression, group.Select(l => l.Entry).ToArray());
+                yield return new(group.Key, conversion, compression, group.Select(l => l.Entry).ToArray());
         }
 
         private IEnumerable<UiWpdLeafsAccessor> GroupWpdLeafs(IEnumerable<UiWpdTableLeaf> leafs, bool? conversion)
         {
             foreach (IGrouping<WpdArchiveListing, UiWpdTableLeaf> group in leafs.GroupBy(l => l.Listing))
-                yield return new UiWpdLeafsAccessor(group.Key, conversion, group.Select(l => l.Entry).ToArray());
+                yield return new(group.Key, conversion, group.Select(l => l.Entry).ToArray());
         }
 
         private IEnumerable<UiWdbMovieLeafsAccessor> GroupWdbLeafs(IEnumerable<UiWdbMovieLeaf> leafs, bool? conversion)
         {
             foreach (IGrouping<WdbMovieArchiveListing, UiWdbMovieLeaf> group in leafs.GroupBy(l => l.Listing))
-                yield return new UiWdbMovieLeafsAccessor(group.Key, conversion, group.Select(l => l.Entry).ToArray());
+                yield return new(group.Key, conversion, group.Select(l => l.Entry).ToArray());
         }
     }
 }

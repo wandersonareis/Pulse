@@ -8,7 +8,7 @@ namespace Pulse.UI
         {
             Exceptions.CheckArgumentNullOrEmprty(content, "content");
 
-            return new UiButton {Content = content};
+            return new() {Content = content};
         }
     }
 }

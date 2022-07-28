@@ -20,21 +20,21 @@ namespace Pulse.DirectX
             try
             {
                 _device = device;
-                _depthBuffer = new Texture2D(_device.Device, new Texture2DDescription
+                _depthBuffer = new(_device.Device, new()
                 {
                     Format = Format.D32_Float_S8X24_UInt,
                     ArraySize = 1,
                     MipLevels = 1,
                     Width = width,
                     Height = height,
-                    SampleDescription = new SampleDescription(1, 0),
+                    SampleDescription = new(1, 0),
                     Usage = ResourceUsage.Default,
                     BindFlags = BindFlags.DepthStencil,
                     CpuAccessFlags = CpuAccessFlags.None,
                     OptionFlags = ResourceOptionFlags.None
                 });
 
-                _depthView = new DepthStencilView(device.Device, _depthBuffer);
+                _depthView = new(device.Device, _depthBuffer);
             }
             catch
             {

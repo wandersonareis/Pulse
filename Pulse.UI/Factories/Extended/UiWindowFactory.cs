@@ -8,7 +8,7 @@ namespace Pulse.UI
         {
             Exceptions.CheckArgumentNullOrEmprty(title, "title");
 
-            UiWindow window = new UiWindow {Title = title};
+            UiWindow window = new() {Title = title};
 
             return window;
         }

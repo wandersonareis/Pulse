@@ -11,7 +11,7 @@ namespace Pulse.UI
         {
             Log.Error(exception, formatMessage, args);
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             if (!string.IsNullOrEmpty(formatMessage))
                 sb.AppendFormatLine(formatMessage, args);

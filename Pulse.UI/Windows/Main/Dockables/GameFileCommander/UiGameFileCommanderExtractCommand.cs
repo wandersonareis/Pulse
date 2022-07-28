@@ -24,17 +24,17 @@ namespace Pulse.UI
                 if (archives == null)
                     return;
 
-                UiGameFileCommanderSettingsWindow settingsDlg = new UiGameFileCommanderSettingsWindow(true);
+                UiGameFileCommanderSettingsWindow settingsDlg = new(true);
                 if (settingsDlg.ShowDialog() != true)
                     return;
 
-                Stopwatch sw = new Stopwatch();
+                Stopwatch sw = new();
                 sw.Start();
 
-                Wildcard wildcard = new Wildcard(settingsDlg.Wildcard, false);
+                Wildcard wildcard = new(settingsDlg.Wildcard, false);
                 bool? conversion = settingsDlg.Convert;
 
-                FileSystemExtractionTarget target = new FileSystemExtractionTarget();
+                FileSystemExtractionTarget target = new();
 
                 foreach (IUiLeafsAccessor accessor in archives.AccessToCheckedLeafs(wildcard, conversion, null))
                     accessor.Extract(target);

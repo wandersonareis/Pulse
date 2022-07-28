@@ -9,10 +9,10 @@ namespace Pulse.UI
         {
             Exceptions.CheckArgumentOutOfRangeException(rows, "rows", 1, 1024);
             Exceptions.CheckArgumentOutOfRangeException(cols, "cols", 1, 1024);
-            UiGrid grid = new UiGrid();
+            UiGrid grid = new();
 
-            if (rows > 1) while (rows-- > 0) grid.RowDefinitions.Add(new RowDefinition());
-            if (cols > 1) while (cols-- > 0) grid.ColumnDefinitions.Add(new ColumnDefinition());
+            if (rows > 1) while (rows-- > 0) grid.RowDefinitions.Add(new());
+            if (cols > 1) while (cols-- > 0) grid.ColumnDefinitions.Add(new());
 
             return grid;
         }

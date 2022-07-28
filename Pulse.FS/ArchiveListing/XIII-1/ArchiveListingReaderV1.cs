@@ -9,7 +9,7 @@ namespace Pulse.FS
     {
         public static ArchiveListing Read(ArchiveAccessor accessor, Action<long> progressIncrement, Action<long> progressTotalChanged)
         {
-            using (ArchiveListingReaderV1 reader = new ArchiveListingReaderV1(accessor, progressIncrement, progressTotalChanged))
+            using (ArchiveListingReaderV1 reader = new(accessor, progressIncrement, progressTotalChanged))
                 return reader.Read();
         }
 
@@ -38,10 +38,10 @@ namespace Pulse.FS
 
             ArchiveListingEntryInfoV1[] entries = _input.ReadStructs<ArchiveListingEntryInfoV1>(header.EntriesCount);
 
-            ArchiveListingCompressedData data = new ArchiveListingCompressedData(header);
+            ArchiveListingCompressedData data = new(header);
             data.ReadFromStream(_input);
 
-            ArchiveListing result = new ArchiveListing(_accessor, header);
+            ArchiveListing result = new(_accessor, header);
             ParseEntries(entries, data, result);
             return result;
         }
@@ -63,7 +63,7 @@ namespace Pulse.FS
                 long sector, uncompressedSize, compressedSize;
                 ParseInfo(entryInfoV1, buff, out sector, out uncompressedSize, out compressedSize, out name);
 
-                ArchiveEntry entry = new ArchiveEntry(name, sector, compressedSize, uncompressedSize)
+                ArchiveEntry entry = new(name, sector, compressedSize, uncompressedSize)
                 {
                     UnknownNumber = entryInfoV1.UnknownNumber,
                     UnknownValue = entryInfoV1.UnknownValue
@@ -81,7 +81,7 @@ namespace Pulse.FS
             {
                 fixed (byte* ptr = &uncompressedData[entryInfo.Offset])
                 {
-                    string str = new string((sbyte*)ptr);
+                    string str = new((sbyte*)ptr);
                     info = str.Split(':');
                 }
             }

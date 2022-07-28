@@ -4,7 +4,7 @@
     {
         public static UiScrollViewer Create()
         {
-            return new UiScrollViewer();
+            return new();
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Pulse.FS
     {
         public static ArchiveListing Read(ArchiveAccessor accessor, Action<long> progressIncrement, Action<long> progressTotalChanged)
         {
-            using (ArchiveListingReaderV2 reader = new ArchiveListingReaderV2(accessor, progressIncrement, progressTotalChanged))
+            using (ArchiveListingReaderV2 reader = new(accessor, progressIncrement, progressTotalChanged))
             {
                 ArchiveListing result = reader.Read();
                 return result;
@@ -57,10 +57,10 @@ namespace Pulse.FS
                     entries[i].BlockNumber = blockNumber;
                 }
 
-                ArchiveListingCompressedData data = new ArchiveListingCompressedData(header);
+                ArchiveListingCompressedData data = new(header);
                 data.ReadFromStream(input);
 
-                ArchiveListing result = new ArchiveListing(_accessor, header);
+                ArchiveListing result = new(_accessor, header);
                 ParseEntries(entries, data, result);
                 return result;
             }
@@ -79,7 +79,7 @@ namespace Pulse.FS
                 }
 
                 /*using (*/
-                TempFileProvider tmpProvider = new TempFileProvider(_accessor.ListingEntry.Name /*"filelist"*/, ".win32.bin");/*)*/
+                TempFileProvider tmpProvider = new(_accessor.ListingEntry.Name /*"filelist"*/, ".win32.bin");/*)*/
                 {
                     using (Stream output = tmpProvider.Create())
                     {
@@ -88,9 +88,9 @@ namespace Pulse.FS
                         result.SafeDispose();
                     }
 
-                    Process decrypter = new Process
+                    Process decrypter = new()
                     {
-                        StartInfo = new ProcessStartInfo()
+                        StartInfo = new()
                         {
                             FileName = @"Resources\Executable\ffxiiicrypt.exe",
                             Arguments = $"-d \"{tmpProvider.FilePath}\" filelist",
@@ -106,7 +106,7 @@ namespace Pulse.FS
                     decrypter.WaitForExit();
                     if (decrypter.ExitCode != -2)
                     {
-                        StringBuilder sb = new StringBuilder("Decryption error! Code: ");
+                        StringBuilder sb = new("Decryption error! Code: ");
                         sb.AppendLine(decrypter.ExitCode.ToString());
                         sb.AppendLine("Error: ");
                         sb.AppendLine(erroMessage.Result);
@@ -149,7 +149,7 @@ namespace Pulse.FS
                 long sector, uncompressedSize, compressedSize;
                 ParseInfo(entryInfoV2, buff, out sector, out uncompressedSize, out compressedSize, out name);
 
-                ArchiveEntry entry = new ArchiveEntry(name, sector, compressedSize, uncompressedSize)
+                ArchiveEntry entry = new(name, sector, compressedSize, uncompressedSize)
                 {
                     UnknownNumber = entryInfoV2.UnknownNumber,
                     UnknownValue = entryInfoV2.UnknownValue,
@@ -168,7 +168,7 @@ namespace Pulse.FS
             {
                 fixed (byte* ptr = &uncompressedData[entryInfo.Offset])
                 {
-                    string str = new string((sbyte*)ptr);
+                    string str = new((sbyte*)ptr);
                     info = str.Split(':');
                 }
             }

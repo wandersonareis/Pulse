@@ -39,7 +39,7 @@ namespace Pulse.Core
             try
             {
                 Interlocked.Increment(ref _counter);
-                DisposableStream result = new DisposableStream(stream);
+                DisposableStream result = new(stream);
                 result.AfterDispose.Add(new DisposableAction(Dispose));
                 return result;
             }

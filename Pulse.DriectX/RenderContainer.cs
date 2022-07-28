@@ -18,7 +18,7 @@ namespace Pulse.DirectX
         public BackBuffer BackBuffer { get; private set; }
         public DepthBuffer DepthBuffer { get; private set; }
 
-        private SwapChainDescription _swapChainDescription;
+        private readonly SwapChainDescription _swapChainDescription;
 
         public event Action<RenderContainer> Reseted;
 
@@ -28,15 +28,15 @@ namespace Pulse.DirectX
             {
                 _swapChainDescription = swapChainDescription;
 
-                using (Factory1 factory = new Factory1())
+                using (Factory1 factory = new())
                 using (Adapter adapter = factory.GetAdapter(0))
                 {
-                    Device11 = new Dx11ChainedDevice(adapter, _swapChainDescription);
-                    Device10 = new Dx10Device(adapter);
+                    Device11 = new(adapter, _swapChainDescription);
+                    Device10 = new(adapter);
                 }
 
-                GraphicsDevice = new GenericGraphicsDevice(Device11.Device);
-                SpriteBatch = new SpriteBatch(GraphicsDevice);
+                GraphicsDevice = new(Device11.Device);
+                SpriteBatch = new(GraphicsDevice);
 
                 Reset(control.Width, control.Height);
 
@@ -83,8 +83,8 @@ namespace Pulse.DirectX
             
             ResizeBuffers(width, height);
 
-            BackBuffer = new BackBuffer(Device10, Device11);
-            DepthBuffer = new DepthBuffer(Device11, width, height);
+            BackBuffer = new(Device10, Device11);
+            DepthBuffer = new(Device11, width, height);
 
             if (backgroundColor != null)
                 BackBuffer.BackgroundColor = backgroundColor.Value;

@@ -6,7 +6,7 @@ namespace Pulse.UI.Interaction
     {
         public ApplicationConfigInfo Provide()
         {
-            return new ApplicationConfigInfo();
+            return new();
         }
 
         public string Title => Lang.InfoProvider.ApplicationConfig.NewTitle;

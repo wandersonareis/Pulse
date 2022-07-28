@@ -9,7 +9,7 @@ namespace Pulse.UI
         {
             Exceptions.CheckArgumentNullOrEmprty(title, "title");
 
-            UiMenuItem menuItem = new UiMenuItem {Header = title, Command = command, CommandParameter = commandParameter};
+            UiMenuItem menuItem = new() {Header = title, Command = command, CommandParameter = commandParameter};
 
             return menuItem;
         }

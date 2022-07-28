@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Threading.Tasks;
 using Meziantou.Framework;
 using Pulse.Core;
 using Pulse.FS;
@@ -9,9 +10,9 @@ using Yusnaan.Compressor;
 
 namespace Yusnaan.Model.ztr
 {
-    internal static class ZtrFileReader
+    internal class ZtrFileReader
     {
-        public static void PulseUnpack(string file, Stream input, Stream output)
+        public void PulseUnpack(string file, Stream input, Stream output)
         {
             ZtrFileUnpacker unPacker = new(input, FFXIIITextEncodingFactory.CreateEuro());
             ZtrFileEntry[] entries = unPacker.Unpack();
@@ -20,14 +21,14 @@ namespace Yusnaan.Model.ztr
             writer.Write(file, entries);
         }
 
-        public static void ToTxt(string file, string fileName, int encoding)
+        public void ToTxt(string file, string fileName, int encoding)
         {
             ZtrFileHandler unpack = new();
 
             string[] result = unpack.Decompressor(file, encoding);
             File.WriteAllLines(Path.Combine(Path.GetDirectoryName(file) ?? throw new InvalidOperationException(), $"{fileName}.txt"), result);
         }
-        public static void ToStrings([DisallowNull] FullPath? file)
+        public async ValueTask ToStrings([DisallowNull] FullPath? file)
         {
             ArgumentNullException.ThrowIfNull(file);
             
@@ -41,16 +42,16 @@ namespace Yusnaan.Model.ztr
 
             Dictionary<string, string> entries = unpack.DecompressorDict(file.Value.Value, encodingCode);
 
-            using FileStream output = File.Create(Path.ChangeExtension(file.Value.Value, ".strings")!);
+            await using FileStream output = File.Create(Path.ChangeExtension(file.Value.Value, ".strings")!);
             ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
             writer.Write(fileName, entries);
         }
-        public static void TestToStrings(FileInfo file)
+        public async ValueTask ZtrTextReader(FileInfo file)
         {
             ArgumentNullException.ThrowIfNull(file);
 
-            string? fileName = Path.GetFileNameWithoutExtension(file.Name);
-            string? name = fileName.Split((char)46)[0];
+            string fileName = Path.GetFileNameWithoutExtension(file.Name);
+            string name = fileName.Split((char)46)[0];
             string? lang = name[^3..];
 
             if (!GameEncoding.EncodingCode.TryGetValue(lang ?? throw new InvalidOperationException(), out int encodingCode)) encodingCode = 65001;
@@ -59,7 +60,7 @@ namespace Yusnaan.Model.ztr
 
             Dictionary<string, string> entries = unpack.DecompressorDict(file.FullName, encodingCode);
 
-            using FileStream output = new(Path.ChangeExtension(file.FullName, ".strings"), FileMode.Create, FileAccess.ReadWrite);
+            await using FileStream output = new(Path.ChangeExtension(file.FullName, ".strings"), FileMode.Create, FileAccess.ReadWrite);
 
             ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
             writer.Write(fileName, entries);

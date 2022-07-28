@@ -35,17 +35,17 @@ namespace Pulse.UI
 
             SetCols(2);
             SetRows(3);
-            RowDefinitions[1].Height = new GridLength();
-            RowDefinitions[2].Height = new GridLength();
+            RowDefinitions[1].Height = new();
+            RowDefinitions[2].Height = new();
 
-            _treeView = new Tree();
+            _treeView = new();
             _treeView.SelectedItemChanged += OnTreeViewSelectedItemChanged;
             AddUiElement(_treeView, 0, 0, 2);
 
-            _propertyGrid = new PropertyGrid {AutoGenerateProperties = true};
+            _propertyGrid = new() {AutoGenerateProperties = true};
             AddUiElement(_propertyGrid, 0, 1);
 
-            _viewer = new UiDxViewport
+            _viewer = new()
             {
                 MinWidth = 320,
                 MinHeight = 240
@@ -56,7 +56,7 @@ namespace Pulse.UI
             UiButton rollbackButton = UiButtonFactory.Create(Lang.Button.Rollback);
             {
                 rollbackButton.Width = 200;
-                rollbackButton.Margin = new Thickness(5);
+                rollbackButton.Margin = new(5);
                 rollbackButton.HorizontalAlignment = HorizontalAlignment.Left;
                 rollbackButton.VerticalAlignment = VerticalAlignment.Center;
                 rollbackButton.Click += OnRolbackButtonClick;
@@ -66,7 +66,7 @@ namespace Pulse.UI
             UiButton injectButton = UiButtonFactory.Create(Lang.Button.Inject);
             {
                 injectButton.Width = 200;
-                injectButton.Margin = new Thickness(5, 5, 210, 5);
+                injectButton.Margin = new(5, 5, 210, 5);
                 injectButton.HorizontalAlignment = HorizontalAlignment.Right;
                 injectButton.VerticalAlignment = VerticalAlignment.Center;
                 injectButton.Click += OnInjectButtonClick;
@@ -76,7 +76,7 @@ namespace Pulse.UI
             UiButton saveAsButton = UiButtonFactory.Create(Lang.Button.SaveAs);
             {
                 saveAsButton.Width = 200;
-                saveAsButton.Margin = new Thickness(5);
+                saveAsButton.Margin = new(5);
                 saveAsButton.HorizontalAlignment = HorizontalAlignment.Right;
                 saveAsButton.VerticalAlignment = VerticalAlignment.Center;
                 saveAsButton.Click += OnSaveAsButtonClick;
@@ -159,19 +159,19 @@ namespace Pulse.UI
                 {
                     case YkdResourceViewportType.Fragment:
                         FragmentYkdResourceViewport fragment = (FragmentYkdResourceViewport)resource.Viewport;
-                        texture.Draw(device, spriteBatch, new Vector2(w, 0), new Rectangle(fragment.SourceX, fragment.SourceY, fragment.SourceWidth, fragment.SourceHeight), 1.0f, cliprectangle);
+                        texture.Draw(device, spriteBatch, new(w, 0), new(fragment.SourceX, fragment.SourceY, fragment.SourceWidth, fragment.SourceHeight), 1.0f, cliprectangle);
                         w += fragment.SourceWidth;
                         h = Math.Max(h, fragment.SourceHeight);
                         break;
                     case YkdResourceViewportType.Full:
                         FullYkdResourceViewport full = (FullYkdResourceViewport)resource.Viewport;
-                        texture.Draw(device, spriteBatch, new Vector2(w, 0), new Rectangle(0, 0, full.ViewportWidth, full.ViewportHeight), 1.0f, cliprectangle);
+                        texture.Draw(device, spriteBatch, new(w, 0), new(0, 0, full.ViewportWidth, full.ViewportHeight), 1.0f, cliprectangle);
                         w += full.ViewportWidth;
                         h = Math.Max(h, full.ViewportHeight);
                         break;
                     case YkdResourceViewportType.Extra:
                         ExtraYkdResourceViewport extra = (ExtraYkdResourceViewport)resource.Viewport;
-                        texture.Draw(device, spriteBatch, new Vector2(w, 0), new Rectangle(0, 0, extra.SourceWidth, extra.SourceHeight), 1.0f, cliprectangle);
+                        texture.Draw(device, spriteBatch, new(w, 0), new(0, 0, extra.SourceWidth, extra.SourceHeight), 1.0f, cliprectangle);
                         w += extra.SourceWidth;
                         h = Math.Max(h, extra.SourceHeight);
                         break;
@@ -216,7 +216,7 @@ namespace Pulse.UI
                 if (_ykdFile == null)
                     return;
 
-                MemoryStream output = new MemoryStream(32 * 1024);
+                MemoryStream output = new(32 * 1024);
                 _ykdFile.WriteToStream(output);
 
                 UiWpdInjector.InjectSingle(_listing, _entry, output);
@@ -235,7 +235,7 @@ namespace Pulse.UI
                     return;
 
                 string targetPath;
-                using (CommonSaveFileDialog dlg = new CommonSaveFileDialog(Lang.Dialogue.SaveAs.Title))
+                using (CommonSaveFileDialog dlg = new(Lang.Dialogue.SaveAs.Title))
                 {
                     dlg.DefaultFileName = _entry.Name;
                     if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
@@ -327,7 +327,7 @@ namespace Pulse.UI
 
             protected internal void RaisePropertyChanged(string propertyName) =>
                 PropertyChanged?.Invoke(this,
-                    new PropertyChangedEventArgs(propertyName));
+                    new(propertyName));
         }
 
         private abstract class View<TView, TNative> : View
@@ -349,17 +349,17 @@ namespace Pulse.UI
             public override DataTemplate TreeViewTemplate => LazyTreeViewTemplate.Value;
 
             // ReSharper disable once StaticMemberInGenericType
-            private static readonly Lazy<DataTemplate> LazyTreeViewTemplate = new Lazy<DataTemplate>(CreateTemplate);
+            private static readonly Lazy<DataTemplate> LazyTreeViewTemplate = new(CreateTemplate);
 
             private static DataTemplate CreateTemplate()
             {
-                HierarchicalDataTemplate template = new HierarchicalDataTemplate
+                HierarchicalDataTemplate template = new()
                 {
                     DataType = TypeCache<TView>.Type,
                     ItemsSource = new Binding("BindableChilds")
                 };
 
-                FrameworkElementFactory textBlock = new FrameworkElementFactory(typeof(TextBlock));
+                FrameworkElementFactory textBlock = new(typeof(TextBlock));
                 textBlock.SetBinding(TextBlock.TextProperty, new Binding("Title"));
                 textBlock.SetBinding(ContextMenuProperty, new Binding("ContextMenu"));
 
@@ -884,8 +884,8 @@ namespace Pulse.UI
 
             private class YkdResourceViewRemoveCommand : ICommand
             {
-                private YkdResourceView _resource;
-                private YkdResourcesView _collection;
+                private readonly YkdResourceView _resource;
+                private readonly YkdResourcesView _collection;
 
                 public YkdResourceViewRemoveCommand(YkdResourceView ykdResourceView, YkdResourcesView parent)
                 {
@@ -915,8 +915,8 @@ namespace Pulse.UI
 
             private class YkdResourceViewDuplicateCommand : ICommand
             {
-                private YkdResourceView _resource;
-                private YkdResourcesView _collection;
+                private readonly YkdResourceView _resource;
+                private readonly YkdResourcesView _collection;
 
                 public YkdResourceViewDuplicateCommand(YkdResourceView ykdResourceView, YkdResourcesView parent)
                 {

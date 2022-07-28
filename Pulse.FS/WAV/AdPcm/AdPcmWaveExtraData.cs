@@ -11,7 +11,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
             SamplesPerBlock = br.ReadInt16();
             CoefficientsCount = br.ReadInt16();
             Coefficients = stream.ReadContent<AdPcmCoefficientSet>(CoefficientsCount);
@@ -19,7 +19,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
             bw.Write(SamplesPerBlock);
             bw.Write(CoefficientsCount);
             stream.WriteContent(Coefficients);

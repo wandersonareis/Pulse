@@ -31,19 +31,19 @@ namespace Pulse.UI
             _grid.ColumnDefinitions[1].Width = GridLength.Auto;
             _grid.RowDefinitions[1].Height = GridLength.Auto;
 
-            _verticalScrollBar = new ScrollBar {Orientation = Orientation.Vertical};
+            _verticalScrollBar = new() {Orientation = Orientation.Vertical};
             {
                 _verticalScrollBar.ValueChanged += OnVerticalScroll;
                 _grid.AddUiElement(_verticalScrollBar, 0, 1);
             }
 
-            _horizontalScrollBar = new ScrollBar {Orientation = Orientation.Horizontal};
+            _horizontalScrollBar = new() {Orientation = Orientation.Horizontal};
             {
                 _horizontalScrollBar.ValueChanged += OnHorizontalScroll;
                 _grid.AddUiElement(_horizontalScrollBar, 1, 0);
             }
 
-            DxControl = new UiDxControl();
+            DxControl = new();
             {
                 DxControl.SizeChanged += OnDxControlSizeChanged;
                 _grid.AddUiElement(DxControl, 0, 0);
@@ -57,13 +57,13 @@ namespace Pulse.UI
 
         public event UiDxControl.DrawSpritesDelegate DrawSprites
         {
-            add { DxControl.DrawSprites += (device, spriteBatch, clipRectangle) => value(device, spriteBatch, new Rectangle(X, Y, clipRectangle.Width, clipRectangle.Height)); }
+            add { DxControl.DrawSprites += (device, spriteBatch, clipRectangle) => value(device, spriteBatch, new(X, Y, clipRectangle.Width, clipRectangle.Height)); }
             remove => throw new NotSupportedException();
         }
 
         public event UiDxControl.DrawPrimitivesDelegate DrawPrimitives
         {
-            add { DxControl.DrawPrimitives += (device, primitivesBatch, clipRectangle) => value(device, primitivesBatch, new Rectangle(X, Y, clipRectangle.Width, clipRectangle.Height)); }
+            add { DxControl.DrawPrimitives += (device, primitivesBatch, clipRectangle) => value(device, primitivesBatch, new(X, Y, clipRectangle.Width, clipRectangle.Height)); }
             remove => throw new NotSupportedException();
         }
 

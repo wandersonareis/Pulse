@@ -8,7 +8,7 @@ namespace Pulse.Core
     public sealed class SharedMemoryMappedFile
     {
         private readonly string _filePath;
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         private long _counter;
         private MemoryMappedFile _mmf;
 
@@ -30,7 +30,7 @@ namespace Pulse.Core
         public Stream CreateViewStream(long offset, long size, MemoryMappedFileAccess access)
         {
             IDisposable context = Acquire();
-            DisposableStream result = new DisposableStream(_mmf.CreateViewStream(offset, size, access));
+            DisposableStream result = new(_mmf.CreateViewStream(offset, size, access));
             result.AfterDispose.Add(context);
             return result;
         }
@@ -65,7 +65,7 @@ namespace Pulse.Core
                         throw new NotSupportedException();
                 }
 
-                FileStream file = new FileStream(_filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                FileStream file = new(_filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
                 try
                 {
                     offset = MathEx.RoundUp(file.Length, 0x800);
@@ -79,7 +79,7 @@ namespace Pulse.Core
                 }
 
                 Interlocked.Increment(ref _counter);
-                DisposableStream result = new DisposableStream(_mmf.CreateViewStream(offset, value, MemoryMappedFileAccess.ReadWrite));
+                DisposableStream result = new(_mmf.CreateViewStream(offset, value, MemoryMappedFileAccess.ReadWrite));
                 result.AfterDispose.Add(new DisposableAction(Free));
                 return result;
             }

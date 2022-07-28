@@ -63,7 +63,7 @@ namespace Pulse.FS
             if (TextLinesTable.Length != Count)
                 throw new InvalidDataException();
 
-            BinaryWriter bw = new BinaryWriter(output);
+            BinaryWriter bw = new(output);
             bw.WriteBig(Version);
             bw.WriteBig(Count);
             bw.WriteBig(KeysUnpackedSize);

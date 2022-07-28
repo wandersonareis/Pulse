@@ -23,8 +23,8 @@ namespace Pulse.UI
             _conversion = conversion;
             _target = target;
             _extractors = ProvideExtractors(conversion);
-            _headers = new Lazy<Stream>(AcquireHeaders);
-            _content = new Lazy<Stream>(AcquireContent);
+            _headers = new(AcquireHeaders);
+            _content = new(AcquireContent);
         }
 
         public void Dispose()
@@ -86,7 +86,7 @@ namespace Pulse.UI
         #region Static
 
         private static readonly IWpdEntryExtractor DefaultExtractor = ProvideDefaultExtractor();
-        private static readonly Dictionary<string, IWpdEntryExtractor> Empty = new Dictionary<string, IWpdEntryExtractor>(0);
+        private static readonly Dictionary<string, IWpdEntryExtractor> Empty = new(0);
         private static readonly Dictionary<string, IWpdEntryExtractor> Converters = RegisterConverters();
 
         private static IWpdEntryExtractor ProvideDefaultExtractor()
@@ -96,7 +96,7 @@ namespace Pulse.UI
 
         private static Dictionary<string, IWpdEntryExtractor> RegisterConverters()
         {
-            return new Dictionary<string, IWpdEntryExtractor>
+            return new()
             {
                 {"txbh", new TxbhToDdsWpdEntryExtractor()},
                 {"vtex", new VtexToDdsWpdEntryExtractor()},

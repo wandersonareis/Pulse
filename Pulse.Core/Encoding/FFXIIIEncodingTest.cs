@@ -7,8 +7,8 @@ namespace Pulse.Core
     {
         public static void Test()
         {
-            HashSet<int> values = new HashSet<int>();
-            HashSet<int> indices = new HashSet<int>();
+            HashSet<int> values = new();
+            HashSet<int> indices = new();
             foreach (var h in new[] {0x81, 0x85})
             {
                 for (int l = 0; l < 256; l++)

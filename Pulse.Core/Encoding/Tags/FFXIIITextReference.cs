@@ -55,7 +55,7 @@ namespace Pulse.Core
                 throw new InvalidDataException();
 
             string content = Encoding.ASCII.GetString(result, 0, index + 1);
-            return new FFXIIITextReference(content);
+            return new(content);
         }
 
         public static FFXIIITextReference TryRead(char[] chars, ref int offset, ref int left)
@@ -78,8 +78,8 @@ namespace Pulse.Core
             if (index >= MaxTagLength)
                 throw new InvalidDataException();
 
-            string content = new string(result, 0, index + 1);
-            return new FFXIIITextReference(content);
+            string content = new(result, 0, index + 1);
+            return new(content);
         }
 
         public override string ToString()

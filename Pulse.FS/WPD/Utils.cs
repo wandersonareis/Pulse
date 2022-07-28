@@ -8,7 +8,7 @@ namespace Pulse.FS
     {
         public void RunLs(string args)
         {
-            ProcessStartInfo processStartInfo = new ProcessStartInfo();
+            ProcessStartInfo processStartInfo = new();
             processStartInfo.FileName = Application.StartupPath + "\\ls.exe";
             processStartInfo.ErrorDialog = false;
             processStartInfo.Arguments = " " + args;
@@ -18,7 +18,7 @@ namespace Pulse.FS
             using (Process process = Process.Start(processStartInfo))
             {
                 string value = process?.StandardOutput.ReadToEnd();
-                StreamWriter streamWriter = new StreamWriter(Application.StartupPath + "\\ls.txt");
+                StreamWriter streamWriter = new(Application.StartupPath + "\\ls.txt");
                 streamWriter.WriteLine(value);
                 streamWriter.Close();
                 process?.WaitForExit();
@@ -27,7 +27,7 @@ namespace Pulse.FS
 
         public void RunFfxiiiCrypt(string args)
         {
-            ProcessStartInfo processStartInfo = new ProcessStartInfo();
+            ProcessStartInfo processStartInfo = new();
             processStartInfo.FileName = Application.StartupPath + "\\ffxiiicrypt.exe";
             processStartInfo.Arguments = " " + args;
             processStartInfo.WindowStyle = ProcessWindowStyle.Hidden;

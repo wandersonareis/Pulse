@@ -32,16 +32,16 @@ namespace Pulse.UI
             UiGrid root = UiGridFactory.Create(2, 1);
             root.RowDefinitions[0].Height = GridLength.Auto;
 
-            DockingManager dockingManager = new DockingManager();
+            DockingManager dockingManager = new();
             {
                 root.AddUiElement(dockingManager, 1, 0);
-                _layoutSerializer = new XmlLayoutSerializer(dockingManager);
+                _layoutSerializer = new(dockingManager);
                 _layoutSerializer.LayoutSerializationCallback += OnLayoutDeserialized;
             }
 
             _mainMenu = UiMenuFactory.Create();
             {
-                _mainMenuView = _mainMenu.AddChild(UiMenuItemFactory.Create("Вид"));
+                _mainMenuView = _mainMenu.AddChild(UiMenuItemFactory.Create("Ver"));
                 {
                     foreach (UiMainDockableControl dockable in UiMainDockableControl.CreateKnownDockables(dockingManager))
                         _mainMenuView.AddChild(dockable.CreateMenuItem());

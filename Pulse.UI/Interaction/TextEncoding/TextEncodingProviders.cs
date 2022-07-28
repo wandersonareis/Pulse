@@ -9,7 +9,7 @@ namespace Pulse.UI
         {
             Capacity = 3;
 
-            TextEncodingUserProvider userProvider = new TextEncodingUserProvider();
+            TextEncodingUserProvider userProvider = new();
             InfoProvided += userProvider.EncodingProvided;
 
             Add(new TextEncodingWorkingLocationProvider());

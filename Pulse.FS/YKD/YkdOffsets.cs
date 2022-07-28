@@ -27,7 +27,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
 
             int count = br.ReadInt32();
             Unknown1 = br.ReadInt32();
@@ -50,7 +50,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
 
             bw.Write(Count);
             bw.Write(Unknown1);
@@ -68,7 +68,7 @@ namespace Pulse.FS
         public static void WriteToStream<T>(Stream stream, ref YkdOffsets self, ref T[] values, Func<T, int> valueSizeCalculator)
         {
             if (values == null) values = new T[0];
-            if (self == null) self = new YkdOffsets();
+            if (self == null) self = new();
 
             self.Offsets = new int[values.Length];
             int offset = (int)stream.Position + self.CalcSize();

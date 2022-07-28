@@ -18,19 +18,19 @@ namespace Pulse.FS
 
         public void Write(ArchiveListing listing, out ArchiveListingBlockInfo[] blocksInfo, out ArchiveListingEntryInfoV3[] entriesInfoV3)
         {
-            using (MemoryStream ms = new MemoryStream(32768))
+            using (MemoryStream ms = new(32768))
             {
                 int blockNumber = 0, unpackedBlockOffset = 0;
                 entriesInfoV3 = new ArchiveListingEntryInfoV3[listing.Count];
-                List<ArchiveListingBlockInfo> blocks = new List<ArchiveListingBlockInfo>(128);
-                using (FormattingStreamWriter sw = new FormattingStreamWriter(ms, Encoding.ASCII, 4096, true, CultureInfo.InvariantCulture))
+                List<ArchiveListingBlockInfo> blocks = new(128);
+                using (FormattingStreamWriter sw = new(ms, Encoding.ASCII, 4096, true, CultureInfo.InvariantCulture))
                 {
                     sw.AutoFlush = true;
                     for (int i = 0; i < listing.Count; i++)
                     {
                         ArchiveEntry entry = listing[i];
 
-                        ArchiveListingEntryInfoV3 info = new ArchiveListingEntryInfoV3 { BlockNumber = (short)(ms.Position / 8192) };
+                        ArchiveListingEntryInfoV3 info = new() { BlockNumber = (short)(ms.Position / 8192) };
                         info.Flag = (info.BlockNumber % 2 != 0);
 
                         entriesInfoV3[i] = info;
@@ -39,7 +39,7 @@ namespace Pulse.FS
                         {
                             int blockSize = (int)(ms.Position - unpackedBlockOffset);
                             ms.Position = unpackedBlockOffset;
-                            ArchiveListingBlockInfo block = new ArchiveListingBlockInfo { Offset = (int)_output.Position, UncompressedSize = blockSize };
+                            ArchiveListingBlockInfo block = new() { Offset = (int)_output.Position, UncompressedSize = blockSize };
                             block.CompressedSize = ZLibHelper.Compress(ms, _output, block.UncompressedSize);
                             blocks.Add(block);
 
@@ -53,7 +53,7 @@ namespace Pulse.FS
                             sw.Write("{0:x}:{1:x}:{2:x}:{3}\0end\0", entry.Sector, entry.UncompressedSize, entry.Size, entry.Name);
                             int blockSize = (int)(ms.Position - unpackedBlockOffset);
                             ms.Position = unpackedBlockOffset;
-                            ArchiveListingBlockInfo block = new ArchiveListingBlockInfo { Offset = (int)_output.Position, UncompressedSize = blockSize };
+                            ArchiveListingBlockInfo block = new() { Offset = (int)_output.Position, UncompressedSize = blockSize };
                             block.CompressedSize = ZLibHelper.Compress(ms, _output, block.UncompressedSize);
                             blocks.Add(block);
                         }

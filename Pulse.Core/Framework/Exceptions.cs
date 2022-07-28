@@ -13,7 +13,7 @@ namespace Pulse.Core
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static Exception CreateException(string message, params object[] args)
         {
-            return new Exception(string.Format(message, args));
+            return new(string.Format(message, args));
         }
 
         [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")]

@@ -11,7 +11,7 @@ namespace Pulse.FS
         public static byte[] Uncompress(Stream input, int uncompressedSize)
         {
             byte[] buff = new byte[uncompressedSize];
-            ZInputStream reader = new ZInputStream(input);
+            ZInputStream reader = new(input);
             reader.EnsureRead(buff, 0, uncompressedSize);
             return buff;
         }
@@ -43,7 +43,7 @@ namespace Pulse.FS
             Exceptions.CheckArgumentNull(output, "output");
             Exceptions.CheckArgumentOutOfRangeException(uncompressedSize, "uncompressedSize", 0, int.MaxValue);
 
-            ZInputStream reader = new ZInputStream(input);
+            ZInputStream reader = new(input);
 
             int readed;
             while (uncompressedSize > 0 && (readed = reader.read(buff, 0, Math.Min(buff.Length, uncompressedSize))) > 0)
@@ -57,7 +57,7 @@ namespace Pulse.FS
             }
 
             if (uncompressedSize != 0)
-                throw new Exception("Неожиданный конец потока.");
+                throw new("Неожиданный конец потока.");
         }
 
         public static int Compress(Stream input, Stream output, int uncompressedSize, Action<long> compressed = null)
@@ -67,7 +67,7 @@ namespace Pulse.FS
             Exceptions.CheckArgumentOutOfRangeException(uncompressedSize, "uncompressedSize", 0, int.MaxValue);
 
             byte[] buff = new byte[Math.Min(32 * 1024, uncompressedSize)];
-            ZOutputStream writer = new ZOutputStream(output, 6);
+            ZOutputStream writer = new(output, 6);
 
             long position = output.Position;
 
@@ -82,7 +82,7 @@ namespace Pulse.FS
             writer.finish();
 
             if (uncompressedSize != 0)
-                throw new Exception("Неожиданный конец потока.");
+                throw new("Неожиданный конец потока.");
 
             return (int)(output.Position - position);
         }
@@ -95,14 +95,14 @@ namespace Pulse.FS
             while (size > 0 && (readed = self.read(buff, offset, size)) != 0)
             {
                 if (readed < 0)
-                    throw new Exception("Неожиданный конец потока.");
+                    throw new("Неожиданный конец потока.");
 
                 size -= readed;
                 offset += readed;
             }
 
             if (size != 0)
-                throw new Exception("Неожиданный конец потока.");
+                throw new("Неожиданный конец потока.");
         }
     }
 }

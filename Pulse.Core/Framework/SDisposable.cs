@@ -5,7 +5,7 @@ namespace Pulse.Core
 {
     public static class DisposableSerivce
     {
-        private static readonly ConcurrentStack<IDisposable> Disposables = new ConcurrentStack<IDisposable>();
+        private static readonly ConcurrentStack<IDisposable> Disposables = new();
 
         public static void Register(IDisposable disposable)
         {

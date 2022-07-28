@@ -15,7 +15,7 @@ namespace Pulse.UI
         protected string Header { get; set; }
         private DockingManager DockingManager { get; set; }
         internal LayoutAnchorable LayoutAnchorable { get; set; }
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
 
         public static UiMainDockableControl[] CreateKnownDockables(DockingManager dockingManager)
         {
@@ -23,7 +23,7 @@ namespace Pulse.UI
             Assembly currentAssymbly = Assembly.GetExecutingAssembly();
 
             Type[] types = currentAssymbly.GetTypes();
-            SortedList<int, UiMainDockableControl> list = new SortedList<int, UiMainDockableControl>();
+            SortedList<int, UiMainDockableControl> list = new();
             foreach (Type type in types)
             {
                 if (!type.IsSubclassOf(currentType))
@@ -43,7 +43,7 @@ namespace Pulse.UI
 
         private sealed class MenuCommand : ICommand
         {
-            public static readonly MenuCommand Instance = new MenuCommand();
+            public static readonly MenuCommand Instance = new();
 
             private MenuCommand()
             {
@@ -64,7 +64,7 @@ namespace Pulse.UI
                     LayoutAnchorable layout = window.LayoutAnchorable ?? (window.LayoutAnchorable = window.DockingManager.Layout.Descendents().OfType<LayoutAnchorable>().FirstOrDefault(l => l.Title == window.Header));
                     if (layout == null)
                     {
-                        layout = new LayoutAnchorable
+                        layout = new()
                         {
                             ContentId = window.Header,
                             Title = window.Header,

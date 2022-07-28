@@ -50,7 +50,7 @@ namespace Pulse.FS
                     codeBuff[count++] = 0;
                     codeBuff[count++] = 0;
 
-                    lines[e] = new ZtrFileHeaderLineInfo
+                    lines[e] = new()
                     {
                         Block = _blockNumber,
                         BlockOffset = 0 // See below: lines[i].BlockOffset = checked ((byte)innerOffsets[i, 1]);

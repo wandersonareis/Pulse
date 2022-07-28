@@ -24,7 +24,7 @@ namespace Pulse.Core.WinAPI
             {
                 string processIdStr = processId.ToString();
                 const string query = "SELECT ExecutablePath, ProcessID FROM Win32_Process";
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(query);
+                ManagementObjectSearcher searcher = new(query);
 
                 foreach (ManagementBaseObject o in searcher.Get())
                 {

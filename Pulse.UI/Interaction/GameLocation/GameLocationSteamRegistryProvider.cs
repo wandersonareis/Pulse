@@ -19,7 +19,7 @@ namespace Pulse.UI
                 if (registryKey == null)
                     throw Exceptions.CreateException("Não foi encontrada nenhuma entrada no registro.");
 
-                GameLocationInfo result = new GameLocationInfo((string)registryKey.GetValue(SteamGamePathTag));
+                GameLocationInfo result = new((string)registryKey.GetValue(SteamGamePathTag));
                 result.Validate();
 
                 return result;

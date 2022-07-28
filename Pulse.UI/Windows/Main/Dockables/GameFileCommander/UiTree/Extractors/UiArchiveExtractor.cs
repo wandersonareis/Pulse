@@ -75,7 +75,7 @@ namespace Pulse.UI
         #region Static
 
         private static readonly IArchiveEntryExtractor DefaultExtractor = ProvideDefaultExtractor();
-        private static readonly Dictionary<string, IArchiveEntryExtractor> Emptry = new Dictionary<string, IArchiveEntryExtractor>(0);
+        private static readonly Dictionary<string, IArchiveEntryExtractor> Emptry = new(0);
         private static readonly Dictionary<string, IArchiveEntryExtractor> Converters = RegisterConverters();
 
         private static IArchiveEntryExtractor ProvideDefaultExtractor()
@@ -85,7 +85,7 @@ namespace Pulse.UI
 
         private static Dictionary<string, IArchiveEntryExtractor> RegisterConverters()
         {
-            return new Dictionary<string, IArchiveEntryExtractor>
+            return new()
             {
                 {".ztr", new ZtrToStringsArchiveEntryExtractor()},
                 {".win32.scd", new ScdToWaveArchiveEntryExtractor()}

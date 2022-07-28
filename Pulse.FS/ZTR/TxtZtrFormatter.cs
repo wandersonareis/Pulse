@@ -7,7 +7,7 @@ namespace Pulse.FS
 {
     public sealed class TxtZtrFormatter : IZtrFormatter
     {
-        private static readonly Lazy<TxtZtrFormatter> LazyInstance = new Lazy<TxtZtrFormatter>();
+        private static readonly Lazy<TxtZtrFormatter> LazyInstance = new();
 
         public static TxtZtrFormatter Instance => LazyInstance.Value;
 
@@ -30,7 +30,7 @@ namespace Pulse.FS
 
             string[] line = str.Split('║');
             index = int.Parse(line[0], CultureInfo.InvariantCulture);
-            return new ZtrFileEntry {Key = line[1], Value = line[2]};
+            return new() {Key = line[1], Value = line[2]};
         }
 
         

@@ -23,7 +23,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
             _inputOffset = stream.Position;
             DataLength = br.ReadInt32();
             NumChannels = br.ReadInt32();
@@ -40,7 +40,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
             bw.Write(DataLength);
             bw.Write(NumChannels);
             bw.Write(SamplingRate);

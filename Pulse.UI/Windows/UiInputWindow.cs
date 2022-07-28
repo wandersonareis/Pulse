@@ -20,14 +20,14 @@ namespace Pulse.UI
                 _textBox = UiWatermarkTextBoxFactory.Create(watermark, text);
                 {
                     _textBox.Width = 320;
-                    _textBox.Margin = new Thickness(3);
+                    _textBox.Margin = new(3);
                     root.AddUiElement(_textBox, 0, 0);
                 }
 
                 UiButton button = UiButtonFactory.Create("OK");
                 {
                     button.Width = 70;
-                    button.Margin = new Thickness(3);
+                    button.Margin = new(3);
                     button.Click += OnOkButtonClick;
                     root.AddUiElement(button, 0, 1);
                 }

@@ -17,10 +17,10 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
             Magic = br.ReadInt32();
             if (Magic != MagicNumber)
-                throw new Exception("Assinatura de arquivo incorreta: " + Magic);
+                throw new("Assinatura de arquivo incorreta: " + Magic);
 
             Type = (SectionType)br.ReadInt32();
             Version = br.ReadBigInt32();
@@ -31,7 +31,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
             bw.Write(Magic);
             bw.Write((int)Type);
             bw.WriteBig(Version);

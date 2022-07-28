@@ -10,7 +10,7 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         public IWavePlayer CreateDevice(int latency)
         {
-            WasapiOut wasapi = new WasapiOut(
+            WasapiOut wasapi = new(
                 _settingsPanel.SelectedDevice,
                 _settingsPanel.ShareMode,
                 _settingsPanel.UseEventCallback,
@@ -20,7 +20,7 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         public UserControl CreateSettingsPanel()
         {
-            _settingsPanel = new WasapiOutSettingsPanel();
+            _settingsPanel = new();
             return _settingsPanel;
         }
 

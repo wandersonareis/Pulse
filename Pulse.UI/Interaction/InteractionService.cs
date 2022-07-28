@@ -19,12 +19,12 @@ namespace Pulse.UI
 
         static InteractionService()
         {
-            Configuration = new ApplicationConfigProviders();
-            AudioSettings = new AudioSettingsProviders();
-            GameLocation = new GameLocationProviders();
-            WorkingLocation = new WorkingLocationProviders();
-            TextEncoding = new TextEncodingProviders();
-            LocalizatorEnvironment = new LocalizatorEnvironmentProviders();
+            Configuration = new();
+            AudioSettings = new();
+            GameLocation = new();
+            WorkingLocation = new();
+            TextEncoding = new();
+            LocalizatorEnvironment = new();
 
             GameLocation.InfoProvided += Configuration.GameLocationProvided;
             WorkingLocation.InfoProvided += Configuration.WorkingLocationProvided;

@@ -8,7 +8,7 @@ namespace Pulse.Core
     [Serializable]
     public sealed class PathComparer : IEqualityComparer<string>
     {
-        public static readonly Lazy<PathComparer> Instance = new Lazy<PathComparer>(() => new PathComparer());
+        public static readonly Lazy<PathComparer> Instance = new(() => new());
 
         private PathComparer()
         {

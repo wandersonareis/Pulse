@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using Pulse.Core;
 using Pulse.UI;
 
@@ -11,13 +12,14 @@ namespace Pulse
     public partial class UiGamePartSelectDialog
     {
         public FFXIIIGamePart Result { get; set; }
+        public Button btnFF13 => this.Ff13;
 
         public UiGamePartSelectDialog()
         {
             InitializeComponent();
         }
 
-        private void OnPart1ButtonClick(object sender, RoutedEventArgs e)
+        public void OnPart1ButtonClick(object sender, RoutedEventArgs e)
         {
             try
             {

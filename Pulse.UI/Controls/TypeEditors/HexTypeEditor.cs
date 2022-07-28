@@ -10,7 +10,7 @@ namespace Pulse.UI
 {
     public class HexTypeEditor : TypeEditor<UiHexControl>
     {
-        protected override UiHexControl CreateEditor() => new UiHexControl();
+        protected override UiHexControl CreateEditor() => new();
 
         protected override void SetControlProperties()
         {
@@ -22,12 +22,12 @@ namespace Pulse.UI
     public sealed class UiHexControl : WindowsFormsHost
     {
         private readonly HexBox _hexBox;
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         private bool _isInternalCall;
 
         public UiHexControl()
         {
-            _hexBox = new HexBox {VScrollBarVisible = true};
+            _hexBox = new() {VScrollBarVisible = true};
             Height = 70;
             Child = _hexBox;
         }
@@ -38,7 +38,7 @@ namespace Pulse.UI
             set => SetValue(ValueProperty, value);
         }
 
-        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(byte[]), typeof(UiHexControl), new PropertyMetadata(null, OnValueChanged));
+        public static readonly DependencyProperty ValueProperty = DependencyProperty.Register("Value", typeof(byte[]), typeof(UiHexControl), new(null, OnValueChanged));
 
         private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
@@ -57,7 +57,7 @@ namespace Pulse.UI
                 }
                 else
                 {
-                    byteProvider = new FixedByteProvider((byte[])e.NewValue);
+                    byteProvider = new((byte[])e.NewValue);
                     self._hexBox.Height = 70;
                 }
 
@@ -99,7 +99,7 @@ namespace Pulse.UI
         /// Contains a byte collection.
         /// 
         /// </summary>
-        private List<byte> _bytes;
+        private readonly List<byte> _bytes;
 
         /// <summary>
         /// Gets the byte collection.

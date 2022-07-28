@@ -1,18 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using System.Windows.Forms;
-using Be.IO;
 using Pulse.Core;
 using Pulse.DirectX;
 using Pulse.FS;
 using Pulse.UI;
+using SimpleLogger.Logging.Handlers;
+using SimpleLogger;
 using Yusnaan.Common;
-using Yusnaan.Formats;
 using Yusnaan.Formats.imgb;
-using MessageBox = System.Windows.MessageBox;
+using Yusnaan.Model.Extractors;
+using Yusnaan.Model.Injectors;
+using Yusnaan.Model.ztr;
 
 namespace Yusnaan
 {
@@ -22,59 +26,30 @@ namespace Yusnaan
     public partial class MainWindow : Window
     {
         public FFXIIIGamePart Result { get; set; }
-        private string? OldPath { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
+            Logger.LoggerHandlerManager
+            .AddHandler(new FileLoggerHandler());
         }
-
-        #region ZtrDecompressor
-        private void ZtrDecompressor_Click(object sender, RoutedEventArgs e)
-        {
-            string? ztrFile = Dialogs.GetFile("Ztr file to decompress", "Ztr File|*.ztr");
-            if (ztrFile == null) return;
-
-            ZtrToStrings.ToStrings(ztrFile);
-        }
-        private void ZtrCompressor_Click(object sender, RoutedEventArgs e)
-        {
-            string? stringsFile = Dialogs.GetFile("Get strings file!");
-            if (stringsFile == null) return;
-            using FileStream fileStream = new(stringsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-            Packer.PackStringsNewCompression(fileStream, stringsFile);
-        }
-
-        private void AllZtrDecompressor_Click(object sender, RoutedEventArgs e)
-        {
-            FolderBrowserDialog openFileDialog = new();
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel) return;
-            foreach (var fileName in Directory.EnumerateFiles(openFileDialog.SelectedPath, "*.ztr", SearchOption.AllDirectories))
-            {
-                using FileStream fileStream = new(fileName, FileMode.Open, FileAccess.Read);
-                ZtrToStrings.ToStrings(fileName);
-            }
-        }
-        private void AllZtrCompressor_Click(object sender, RoutedEventArgs e)
-        {
-            using FolderBrowserDialog openFileDialog = new();
-            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel) return;
-
-            foreach (string f in Directory.EnumerateFiles(openFileDialog.SelectedPath, "*.strings", SearchOption.AllDirectories))
-            {
-                using FileStream fileStream = new(f, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                Packer.PackStringsNewCompression(fileStream, f);
-            }
-        }
-        #endregion
 
         #region Pulse
         private void ZtrPulseCompressor_Click(object sender, RoutedEventArgs e)
         {
-            string? stringsFile = Dialogs.GetFile("Get strings file!");
-            if (stringsFile is null) return;
-            using FileStream fileStream = new(stringsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-            Packer.PackStringsWithPulse(fileStream, stringsFile);
+            try
+            {
+                string? stringsFile = Dialogs.GetFile("Get strings file!");
+                if (stringsFile is null) return;
+                using FileStream fileStream = new(stringsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+                var writer = new ZtrPulseWriter(fileStream, stringsFile);
+                writer.PackStringsWithPulse();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                throw;
+            }
         }
         private void PulseZtrUnpack_Click(object sender, RoutedEventArgs e)
         {
@@ -86,11 +61,13 @@ namespace Yusnaan
                 using Stream input = File.OpenRead(ztrFile);
                 using Stream output = File.Create(Path.ChangeExtension(ztrFile, ".strings"));
 
-                ZtrToStrings.PulseUnpack(ztrFile, input, output);
+                var reader = new ZtrFileReader();
+                reader.PulseUnpack(ztrFile, input, output);
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show(ex.Message);
+                Logger.Log(ex);
+                throw;
             }
         }
 
@@ -98,106 +75,53 @@ namespace Yusnaan
         {
             try
             {
-                string? wpdFile = Commons.GetScenarioFile();
+                FileInfo? wpdFile = Dialogs.TestGetScenarioFile();
                 if (wpdFile == null) return;
 
-                WpdZtrUnpack.Extract(wpdFile);
+                var wpdUnpack = new WpdZtrUnpack();
+                wpdUnpack.ExtractInfo(wpdFile);
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show(ex.Message);
-            }
-        }
-        private void WpdToStringsDecompressor_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string? wpdFile = Commons.GetScenarioFile();
-                if (wpdFile == null) return;
-
-                WpdZtrUnpack.Extract(wpdFile, out string? fileName);
-                ZtrToStrings.ToStrings(fileName);
-            }
-            catch (Exception ex)
-            {
-                _ = MessageBox.Show(ex.Message);
-            }
-        }
-        private void StringsToWpdCompressor_Click(object sender, RoutedEventArgs e)
-        {
-            //try
-            //{
-            //    string? wpdFile = Commons.GetScenarioFile(OldPath);
-            //    if (wpdFile == null) return;
-            //    OldPath = Path.GetDirectoryName(wpdFile);
-            //    WpdZtrUnpack.Extract(wpdFile, out string? fileName);
-            //    if (fileName == null) return;
-
-            //    string? stringsFile = Commons.GetStringsFile(fileName);
-            //    if (stringsFile == null) return;
-
-            //    using FileStream fileStream = new(stringsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-            //    Packer.PackStringsNewCompression(fileStream, fileName);
-
-            //    ZtrToWpdEntryInjector.Pack(wpdFile);
-            //}
-            //catch (Exception ex)
-            //{
-            //    _ = MessageBox.Show(ex.Message);
-            //    throw;
-            //}
-            var wpdFile = Commons.GetScenarioFiles(OldPath);
-            if (wpdFile == null) return;
-            var stringsFolder = Commons.GetFolder("Set strings files directories.");
-            if (stringsFolder == null) return;
-
-            foreach (string f in wpdFile)
-            {
-                OldPath = Path.GetDirectoryName(f);
-                WpdZtrUnpack.Extract(f, out string? fileName);
-                if (fileName == null) return;
-
-                var noob = $"{stringsFolder}\\{Path.GetFileNameWithoutExtension(fileName)}.strings";
-                string? stringsFile =
-                    Commons.CheckStringsFile($"{stringsFolder}\\{Path.GetFileNameWithoutExtension(fileName)}.strings");
-                if (stringsFile == null) return;
-
-                using FileStream fileStream = new(stringsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                Packer.PackStringsNewCompression(fileStream, fileName);
-
-                ZtrToWpdEntryInjector.Pack(f);
+                Logger.Log(ex);
+                throw;
             }
         }
         private void PulseWpdPack_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string? wpdFile = Commons.GetScenarioFile();
-
-                if (wpdFile != null) ZtrToWpdEntryInjector.Pack(wpdFile);
+                FileInfo? wpdFile = Dialogs.TestGetScenarioFile();
+                if (wpdFile == null) return;
+                
+                var wpdInjector = new WpdEntryInjector();
+                wpdInjector.TestPack(wpdFile);
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show(ex.Message);
+                Logger.Log(ex);
+                throw;
             }
         }
         private void PulseAllZtrUnpack_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                FolderBrowserDialog openFileDialog = new();
-                if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel) return;
-                foreach (string f in Directory.EnumerateFiles(openFileDialog.SelectedPath, "*.ztr", SearchOption.AllDirectories))
+                string? folder = Dialogs.ShowFolderBrowserDialog("Target ztr folder");
+                if (folder == null) return;
+                foreach (string f in Directory.EnumerateFiles(folder, "*.ztr", SearchOption.AllDirectories))
                 {
                     using Stream input = File.OpenRead(f);
                     using Stream output = File.Create(Path.ChangeExtension(f, ".strings"));
 
-                    ZtrToStrings.PulseUnpack(f, input, output);
+                    var reader = new ZtrFileReader();
+                    reader.PulseUnpack(f, input, output);
                 }
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show(ex.Message);
+                Logger.Log(ex);
+                throw;
             }
         }
 
@@ -205,30 +129,32 @@ namespace Yusnaan
         {
             try
             {
-                FolderBrowserDialog folderBrowserDialog = new();
-                if (folderBrowserDialog.ShowDialog() == System.Windows.Forms.DialogResult.Cancel) return;
-                string[] array = Directory.EnumerateFiles(folderBrowserDialog.SelectedPath, "*_us.bin", SearchOption.AllDirectories).OrderBy(f => f).ToArray();
-                foreach (string v in array)
+                string? folder = Dialogs.ShowFolderBrowserDialog("Target wpd(bin) folder");
+                if (folder == null) return;
+                IOrderedEnumerable<FileInfo> files = new DirectoryInfo(folder).EnumerateFiles("*_us.bin", SearchOption.AllDirectories)
+                    .OrderBy(f => f);
+                //FileInfo[] array = Directory.EnumerateFiles(folder, "*_us.bin", SearchOption.AllDirectories).Select(x => new FileInfo(x)).OrderBy(f => f).ToArray();
+                var wpdUnpack = new WpdZtrUnpack();
+                foreach (FileInfo v in files)
                 {
-                    WpdZtrUnpack.Extract(v);
+                    wpdUnpack.ExtractInfo(v);
                 }
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show(ex.Message);
+                Logger.Log(ex);
+                throw;
             }
         }
         #endregion
+
+        #region PulseButton
 
         private void OnPart1ButtonClick(object sender, RoutedEventArgs e)
         {
             try
             {
-                Result = FFXIIIGamePart.Part1;
-                UiMainWindow main = new();
-
-                InteractionService.SetGamePart(Result);
-                main.Show();
+                Process.Start("Pulse", "-ff13");
             }
             catch (Exception ex)
             {
@@ -240,11 +166,7 @@ namespace Yusnaan
         {
             try
             {
-                Result = FFXIIIGamePart.Part2;
-                UiMainWindow main = new();
-
-                InteractionService.SetGamePart(Result);
-                main.Show();
+                Process.Start("Pulse", "-ff132");
             }
             catch (Exception ex)
             {
@@ -256,11 +178,7 @@ namespace Yusnaan
         {
             try
             {
-                Result = FFXIIIGamePart.Part3;
-                UiMainWindow main = new();
-
-                InteractionService.SetGamePart(FFXIIIGamePart.Part3);
-                main.Show();
+                Process.Start("Pulse", "-ff133");
             }
             catch (Exception ex)
             {
@@ -269,63 +187,81 @@ namespace Yusnaan
             }
         }
 
+        #endregion
+
         private void Window_Closing(object sender, CancelEventArgs e)
         {
             Environment.Exit(1);
         }
 
-        private void unpackXvf_Click(object sender, RoutedEventArgs e)
-        {
-            string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
-            if (xfvFile == null) return;
-            string unpackPath = Path.Combine(Path.GetDirectoryName(xfvFile) ?? throw new NullReferenceException(), Path.GetFileNameWithoutExtension(xfvFile), ".unpack");
-            Directory.CreateDirectory(unpackPath);
-            using Stream xfvFileStream = File.OpenRead(xfvFile);
-            using Stream imgbFileStream = File.OpenRead(Path.ChangeExtension(xfvFile, ".imgb"));
-            WdbHeader wdbHeader = xfvFileStream.ReadContent<WdbHeader>();
-            byte[] buff = new byte[32 * 1024];
-
-            foreach (WpdEntry entry in wdbHeader.Entries.Where(e => e.Extension == "vtex"))
-            {
-                xfvFileStream.Position = entry.Offset;
-
-                var sectionHeader = xfvFileStream.ReadContent<SectionHeader>();
-                var textureHeader = xfvFileStream.ReadContent<VtexHeader>();
-                xfvFileStream.Seek(textureHeader.GtexOffset - VtexHeader.Size, SeekOrigin.Current);
-                var gtex = xfvFileStream.ReadContent<GtexData>();
-                using Stream output = File.Create(Path.Combine(unpackPath, textureHeader.Name + ".dds"));
-
-                DdsHeader header = DdsHeaderDecoder.FromGtexHeader(gtex.Header);
-                DdsHeaderEncoder.ToFileStream(header, output);
-
-                foreach (GtexMipMapLocation mipMap in gtex.MipMapData)
-                {
-                    imgbFileStream.Position = mipMap.Offset;
-                    imgbFileStream.CopyToStream(output, mipMap.Length, buff);
-                }
-            }
-
-        }
-
-        private void packXvf_Click(object sender, RoutedEventArgs e)
-        {
-            string? ddsFile = Dialogs.GetFile("Get Dds File", "dds file|*.dds");
-            if (ddsFile == null) return;
-            FileStream input = File.OpenRead(ddsFile);
-            string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
-            if (xfvFile == null) return;
-            using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
-            using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open, FileAccess.ReadWrite);
-
-            var xfv = new XfvInject(Path.GetFileNameWithoutExtension(ddsFile),input, xfvFileStream, imgbFileStream);
-            xfv.Inject();
-        }
-
-        private void packAllXfv_Click(object sender, RoutedEventArgs e)
+        [SuppressMessage("ReSharper", "UnusedVariable")]
+        private void UnpackXvf_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                string? ddsPath = Dialogs.GetFolder("DDS path");
+                string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
+                if (xfvFile == null) return;
+                string unpackPath = Path.Combine(Path.GetDirectoryName(xfvFile)!, $"{xfvFile.GetFileNameMultiDotExtension()}.unpack");
+                Directory.CreateDirectory(unpackPath);
+                using Stream xfvFileStream = File.OpenRead(xfvFile);
+                using Stream imgbFileStream = File.OpenRead(Path.ChangeExtension(xfvFile, ".imgb"));
+                var wdbHeader = xfvFileStream.ReadContent<WdbHeader>();
+                var buff = new byte[32 * 1024];
+
+                foreach (WpdEntry entry in wdbHeader.Entries.Where(x => string.Equals(x.Extension, "vtex", StringComparison.Ordinal)))
+                {
+                    xfvFileStream.Position = entry.Offset;
+
+                    var sectionHeader = xfvFileStream.ReadContent<SectionHeader>();
+                    var textureHeader = xfvFileStream.ReadContent<VtexHeader>();
+                    xfvFileStream.Seek(textureHeader.GtexOffset - VtexHeader.Size, SeekOrigin.Current);
+                    var gtex = xfvFileStream.ReadContent<GtexData>();
+                    using Stream output = File.Create(Path.Combine(unpackPath, textureHeader.Name + ".dds"));
+
+                    DdsHeader header = DdsHeaderDecoder.FromGtexHeader(gtex.Header);
+                    DdsHeaderEncoder.ToFileStream(header, output);
+
+                    foreach (GtexMipMapLocation mipMap in gtex.MipMapData)
+                    {
+                        imgbFileStream.Position = mipMap.Offset;
+                        imgbFileStream.CopyToStream(output, mipMap.Length, buff);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                throw;
+            }
+        }
+        
+        private void PackXvf_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string? ddsFile = Dialogs.GetFile("Get Dds File", "dds file|*.dds");
+                if (ddsFile == null) return;
+                FileStream input = File.OpenRead(ddsFile);
+                string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
+                if (xfvFile == null) return;
+                using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
+                using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open, FileAccess.ReadWrite);
+
+                var xfv = new XfvInject(Path.GetFileNameWithoutExtension(ddsFile),input, xfvFileStream, imgbFileStream);
+                xfv.Inject();
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(ex);
+                throw;
+            }
+        }
+
+        private void PackAllXfv_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string? ddsPath = Dialogs.ShowFolderBrowserDialog("Target dds folder");
                 if (ddsPath == null) return;
                 string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
                 if (xfvFile == null) return;
@@ -347,13 +283,9 @@ namespace Yusnaan
                     input.Close();
                 }
             }
-            catch (NotImplementedException notImplementedException)
-            {
-                MessageBox.Show($"Algo não implementado!\n{notImplementedException.Message}");
-            }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Logger.Log(ex);
                 throw;
             }
         }

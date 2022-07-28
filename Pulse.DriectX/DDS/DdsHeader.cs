@@ -16,7 +16,7 @@ namespace Pulse.DirectX
 
         public static DdsHeader Create()
         {
-            return new DdsHeader
+            return new()
             {
                 Size = 124,
                 Flags = DdsHeaderFlags.Caps,

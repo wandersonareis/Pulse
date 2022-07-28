@@ -44,7 +44,7 @@ namespace Pulse.UI
             input.CopyToStream(content.Value, dataSize, buff);
             mipMapLocation.Length = dataSize;
 
-            using (MemoryStream ms = new MemoryStream(180))
+            using (MemoryStream ms = new(180))
             {
                 sectionHeader.WriteToStream(ms);
                 textureHeader.WriteToStream(ms);

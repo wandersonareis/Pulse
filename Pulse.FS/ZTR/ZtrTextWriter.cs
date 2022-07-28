@@ -19,7 +19,7 @@ namespace Pulse.FS
 
         public void Write(string name, ZtrFileEntry[] entries)
         {
-            using (StreamWriter sw = new StreamWriter(_output, Encoding.UTF8, 4096, true))
+            using (StreamWriter sw = new(_output, Encoding.UTF8, 4096, true))
             {
                 if (_formatter is StringsZtrFormatter) // TEMP
                 {
@@ -38,7 +38,7 @@ namespace Pulse.FS
         }
         public void Write(string name, Dictionary<string, string> entries)
         {
-            using (StreamWriter sw = new StreamWriter(_output, Encoding.UTF8, 4096, true))
+            using (StreamWriter sw = new(_output, Encoding.UTF8, 4096, true))
             {
                 if (_formatter is StringsZtrFormatter) // TEMP
                 {

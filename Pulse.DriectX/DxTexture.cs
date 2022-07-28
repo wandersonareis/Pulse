@@ -10,7 +10,7 @@ namespace Pulse.DirectX
 {
     public sealed class DxTexture : IDisposable
     {
-        private readonly Dictionary<IntPtr, IntPtr> _sharedViews = new Dictionary<IntPtr, IntPtr>(1);
+        private readonly Dictionary<IntPtr, IntPtr> _sharedViews = new(1);
 
         public readonly Resource Texture;
         public readonly Texture2DDescription Descriptor2D;
@@ -51,7 +51,7 @@ namespace Pulse.DirectX
             spriteBatch.Draw(shaderView,
                 position,
                 sourceRectangle,
-                new Color(0xff, 0xff, 0xff, 0xff),
+                new(0xff, 0xff, 0xff, 0xff),
                 0,
                 Vector2.Zero,
                 Vector2.One,
@@ -64,12 +64,12 @@ namespace Pulse.DirectX
             {
                 IntPtr viewPointer;
                 if (_sharedViews.TryGetValue(device.NativePointer, out viewPointer))
-                    return new ShaderResourceView(viewPointer);
+                    return new(viewPointer);
 
                 using (SharpDX.DXGI.Resource resource = Texture.QueryInterface<SharpDX.DXGI.Resource>())
                 using (Resource sharedResource = device.OpenSharedResource<Resource>(resource.SharedHandle))
                 {
-                    ShaderResourceView shaderView = new ShaderResourceView(device, sharedResource);
+                    ShaderResourceView shaderView = new(device, sharedResource);
                     _sharedViews.Add(device.NativePointer, shaderView.NativePointer);
                     return shaderView;
                 }

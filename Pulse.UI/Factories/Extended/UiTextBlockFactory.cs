@@ -8,7 +8,7 @@ namespace Pulse.UI
         {
             Exceptions.CheckArgumentNull(text, "text");
 
-            UiTextBlock textBlock = new UiTextBlock {Text = text};
+            UiTextBlock textBlock = new() {Text = text};
 
             return textBlock;
         }

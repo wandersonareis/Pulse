@@ -4,7 +4,7 @@
     {
         public static UiComboBox Create()
         {
-            return new UiComboBox();
+            return new();
         }
     }
 }

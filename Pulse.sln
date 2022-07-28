@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Blend for Visual Studio Version 17
+# Visual Studio Version 17
 VisualStudioVersion = 17.1.32203.90
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse", "Pulse\Pulse.csproj", "{9D189792-258A-4A23-98C8-6BED9329CAD1}"
@@ -19,11 +19,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.UI", "Pulse.UI\Pulse.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.DirectX", "Pulse.DriectX\Pulse.DirectX.csproj", "{A3B325CC-101C-49D3-9BA7-96F7FB3F9B72}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulse.Gui", "Pulse.Gui\Pulse.Gui.csproj", "{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yusnaan", "Yusnaan\Yusnaan.csproj", "{112B2415-8E26-47ED-AABD-552A71258767}"
 	ProjectSection(ProjectDependencies) = postProject
 		{87509062-BCDD-4BF0-92C8-169C0B59740B} = {87509062-BCDD-4BF0-92C8-169C0B59740B}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C35DD1A9-03A4-4F46-87F2-87A3C8DF83B8}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 	EndProjectSection
 EndProject
 Global
@@ -118,22 +121,6 @@ Global
 		{A3B325CC-101C-49D3-9BA7-96F7FB3F9B72}.Release|x64.Build.0 = Release|Any CPU
 		{A3B325CC-101C-49D3-9BA7-96F7FB3F9B72}.Release|x86.ActiveCfg = Release|x86
 		{A3B325CC-101C-49D3-9BA7-96F7FB3F9B72}.Release|x86.Build.0 = Release|x86
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Debug|x64.Build.0 = Debug|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Debug|x86.Build.0 = Debug|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Release|x64.ActiveCfg = Release|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Release|x64.Build.0 = Release|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Release|x86.ActiveCfg = Release|Any CPU
-		{D2376BFA-C6C7-4C47-A1A7-A568A3BEE9F0}.Release|x86.Build.0 = Release|Any CPU
 		{112B2415-8E26-47ED-AABD-552A71258767}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{112B2415-8E26-47ED-AABD-552A71258767}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{112B2415-8E26-47ED-AABD-552A71258767}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU

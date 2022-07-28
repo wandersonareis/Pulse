@@ -24,7 +24,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream input)
         {
-            BinaryReader br = new BinaryReader(input);
+            BinaryReader br = new(input);
             
             Magic = br.ReadInt64();
             Unknown1 = br.ReadInt32();

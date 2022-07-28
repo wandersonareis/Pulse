@@ -12,8 +12,8 @@ namespace Pulse.Core
         public FFXIIITextEncoding(FFXIIICodePage codepage)
         {
             Codepage = codepage;
-            _encoder = new FFXIIITextEncoder(codepage);
-            _decoder = new FFXIIITextDecoder(codepage);
+            _encoder = new(codepage);
+            _decoder = new(codepage);
         }
 
         public override int GetByteCount(char[] chars, int index, int count)

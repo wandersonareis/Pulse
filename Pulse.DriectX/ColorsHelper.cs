@@ -8,7 +8,7 @@ namespace Pulse.DirectX
         public static Color4 ToColor4(this Color color)
         {
             const float max = byte.MaxValue;
-            return new Color4(color.R / max, color.G / max, color.B / max, color.A / max);
+            return new(color.R / max, color.G / max, color.B / max, color.A / max);
         }
     }
 }

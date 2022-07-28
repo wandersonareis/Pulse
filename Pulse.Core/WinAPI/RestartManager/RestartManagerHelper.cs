@@ -7,7 +7,7 @@ namespace Pulse.Core.WinAPI
         public static Process[] GetFileLockers(params string[] filePathes)
         {
             RestartManagerProcessInfo[] infos;
-            using (RestartManager rm = new RestartManager())
+            using (RestartManager rm = new())
             {
                 rm.RegisterFiles(filePathes);
                 infos = rm.GetList();

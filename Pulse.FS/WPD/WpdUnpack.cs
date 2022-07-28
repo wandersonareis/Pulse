@@ -9,7 +9,7 @@ namespace Pulse.FS
 {
     public sealed class WpdUnpack
     {
-        private readonly Utils _utils = new Utils();
+        private readonly Utils _utils = new();
 
         private readonly byte[] _info4 = new byte[4];
 
@@ -36,11 +36,11 @@ namespace Pulse.FS
                 fs.Read(_info4, 0, 4);
                 uint num = BitConverter.ToUInt32(ArrayReverse(_info4), 0);
                 fs.Seek(8L, SeekOrigin.Current);
-                List<string> fileNames = new List<string>();
-                List<uint> list2 = new List<uint>();
-                List<uint> list3 = new List<uint>();
-                List<string> list4 = new List<string>();
-                StreamWriter streamWriter = new StreamWriter(path2);
+                List<string> fileNames = new();
+                List<uint> list2 = new();
+                List<uint> list3 = new();
+                List<string> list4 = new();
+                StreamWriter streamWriter = new(path2);
                 for (int i = 0; i < num; i++)
                 {
                     fs.Read(_wpdEntryNameBuffer, 0, 16);
@@ -84,7 +84,7 @@ namespace Pulse.FS
         public void RepackWpdGlobalAlignment(string selectedPath, uint alignment, uint dataBaseAlignment)
         {
             string text = selectedPath + "\\_repacked";
-            DirectoryInfo directoryInfo = new DirectoryInfo(selectedPath);
+            DirectoryInfo directoryInfo = new(selectedPath);
             string path = text + "\\" + directoryInfo.Name;
             if (Directory.Exists(text))
             {
@@ -97,14 +97,14 @@ namespace Pulse.FS
             }
             Directory.CreateDirectory(text);
             string[] array = File.ReadAllLines(selectedPath + "\\..\\..\\_cfg\\" + directoryInfo.Name + ".txt");
-            List<string> list = new List<string>();
+            List<string> list = new();
             int count = array.Length;
             for (int j = count - 1; j >= 0; j--)
             {
                 string[] array2 = array[j].Split(',');
                 list.Add(array2[1]);
             }
-            FileStream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
+            FileStream fileStream = new(path, FileMode.Create, FileAccess.Write);
             fileStream.Write(Encoding.ASCII.GetBytes("WPD\0"), 0, 4);
             fileStream.Write(ArrayReverse(BitConverter.GetBytes(list.Count())), 0, 4);
             fileStream.Write(ArrayReverse(BitConverter.GetBytes(0)), 0, 4);
@@ -120,7 +120,7 @@ namespace Pulse.FS
                                select f).ToArray();
             for (int l = 0; l < list.Count(); l++)
             {
-                FileInfo fileInfo = new FileInfo(array3[l]);
+                FileInfo fileInfo = new(array3[l]);
                 byte[] bytes = Encoding.UTF8.GetBytes(list[l]);
                 fileStream.Write(bytes, 0, bytes.Length);
                 while (fileStream.Position % 16 != 0)

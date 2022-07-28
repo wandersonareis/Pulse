@@ -4,7 +4,7 @@ namespace Pulse.UI
 {
     public sealed class UiNodeComparer : IComparer<UiNode>
     {
-        public static readonly UiNodeComparer Instance = new UiNodeComparer();
+        public static readonly UiNodeComparer Instance = new();
 
         public int Compare(UiNode x, UiNode y)
         {

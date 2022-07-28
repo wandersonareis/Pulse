@@ -9,14 +9,14 @@ namespace Pulse.UI.Encoding
 
         public UiEncodingLabeledWatermark(string label, string watermark, int width, TextChangedEventHandler onValueChanged)
         {
-            ColumnDefinitions.Add(new ColumnDefinition() {Width = GridLength.Auto});
-            ColumnDefinitions.Add(new ColumnDefinition());
+            ColumnDefinitions.Add(new() {Width = GridLength.Auto});
+            ColumnDefinitions.Add(new());
 
-            Margin = new Thickness(5);
+            Margin = new(5);
 
             UiTextBlock labelControl = UiTextBlockFactory.Create(label);
             {
-                labelControl.Margin = new Thickness(5, 5, 2, 5);
+                labelControl.Margin = new(5, 5, 2, 5);
                 labelControl.VerticalAlignment = VerticalAlignment.Center;
                 AddUiElement(labelControl, 0, 0);
             }
@@ -24,7 +24,7 @@ namespace Pulse.UI.Encoding
             _textControl = UiWatermarkTextBoxFactory.Create(watermark);
             {
                 _textControl.Width = width;
-                _textControl.Margin = new Thickness(2, 5, 5, 5);
+                _textControl.Margin = new(2, 5, 5, 5);
                 _textControl.TextChanged += onValueChanged;
                 AddUiElement(_textControl, 0, 1);
             }

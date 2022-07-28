@@ -4,7 +4,7 @@
     {
         public static UiRadioButton Create(string groupName, object content, bool? isChecked)
         {
-            return new UiRadioButton
+            return new()
             {
                 Content = content,
                 IsChecked = isChecked,

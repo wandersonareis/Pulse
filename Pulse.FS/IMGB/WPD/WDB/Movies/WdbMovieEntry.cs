@@ -30,7 +30,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
             bw.WriteBig(PackageNameOffset);
             bw.WriteBig(Length);
             bw.WriteBig(Dummy);

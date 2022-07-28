@@ -27,14 +27,14 @@ namespace Pulse.DirectX
         public event DrawSpritesDelegate DrawSprites;
         public event DrawPrimitivesDelegate DrawPrimitives;
 
-        private readonly Semaphore _semaphore = new Semaphore(2, 2);
+        private readonly Semaphore _semaphore = new(2, 2);
 
         public UiDxControl()
         {
-            Control = new RenderControl();
+            Control = new();
 
             SwapChainDescription swapChainDescription = CreateSwapChainDescription();
-            RenderContainer = new RenderContainer(swapChainDescription, Control);
+            RenderContainer = new(swapChainDescription, Control);
 
             VerticalAlignment = VerticalAlignment.Stretch;
             HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -56,7 +56,7 @@ namespace Pulse.DirectX
                     RenderContainer.DepthBuffer.Clear();
                     RenderContainer.BackBuffer.Clear();
 
-                    Rectangle clipRectangle = new Rectangle(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width, e.ClipRectangle.Height);
+                    Rectangle clipRectangle = new(e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle.Width, e.ClipRectangle.Height);
 
                     DrawSprites?.Invoke(RenderContainer.Device11.Device, RenderContainer.SpriteBatch, clipRectangle);
                     DrawPrimitives?.Invoke(RenderContainer.Device11.Device, RenderContainer.BackBuffer.Target2D, clipRectangle);
@@ -78,10 +78,10 @@ namespace Pulse.DirectX
         {
             ModeDescription bufferDescription = CreateModeDescription();
 
-            return new SwapChainDescription()
+            return new()
             {
                 ModeDescription = bufferDescription,
-                SampleDescription = new SampleDescription(1, 0),
+                SampleDescription = new(1, 0),
                 Usage = Usage.RenderTargetOutput,
                 BufferCount = 1,
                 OutputHandle = Control.Handle,
@@ -91,9 +91,9 @@ namespace Pulse.DirectX
 
         private ModeDescription CreateModeDescription()
         {
-            return new ModeDescription
+            return new()
             {
-                RefreshRate = new Rational(60, 1),
+                RefreshRate = new(60, 1),
                 Format = Format.B8G8R8A8_UNorm
             };
         }

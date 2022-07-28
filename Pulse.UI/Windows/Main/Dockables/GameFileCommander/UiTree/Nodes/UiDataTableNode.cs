@@ -31,7 +31,7 @@ namespace Pulse.UI
 
         private UiNode[] ExpandMovieChilds()
         {
-            DbArchiveAccessor dbAccessor = new DbArchiveAccessor(_listing, _indices);
+            DbArchiveAccessor dbAccessor = new(_listing, _indices);
             WdbMovieArchiveListing wpdListing = WdbMovieArchiveListingReader.Read(dbAccessor);
 
             UiNode[] result = new UiNode[wpdListing.Count];

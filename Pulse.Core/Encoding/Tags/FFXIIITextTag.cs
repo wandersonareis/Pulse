@@ -29,7 +29,7 @@ namespace Pulse.Core
 
         public int Write(char[] chars, ref int offset)
         {
-            StringBuilder sb = new StringBuilder(MaxTagLength);
+            StringBuilder sb = new(MaxTagLength);
             sb.Append('{');
             if (EnumCache<FFXIIITextTagCode>.IsDefined(Code))
                 sb.Append(Code);
@@ -64,21 +64,21 @@ namespace Pulse.Core
                 case FFXIIITextTagCode.Article:
                 case FFXIIITextTagCode.ArticleMany:
                     left++;
-                    return new FFXIIITextTag(code);
+                    return new(code);
                 case FFXIIITextTagCode.Icon:
-                    return new FFXIIITextTag(code, (FFXIIITextTagIcon)bytes[offset++]);
+                    return new(code, (FFXIIITextTagIcon)bytes[offset++]);
                 case FFXIIITextTagCode.Accents:
-                    return new FFXIIITextTag(code, (FFXIIITextTagAccents)bytes[offset++]);
+                    return new(code, (FFXIIITextTagAccents)bytes[offset++]);
                 case FFXIIITextTagCode.VarF4:
                 case FFXIIITextTagCode.VarF6:
                 case FFXIIITextTagCode.VarF7:
-                    return new FFXIIITextTag(code, (FFXIIITextTagParam)bytes[offset++]);
+                    return new(code, (FFXIIITextTagParam)bytes[offset++]);
                 case FFXIIITextTagCode.Text:
-                    return new FFXIIITextTag(code, (FFXIIITextTagText)bytes[offset++]);
+                    return new(code, (FFXIIITextTagText)bytes[offset++]);
                 case FFXIIITextTagCode.Key:
-                    return new FFXIIITextTag(code, (FFXIIITextTagKey)bytes[offset++]);
+                    return new(code, (FFXIIITextTagKey)bytes[offset++]);
                 case FFXIIITextTagCode.Color:
-                    return new FFXIIITextTag(code, (FFXIIITextTagColor)bytes[offset++]);
+                    return new(code, (FFXIIITextTagColor)bytes[offset++]);
                 default:
                     int value = (int)code;
                     switch (value)
@@ -91,7 +91,7 @@ namespace Pulse.Core
                     }
 
                     if (value >= 0x80)
-                        return new FFXIIITextTag(code, (FFXIIITextTagColor)bytes[offset++]);
+                        return new(code, (FFXIIITextTagColor)bytes[offset++]);
 
                     left += 2;
                     offset--;
@@ -119,7 +119,7 @@ namespace Pulse.Core
                 if (tag.Length == 5 &&
                     byte.TryParse(tag.Substring(3, 2), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out varCode) &&
                     byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
-                    return new FFXIIITextTag((FFXIIITextTagCode)varCode, (FFXIIITextTagParam)numArg);
+                    return new((FFXIIITextTagCode)varCode, (FFXIIITextTagParam)numArg);
             }
 
             if (code == null)
@@ -137,24 +137,24 @@ namespace Pulse.Core
                 case FFXIIITextTagCode.Many:
                 case FFXIIITextTagCode.Article:
                 case FFXIIITextTagCode.ArticleMany:
-                    return new FFXIIITextTag(code.Value);
+                    return new(code.Value);
                 case FFXIIITextTagCode.VarF4:
                 case FFXIIITextTagCode.VarF6:
                 case FFXIIITextTagCode.VarF7:
                     {
                         byte numArg;
                         if (byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
-                            return new FFXIIITextTag(code.Value, (FFXIIITextTagParam)numArg);
+                            return new(code.Value, (FFXIIITextTagParam)numArg);
                         break;
                     }
                 case FFXIIITextTagCode.Var87:
                 {
                     byte numArg;
-                    FFXIIITextTagColor? arg = EnumCache<FFXIIITextTagColor>.TryParse(par);
+                    var arg = EnumCache<FFXIIITextTagColor>.TryParse(par);
                     if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
                         arg = (FFXIIITextTagColor)numArg;
                     if (arg != null)
-                        return new FFXIIITextTag(code.Value, arg.Value);
+                        return new(code.Value, arg.Value);
                     break;
                 }
                 case FFXIIITextTagCode.Accents:
@@ -164,7 +164,7 @@ namespace Pulse.Core
                         if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
                             arg = (FFXIIITextTagAccents)numArg;
                         if (arg != null)
-                            return new FFXIIITextTag(code.Value, arg.Value);
+                            return new(code.Value, arg.Value);
                         break;
                     }
                 case FFXIIITextTagCode.Icon:
@@ -174,7 +174,7 @@ namespace Pulse.Core
                         if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
                             arg = (FFXIIITextTagIcon)numArg;
                         if (arg != null)
-                            return new FFXIIITextTag(code.Value, arg.Value);
+                            return new(code.Value, arg.Value);
                         break;
                     }
                 case FFXIIITextTagCode.Text:
@@ -184,7 +184,7 @@ namespace Pulse.Core
                         if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
                             arg = (FFXIIITextTagText)numArg;
                         if (arg != null)
-                            return new FFXIIITextTag(code.Value, arg.Value);
+                            return new(code.Value, arg.Value);
                         break;
                     }
                 case FFXIIITextTagCode.Key:
@@ -194,7 +194,7 @@ namespace Pulse.Core
                         if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
                             arg = (FFXIIITextTagKey)numArg;
                         if (arg != null)
-                            return new FFXIIITextTag(code.Value, arg.Value);
+                            return new(code.Value, arg.Value);
                         break;
                     }
                 case FFXIIITextTagCode.Color:
@@ -204,7 +204,7 @@ namespace Pulse.Core
                         if (arg == null && byte.TryParse(par, NumberStyles.Integer, CultureInfo.InvariantCulture, out numArg))
                             arg = (FFXIIITextTagColor)numArg;
                         if (arg != null)
-                            return new FFXIIITextTag(code.Value, arg.Value);
+                            return new(code.Value, arg.Value);
                         break;
                     }
                 default:
@@ -233,13 +233,13 @@ namespace Pulse.Core
             int spaceIndex = Array.IndexOf(chars, ' ', offset + 1, length - 2);
             if (spaceIndex < 0)
             {
-                tag = new string(chars, offset, length - 1);
+                tag = new(chars, offset, length - 1);
                 par = string.Empty;
             }
             else
             {
-                tag = new string(chars, offset, spaceIndex - offset);
-                par = new string(chars, spaceIndex + 1, lastIndex - spaceIndex - 1);
+                tag = new(chars, offset, spaceIndex - offset);
+                par = new(chars, spaceIndex + 1, lastIndex - spaceIndex - 1);
             }
 
             offset = lastIndex + 1;
@@ -248,7 +248,7 @@ namespace Pulse.Core
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder(MaxTagLength);
+            StringBuilder sb = new(MaxTagLength);
             sb.Append('{');
             if (EnumCache<FFXIIITextTagCode>.IsDefined(Code))
                 sb.Append(Code);

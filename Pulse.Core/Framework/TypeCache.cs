@@ -16,7 +16,7 @@ namespace Pulse.Core
 
         private static int GetSize()
         {
-            DynamicMethod dynamicMethod = new DynamicMethod("SizeOf", typeof(int), Type.EmptyTypes);
+            DynamicMethod dynamicMethod = new("SizeOf", typeof(int), Type.EmptyTypes);
             ILGenerator generator = dynamicMethod.GetILGenerator();
 
             generator.Emit(OpCodes.Sizeof, TypeCache<T>.Type);
@@ -28,7 +28,7 @@ namespace Pulse.Core
         private static unsafe UIntPtr GetArrayTypePointer()
         {
             T[] result = new T[1];
-            using (SafeGCHandle handle = new SafeGCHandle(result, GCHandleType.Pinned))
+            using (SafeGCHandle handle = new(result, GCHandleType.Pinned))
                 return *(((UIntPtr*)handle.AddrOfPinnedObject().ToPointer()) - 2);
         }
 
@@ -46,7 +46,7 @@ namespace Pulse.Core
             if (array.Length < 1)
                 throw new NotSupportedException();
 
-            SafeGCHandle handle = new SafeGCHandle(array, GCHandleType.Pinned);
+            SafeGCHandle handle = new(array, GCHandleType.Pinned);
             try
             {
                 pointer = handle.AddrOfPinnedObject().ToPointer();
@@ -60,7 +60,7 @@ namespace Pulse.Core
 
                 try
                 {
-                    *(arrayPointer - 1) = new UIntPtr(arraySize / (ulong)UnsafeSize);
+                    *(arrayPointer - 1) = new(arraySize / (ulong)UnsafeSize);
                     *(arrayPointer - 2) = ArrayTypePointer;
 
                     return new DisposableAction(() =>

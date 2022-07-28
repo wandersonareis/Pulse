@@ -10,13 +10,13 @@ namespace Pulse.Core
     {
         #region Lazy
 
-        private static readonly Lazy<Lang> Instance = new Lazy<Lang>(Initialize, true);
+        private static readonly Lazy<Lang> Instance = new(Initialize, true);
 
         private static Lang Initialize()
         {
             try
             {
-                DirectoryInfo dir = new DirectoryInfo("Languages");
+                DirectoryInfo dir = new("Languages");
                 if (!dir.Exists)
                     dir.Create();
 
@@ -43,7 +43,7 @@ namespace Pulse.Core
                 using (Stream output = File.Create(pathCombine))
                     input.CopyTo(output);
 
-                FileInfo defaultLang = new FileInfo(pathCombine);
+                FileInfo defaultLang = new(pathCombine);
 
                 if (currentLang == null)
                     currentLang = defaultLang;
@@ -51,7 +51,7 @@ namespace Pulse.Core
                 XmlElement cur = XmlHelper.LoadDocument(currentLang.FullName);
                 XmlElement def = currentLang == defaultLang ? cur : XmlHelper.LoadDocument(defaultLang.FullName);
 
-                return new Lang(def, cur);
+                return new(def, cur);
             }
             catch (Exception ex)
             {

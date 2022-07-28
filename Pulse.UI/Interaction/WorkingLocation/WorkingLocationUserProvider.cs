@@ -8,13 +8,13 @@ namespace Pulse.UI
     {
         public WorkingLocationInfo Provide()
         {
-            using (CommonOpenFileDialog dlg = new CommonOpenFileDialog("Укажите рабочий каталог..."))
+            using (CommonOpenFileDialog dlg = new("Укажите рабочий каталог..."))
             {
                 dlg.IsFolderPicker = true;
                 if (dlg.ShowDialog() != CommonFileDialogResult.Ok)
                     throw new OperationCanceledException();
 
-                WorkingLocationInfo result = new WorkingLocationInfo(dlg.FileName);
+                WorkingLocationInfo result = new(dlg.FileName);
                 result.Validate();
 
                 return result;

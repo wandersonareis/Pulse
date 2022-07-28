@@ -14,14 +14,14 @@ namespace Pulse.UI.Encoding
         {
             _onValueChanged = onValueChanged;
 
-            ColumnDefinitions.Add(new ColumnDefinition() {Width = GridLength.Auto});
-            ColumnDefinitions.Add(new ColumnDefinition());
+            ColumnDefinitions.Add(new() {Width = GridLength.Auto});
+            ColumnDefinitions.Add(new());
 
-            Margin = new Thickness(5);
+            Margin = new(5);
 
             UiTextBlock labelControl = UiTextBlockFactory.Create(label);
             {
-                labelControl.Margin = new Thickness(5, 5, 2, 5);
+                labelControl.Margin = new(5, 5, 2, 5);
                 labelControl.VerticalAlignment = VerticalAlignment.Center;
                 AddUiElement(labelControl, 0, 0);
             }
@@ -29,7 +29,7 @@ namespace Pulse.UI.Encoding
             NumberControl = UiIntegerUpDownFactory.Create(minValue, maxValue);
             {
                 NumberControl.Width = width;
-                NumberControl.Margin = new Thickness(2, 5, 5, 5);
+                NumberControl.Margin = new(2, 5, 5, 5);
                 NumberControl.ValueChanged += OnValueChanged;
                 AddUiElement(NumberControl, 0, 1);
             }

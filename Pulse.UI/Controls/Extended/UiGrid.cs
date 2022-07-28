@@ -8,13 +8,13 @@ namespace Pulse.UI
         public void SetRows(int count)
         {
             count -= RowDefinitions.Count;
-            if (count > 1) while (count-- > 0) RowDefinitions.Add(new RowDefinition());
+            if (count > 1) while (count-- > 0) RowDefinitions.Add(new());
         }
 
         public void SetCols(int count)
         {
             count -= ColumnDefinitions.Count;
-            if (count > 1) while (count-- > 0) ColumnDefinitions.Add(new ColumnDefinition());
+            if (count > 1) while (count-- > 0) ColumnDefinitions.Add(new());
         }
 
         public void SetRowsHeight(GridLength height)

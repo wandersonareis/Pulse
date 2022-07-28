@@ -29,13 +29,13 @@ namespace Pulse.Core
 
         public static void CreatePipe(long capacity, out Stream input, out Stream output)
         {
-            using (DisposableStack insurance = new DisposableStack(3))
+            using (DisposableStack insurance = new(3))
             {
                 Flute flute = insurance.Add(new Flute(capacity));
                 Stream writer = insurance.Add(flute.AcquireWriter(0, capacity));
                 Stream reader = insurance.Add(flute.AcquireReader(0, capacity));
 
-                DisposableStream disposableOutput = new DisposableStream(reader);
+                DisposableStream disposableOutput = new(reader);
                 disposableOutput.AfterDispose.Add(flute);
                 disposableOutput.AfterDispose.Add(writer);
 
@@ -98,7 +98,7 @@ namespace Pulse.Core
                 int readableBlockSize = _occupancy[blockIndex];
                 int result = (int)(readableBlockSize - blockOffset);
                 if (result < 0)
-                    throw new Exception();
+                    throw new();
 
                 return result == 0 ? -1 : result;
             }
@@ -113,7 +113,7 @@ namespace Pulse.Core
         {
             private readonly Flute _flute;
             private readonly MemoryMappedViewStream _output;
-            private readonly Queue<long> _writingQueue = new Queue<long>();
+            private readonly Queue<long> _writingQueue = new();
             private long _disposed;
 
             public FluteWriter(Flute flute, long offset = 0, long size = 0)

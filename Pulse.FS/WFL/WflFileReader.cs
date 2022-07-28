@@ -15,7 +15,7 @@ namespace Pulse.FS
         public WflFileReader(Stream input)
         {
             _input = Exceptions.CheckArgumentNull(input, "input");
-            _br = new BinaryReader(_input);
+            _br = new(_input);
         }
 
         public WflContent Read()
@@ -74,7 +74,7 @@ namespace Pulse.FS
                     offsets[offsetIndex++] = _br.ReadInt32();
             }
 
-            return new WflContent(header, sizes, offsets, colors, additionalTable);
+            return new(header, sizes, offsets, colors, additionalTable);
         }
 
         private WflHeader ReadHeader()

@@ -8,8 +8,8 @@ namespace Pulse.UI.Interaction
 {
     public sealed class ApplicationConfigInfo
     {
-        private static readonly object FileLock = new object();
-        private static readonly object ScheduleLock = new object();
+        private static readonly object FileLock = new();
+        private static readonly object ScheduleLock = new();
 
         public const string ConfigurationDirectory = ".\\Configuration";
         public const string ConfigurationFile = "Pulse.cfg";

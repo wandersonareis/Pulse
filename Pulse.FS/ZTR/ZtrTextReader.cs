@@ -22,7 +22,7 @@ namespace Pulse.FS
 
         public ZtrFileEntry[] Read(out string name)
         {
-            using (StreamReader sr = new StreamReader(_input, Encoding.UTF8, true, 4096, false))
+            using (StreamReader sr = new(_input, Encoding.UTF8, true, 4096, false))
             {
                 name = sr.ReadLine();
                 if (_formatter is StringsZtrFormatter) // TEMP
@@ -33,7 +33,7 @@ namespace Pulse.FS
                     countStr = countStr?.Substring(2, countStr.Length - 4);
                 Debug.Assert(countStr != null, nameof(countStr) + " != null");
                 int count = int.Parse(countStr, CultureInfo.InvariantCulture);
-                List<ZtrFileEntry> result = new List<ZtrFileEntry>(count);
+                List<ZtrFileEntry> result = new(count);
 
                 for (var i = 0; i < count && !sr.EndOfStream; i++)
                 {

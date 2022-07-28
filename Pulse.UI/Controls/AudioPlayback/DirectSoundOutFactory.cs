@@ -14,7 +14,7 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         public UserControl CreateSettingsPanel()
         {
-            _settingsPanel = new DirectSoundOutSettingsPanel();
+            _settingsPanel = new();
             return _settingsPanel;
         }
 

@@ -20,7 +20,7 @@ namespace Pulse.UI
 
         public void Extract(IUiExtractionTarget target)
         {
-            using (UiWdbMovieExtractor extractor = new UiWdbMovieExtractor(_listing, _leafs, _conversion, target))
+            using (UiWdbMovieExtractor extractor = new(_listing, _leafs, _conversion, target))
                 extractor.Extract();
         }
 

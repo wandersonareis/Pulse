@@ -10,14 +10,14 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
             Offset = br.ReadBigInt32();
             Length = br.ReadBigInt32();
         }
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
             bw.WriteBig(Offset);
             bw.WriteBig(Length);
         }

@@ -7,7 +7,7 @@ namespace Pulse.FS
     {
         public static SeDbArchiveListing Read(ImgbArchiveAccessor accessor)
         {
-            SeDbArchiveListingReader reader = new SeDbArchiveListingReader(accessor);
+            SeDbArchiveListingReader reader = new(accessor);
             return reader.Read();
         }
 
@@ -23,7 +23,7 @@ namespace Pulse.FS
             using (Stream input = _accessor.ExtractHeaders())
             {
                 SeDbResHeader header = input.ReadContent<SeDbResHeader>();
-                SeDbArchiveListing result = new SeDbArchiveListing(_accessor, header.Count);
+                SeDbArchiveListing result = new(_accessor, header.Count);
                 result.AddRange(header.Entries);
                 return result;
             }

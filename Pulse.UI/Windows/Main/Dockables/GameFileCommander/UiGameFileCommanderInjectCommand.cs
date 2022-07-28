@@ -30,19 +30,19 @@ namespace Pulse.UI
                 if (archives == null)
                     return;
 
-                UiGameFileCommanderSettingsWindow settingsDlg = new UiGameFileCommanderSettingsWindow(false);
+                UiGameFileCommanderSettingsWindow settingsDlg = new(false);
                 if (settingsDlg.ShowDialog() != true)
                     return;
 
-                Stopwatch sw = new Stopwatch();
+                Stopwatch sw = new();
                 sw.Start();
 
-                Wildcard wildcard = new Wildcard(settingsDlg.Wildcard, false);
+                Wildcard wildcard = new(settingsDlg.Wildcard, false);
                 bool? compression = settingsDlg.Compression;
                 bool? conversion = settingsDlg.Convert;
 
-                UiInjectionManager manager = new UiInjectionManager();
-                FileSystemInjectionSource source = new FileSystemInjectionSource();
+                UiInjectionManager manager = new();
+                FileSystemInjectionSource source = new();
                 foreach (IUiLeafsAccessor accessor in archives.AccessToCheckedLeafs(wildcard, conversion, compression))
                     accessor.Inject(source, manager);
                 manager.WriteListings();

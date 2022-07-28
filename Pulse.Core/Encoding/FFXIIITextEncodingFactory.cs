@@ -8,15 +8,15 @@ namespace Pulse.Core
         public static FFXIIITextEncoding CreateEuro()
         {
             FFXIIICodePage codepage = FFXIIICodePageHelper.CreateEuro();
-            return new FFXIIITextEncoding(codepage);
+            return new(codepage);
         }
 
         public static FFXIIITextEncoding CreateCyrillic()
         {
             FFXIIICodePage codepage = FFXIIICodePageHelper.CreateCyrillic();
-            return new FFXIIITextEncoding(codepage);
+            return new(codepage);
         }
 
-        public static readonly Lazy<FFXIIITextEncoding> DefaultEuroEncoding = new Lazy<FFXIIITextEncoding>(CreateEuro);
+        public static readonly Lazy<FFXIIITextEncoding> DefaultEuroEncoding = new(CreateEuro);
     }
 }

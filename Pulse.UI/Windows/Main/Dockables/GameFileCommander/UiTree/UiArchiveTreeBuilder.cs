@@ -19,15 +19,15 @@ namespace Pulse.UI
         public UiArchives Build()
         {
             string[] lists = _gameLocation.EnumerateListingFiless().ToArray();
-            ConcurrentBag<UiArchiveNode> nodes = new ConcurrentBag<UiArchiveNode>();
+            ConcurrentBag<UiArchiveNode> nodes = new();
 
             Parallel.ForEach(lists, fileName =>
             {
-                ArchiveAccessor accessor = new ArchiveAccessor(GetBinaryFilePath(fileName), fileName);
-                nodes.Add(new UiArchiveNode(accessor, null));
+                ArchiveAccessor accessor = new(GetBinaryFilePath(fileName), fileName);
+                nodes.Add(new(accessor, null));
             });
 
-            return new UiArchives(nodes.OrderBy(n=>n.Name).ToArray());
+            return new(nodes.OrderBy(n=>n.Name).ToArray());
         }
 
         private static string GetBinaryFilePath(string filePath)

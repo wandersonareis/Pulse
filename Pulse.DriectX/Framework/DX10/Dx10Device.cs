@@ -17,7 +17,7 @@ namespace Pulse.DirectX
 
         public Dx10Device(Adapter adapter)
         {
-            _device = new Device1(adapter, GetDeviceCreationFlags(), FeatureLevel.Level_10_0);
+            _device = new(adapter, GetDeviceCreationFlags(), FeatureLevel.Level_10_0);
         }
 
         public virtual void Dispose()
@@ -41,9 +41,9 @@ namespace Pulse.DirectX
 
         public static Dx10Device CreateDefaultAdapter()
         {
-            using (Factory1 factory = new Factory1())
+            using (Factory1 factory = new())
             using (Adapter adapter = factory.GetAdapter(0))
-                return new Dx10Device(adapter);
+                return new(adapter);
         }
     }
 }

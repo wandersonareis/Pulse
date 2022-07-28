@@ -10,7 +10,7 @@ namespace Pulse.FS
 {
     public sealed class StringsZtrFormatter : IZtrFormatter
     {
-        private static readonly Lazy<StringsZtrFormatter> LazyInstance = new Lazy<StringsZtrFormatter>();
+        private static readonly Lazy<StringsZtrFormatter> LazyInstance = new();
 
         public static StringsZtrFormatter Instance => LazyInstance.Value;
 
@@ -32,9 +32,9 @@ namespace Pulse.FS
         public ZtrFileEntry Read(StreamReader sr, out int index)
         {
             index = -1;
-            ZtrFileEntry result = new ZtrFileEntry();
+            ZtrFileEntry result = new();
 
-            StringBuilder sb = new StringBuilder(512);
+            StringBuilder sb = new(512);
             bool key = false;
             bool block = false;
             bool escape = false;

@@ -4,7 +4,7 @@
         WindowStyle="ToolWindow"  WindowStartupLocation="CenterScreen"
         Title="Выбор игры" SizeToContent="Width" ResizeMode="NoResize" Height="300">
     <StackPanel Orientation="Horizontal">
-        <Button Background="White" Click="OnPart1ButtonClick">
+        <Button Name="Ff13" Background="White" Click="OnPart1ButtonClick">
             <Image Source="pack://application:,,,/Pulse.UI;component/Resources/Pictures/LogoXIII-1.png"/>
         </Button>
         <Button Background="White" Click="OnPart2ButtonClick">

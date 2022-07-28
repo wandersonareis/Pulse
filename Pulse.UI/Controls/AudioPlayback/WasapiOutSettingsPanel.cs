@@ -20,12 +20,12 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         private void InitialiseWasapiControls()
         {
-            MMDeviceEnumerator enumerator = new MMDeviceEnumerator();
+            MMDeviceEnumerator enumerator = new();
             MMDeviceCollection endPoints = enumerator.EnumerateAudioEndPoints(DataFlow.Render, DeviceState.Active);
-            List<WasapiDeviceComboItem> comboItems = new List<WasapiDeviceComboItem>();
+            List<WasapiDeviceComboItem> comboItems = new();
             foreach (MMDevice endPoint in endPoints)
             {
-                WasapiDeviceComboItem comboItem = new WasapiDeviceComboItem
+                WasapiDeviceComboItem comboItem = new()
                 {
                     Description = $"{endPoint.FriendlyName} ({endPoint.DeviceFriendlyName})",
                     Device = endPoint

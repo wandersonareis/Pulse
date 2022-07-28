@@ -6,7 +6,7 @@ namespace Pulse.UI
     {
         public AudioSettingsInfo Provide()
         {
-            return new AudioSettingsInfo();
+            return new();
         }
 
         public string Title => Lang.InfoProvider.AudioSettings.NewTitle;

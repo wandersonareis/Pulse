@@ -12,7 +12,7 @@ namespace Pulse.UI
 {
     public sealed class UiDxTextureViewer : UserControl
     {
-        private UiDxViewport _viewport;
+        private readonly UiDxViewport _viewport;
         private DxTexture _texture;
 
         public UiDxTextureViewer()
@@ -20,7 +20,7 @@ namespace Pulse.UI
             HorizontalAlignment = HorizontalAlignment.Left;
             VerticalAlignment = VerticalAlignment.Top;
 
-            _viewport = new UiDxViewport();
+            _viewport = new();
             _viewport.DrawSprites += DrawSprites;
 
             HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -55,7 +55,7 @@ namespace Pulse.UI
                 {
                     int width = Math.Min(texture.Descriptor2D.Width, cliprectangle.Width);
                     int height = Math.Min(texture.Descriptor2D.Height, cliprectangle.Height);
-                    Rectangle rectangle = new Rectangle(cliprectangle.X, cliprectangle.Y, width, height);
+                    Rectangle rectangle = new(cliprectangle.X, cliprectangle.Y, width, height);
                     texture.Draw(device, spritebatch, Vector2.Zero, rectangle, 1.0f);
                 }
                 finally

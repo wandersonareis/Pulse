@@ -34,7 +34,7 @@ namespace Pulse.UI.Encoding
 
             _indexLabel = UiTextBlockFactory.Create("#");
             {
-                _indexLabel.Margin = new Thickness(5);
+                _indexLabel.Margin = new(5);
                 _indexLabel.VerticalAlignment = VerticalAlignment.Center;
                 Children.Add(_indexLabel);
             }

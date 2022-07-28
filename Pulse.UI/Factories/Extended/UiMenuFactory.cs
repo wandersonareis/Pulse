@@ -4,7 +4,7 @@
     {
         public static UiMenu Create()
         {
-            return new UiMenu();
+            return new();
         }
     }
 }

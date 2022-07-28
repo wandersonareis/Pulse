@@ -42,7 +42,7 @@ namespace Pulse.Core
 
         private static Dictionary<int, int> InitializeIndexToValue()
         {
-            Dictionary<int, int> dic = new Dictionary<int, int>(ValueToIndexDic.Count);
+            Dictionary<int, int> dic = new(ValueToIndexDic.Count);
             foreach (KeyValuePair<int, int>  pair in ValueToIndexDic)
             {
                 if (pair.Value >= 0xC0 || pair.Value <= 0xDF)
@@ -60,7 +60,7 @@ namespace Pulse.Core
 
         private static Dictionary<int, int> InitializeValueToIndex()
         {
-            Dictionary<int, int> dic = new Dictionary<int, int>
+            Dictionary<int, int> dic = new()
             {
                 {0x851C, 0x5C}, // _it
                 {0x859F, 0xC0},

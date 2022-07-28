@@ -12,14 +12,14 @@ namespace Pulse.Core
 
         public event Action<Exception> ErrorHandled;
 
-        public readonly ManualResetEvent StopEvent = new ManualResetEvent(false);
-        public readonly AutoResetEvent WorkEvent = new AutoResetEvent(false);
+        public readonly ManualResetEvent StopEvent = new(false);
+        public readonly AutoResetEvent WorkEvent = new(false);
 
         public TimeoutAction(Action action, int millisecondsTimeout)
         {
             _action = action;
             _millisecondsTimeout = millisecondsTimeout;
-            _thread = new Thread(OnTick) {IsBackground = true, Name = GetThreadName()};
+            _thread = new(OnTick) {IsBackground = true, Name = GetThreadName()};
             _thread.Start();
         }
 
@@ -60,7 +60,7 @@ namespace Pulse.Core
         {
             try
             {
-                using (StringReader reader = new StringReader(Environment.StackTrace))
+                using (StringReader reader = new(Environment.StackTrace))
                 {
                     reader.ReadLine();
                     reader.ReadLine();

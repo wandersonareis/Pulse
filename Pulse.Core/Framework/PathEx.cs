@@ -7,10 +7,7 @@ namespace Pulse.Core
         public static string ChangeName(string filePath, string newName)
         {
             string directory = Path.GetDirectoryName(filePath);
-            if (string.IsNullOrEmpty(directory))
-                return newName;
-
-            return Path.Combine(directory, newName);
+            return string.IsNullOrEmpty(directory) ? newName : Path.Combine(directory, newName);
         }
 
         public static string GetMultiDotComparableExtension(string filePath)
@@ -20,14 +17,17 @@ namespace Pulse.Core
                 return string.Empty;
 
             int index = fileName.LastIndexOf('.');
-            if (index < 0)
-                return string.Empty;
-
-            if (index > 0)
+            switch (index)
             {
-                int secondIndex = fileName.LastIndexOf('.', index - 1);
-                if (secondIndex > 0)
-                    return fileName.Substring(secondIndex).ToLower();
+                case < 0:
+                    return string.Empty;
+                case > 0:
+                {
+                    int secondIndex = fileName.LastIndexOf('.', index - 1);
+                    if (secondIndex > 0)
+                        return fileName.Substring(secondIndex).ToLower();
+                    break;
+                }
             }
 
             return fileName.Substring(index).ToLower();

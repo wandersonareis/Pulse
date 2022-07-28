@@ -7,7 +7,7 @@ namespace Pulse.FS
     {
         public static WpdArchiveListing Read(ImgbArchiveAccessor accessor)
         {
-            WpdArchiveListingReader reader = new WpdArchiveListingReader(accessor);
+            WpdArchiveListingReader reader = new(accessor);
             return reader.Read();
         }
 
@@ -23,7 +23,7 @@ namespace Pulse.FS
             using (Stream input = _accessor.ExtractHeaders())
             {
                 WpdHeader header = input.ReadContent<WpdHeader>();
-                WpdArchiveListing result = new WpdArchiveListing(_accessor, header.Count);
+                WpdArchiveListing result = new(_accessor, header.Count);
                 if (header.Entries != null)
                     result.AddRange(header.Entries);
                 return result;

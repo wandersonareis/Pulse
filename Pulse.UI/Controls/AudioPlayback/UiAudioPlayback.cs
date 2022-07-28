@@ -15,14 +15,14 @@ namespace Pulse.UI
         public UiAudioPlayback()
         {
             SetCols(2);
-            ColumnDefinitions[0].Width = new GridLength(50);
+            ColumnDefinitions[0].Width = new(50);
 
             _listView = UiListViewFactory.Create();
             _listView.DisplayMemberPath = "Title";
             _listView.SelectionChanged += OnListViewSelectionChanged;
             AddUiElement(_listView, 0, 0);
 
-            _audioPlayer = new UiAudioPlayer
+            _audioPlayer = new()
             {
                 VerticalAlignment = VerticalAlignment.Top,
                 Height = 32
@@ -48,11 +48,11 @@ namespace Pulse.UI
 
             using (Stream input = listing.Accessor.ExtractBinary(entry))
             {
-                ScdFileReader reader = new ScdFileReader(input);
+                ScdFileReader reader = new(input);
                 WaveStream[] waveProviders = reader.Read();
                 ListItem[] items = new ListItem[waveProviders.Length];
                 for (int i = 0; i < items.Length; i++)
-                    items[i] = new ListItem(i.ToString("D3"), waveProviders[i]);
+                    items[i] = new(i.ToString("D3"), waveProviders[i]);
                 _listView.ItemsSource = items;
                 if (items.Length > 0)
                     _listView.SelectedIndex = 0;

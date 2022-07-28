@@ -10,7 +10,7 @@ namespace Pulse.UI
 
         public UiImageButton()
         {
-            Image = new Image();
+            Image = new();
             Background = Brushes.Transparent;
             BorderBrush = Brushes.Transparent;
             Template = StaticTemplate;
@@ -28,9 +28,9 @@ namespace Pulse.UI
 
         private static ControlTemplate CreateTemplate()
         {
-            ControlTemplate result = new ControlTemplate(typeof(UiImageButton));
+            ControlTemplate result = new(typeof(UiImageButton));
 
-            FrameworkElementFactory contentPresenter = new FrameworkElementFactory(typeof(ContentPresenter));
+            FrameworkElementFactory contentPresenter = new(typeof(ContentPresenter));
 
             result.VisualTree = contentPresenter;
             return result;

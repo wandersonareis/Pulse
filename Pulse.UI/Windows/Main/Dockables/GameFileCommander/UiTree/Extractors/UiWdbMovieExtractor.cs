@@ -72,7 +72,7 @@ namespace Pulse.UI
         #region Static
 
         private static readonly IWdbMovieEntryExtractor DefaultExtractor = ProvideDefaultExtractor();
-        private static readonly Dictionary<string, IWdbMovieEntryExtractor> Empty = new Dictionary<string, IWdbMovieEntryExtractor>(0);
+        private static readonly Dictionary<string, IWdbMovieEntryExtractor> Empty = new(0);
 
         private static IWdbMovieEntryExtractor ProvideDefaultExtractor()
         {

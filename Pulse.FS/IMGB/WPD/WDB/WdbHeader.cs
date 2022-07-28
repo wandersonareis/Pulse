@@ -27,7 +27,7 @@ namespace Pulse.FS
             unsafe
             {
                 fixed (byte* ptr = &_stringData[offset])
-                    return new string((sbyte*)ptr);
+                    return new((sbyte*)ptr);
             }
         }
 

@@ -19,14 +19,14 @@ namespace NAudioDemo.AudioPlaybackDemo
         {
             Orientation = System.Windows.Controls.Orientation.Horizontal;
 
-            Thickness margin = new Thickness(3);
+            Thickness margin = new(3);
             _playbackButton = AddUiElement(new UiImageButton {ImageSource = Icons.PlayIcon, Margin = margin});
             _stopButton = AddUiElement(new UiImageButton {ImageSource = Icons.StopIcon, Margin = margin});
             _timeTextBlock = AddUiElement(UiTextBlockFactory.Create("00:00 / 00:00"));
             _timeTextBlock.Margin = margin;
             _timeTextBlock.VerticalAlignment = VerticalAlignment.Center;
             
-            _timer = new System.Timers.Timer(1000);
+            _timer = new(1000);
             _timer.Elapsed += OnTimerTick;
 
             _playbackButton.Click += Playback;

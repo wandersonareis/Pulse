@@ -69,10 +69,10 @@ namespace Pulse.UI
                 return null;
 
             string rootDirectory = xmlElement.FindString("RootDirectory");
-            return new GameLocationInfo(rootDirectory);
+            return new(rootDirectory);
         }
 
-        private readonly object _taskLock = new object();
+        private readonly object _taskLock = new();
         private UiArchives _archives;
         private Task<UiArchives> _archivesBuilderTask;
 

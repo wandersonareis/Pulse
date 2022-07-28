@@ -7,7 +7,7 @@ namespace Pulse.FS
     {
         public static void Write(ArchiveListing listing)
         {
-            ArchiveListingWriterV1 writer = new ArchiveListingWriterV1(listing);
+            ArchiveListingWriterV1 writer = new(listing);
             writer.Write();
         }
 
@@ -22,12 +22,12 @@ namespace Pulse.FS
 
         public void Write()
         {
-            using (MemoryStream headerBuff = new MemoryStream(32768))
-            using (MemoryStream textBuff = new MemoryStream(32768))
+            using (MemoryStream headerBuff = new(32768))
+            using (MemoryStream textBuff = new(32768))
             {
                 ArchiveListingBlockInfo[] blocksInfo;
                 ArchiveListingEntryInfoV1[] entriesInfoV1;
-                ArchiveListingTextWriterV1 textWriter = new ArchiveListingTextWriterV1(textBuff);
+                ArchiveListingTextWriterV1 textWriter = new(textBuff);
                 textWriter.Write(_listing, out blocksInfo, out entriesInfoV1);
 
                 for (int i = 0; i < entriesInfoV1.Length; i++)
@@ -40,7 +40,7 @@ namespace Pulse.FS
                 int blocksSize = (int)textBuff.Position;
                 textBuff.Position = 0;
 
-                ArchiveListingHeaderV1 header = new ArchiveListingHeaderV1
+                ArchiveListingHeaderV1 header = new()
                 {
                     EntriesCount = entriesInfoV1.Length,
                     BlockOffset = entriesInfoV1.Length * 8 + 12

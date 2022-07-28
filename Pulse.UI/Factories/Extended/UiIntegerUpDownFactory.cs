@@ -4,7 +4,7 @@
     {
         public static UiIntegerUpDown Create(int? minimum, int? maximum)
         {
-            return new UiIntegerUpDown
+            return new()
             {
                 Minimum = minimum,
                 Maximum = maximum

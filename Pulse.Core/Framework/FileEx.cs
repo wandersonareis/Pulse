@@ -8,8 +8,8 @@ namespace Pulse.Core
     {
         public static long GetSize(string path)
         {
-            using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete))
-                return fileStream.Length;
+            using FileStream fileStream = new(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+            return fileStream.Length;
         }
 
         public static long GetSize(FileSystemInfo fsi)
@@ -18,16 +18,16 @@ namespace Pulse.Core
 
             try
             {
-                FileInfo fileInfo = fsi as FileInfo;
-                if (fileInfo != null)
-                    return fileInfo.Length;
-
-                DirectoryInfo directoryInfo = fsi as DirectoryInfo;
-                if (directoryInfo != null)
-                    return directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(f => f.Length);
-
-                Log.Warning("[FileEx]Неизвестный наследник FileSystemInfo: {0}", fsi.GetType());
-                return 0;
+                switch (fsi)
+                {
+                    case FileInfo fileInfo:
+                        return fileInfo.Length;
+                    case DirectoryInfo directoryInfo:
+                        return directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(f => f.Length);
+                    default:
+                        Log.Warning("[FileEx]Неизвестный наследник FileSystemInfo: {0}", fsi.GetType());
+                        return 0;
+                }
             }
             catch (Exception ex)
             {

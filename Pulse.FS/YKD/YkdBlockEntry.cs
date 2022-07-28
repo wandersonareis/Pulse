@@ -15,7 +15,7 @@ namespace Pulse.FS
         public int CalcSize()
         {
             YkdFrames[] frames = Frames ?? new YkdFrames[0];
-            YkdOffsets offsets = new YkdOffsets {Offsets = new int[frames.Length]};
+            YkdOffsets offsets = new() {Offsets = new int[frames.Length]};
 
             return NameSize + offsets.CalcSize() + frames.Sum(t => t.CalcSize());
         }

@@ -23,7 +23,7 @@ namespace Pulse.FS
             Resources = new YkdResource[Offsets.Count];
             for (int i = 0; i < Resources.Length; i++)
             {
-                YkdResource resource = Resources[i] = new YkdResource();
+                YkdResource resource = Resources[i] = new();
 
                 stream.SetPosition(Offsets[i]);
                 resource.ReadFromStream(stream);

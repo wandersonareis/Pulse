@@ -47,35 +47,27 @@ namespace Pulse.DirectX
             {
                 return (c, t, f) =>
                 {
-                    using (MemoryStream ms = new MemoryStream(32 * 1024))
-                        Resource.ToStream(c, t, f, ms);
+                    using MemoryStream ms = new(32 * 1024);
+                    Resource.ToStream(c, t, f, ms);
                 };
             }
         }
 
         public static DxTexture ReadFromWpd(WpdArchiveListing listing, WpdEntry entry)
         {
-            using (Stream headers = listing.Accessor.ExtractHeaders())
-            using (Stream content = listing.Accessor.ExtractContent())
+            using Stream headers = listing.Accessor.ExtractHeaders();
+            using Stream content = listing.Accessor.ExtractContent();
+            headers.SetPosition(entry.Offset);
+
+            SectionHeader sectionHeader = headers.ReadContent<SectionHeader>();
+            GtexData gtex = sectionHeader.Type switch
             {
-                headers.SetPosition(entry.Offset);
+                SectionType.Txb => ReadGtexFromTxb(headers),
+                SectionType.Vtex => ReadGtexFromVtex(headers),
+                _ => throw new NotImplementedException()
+            };
 
-                GtexData gtex;
-                SectionHeader sectionHeader = headers.ReadContent<SectionHeader>();
-                switch (sectionHeader.Type)
-                {
-                    case SectionType.Txb:
-                        gtex = ReadGtexFromTxb(headers);
-                        break;
-                    case SectionType.Vtex:
-                        gtex = ReadGtexFromVtex(headers);
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-
-                return LoadFromStream(gtex, content);
-            }
+            return LoadFromStream(gtex, content);
         }
 
         public static DxTexture LoadFromStream(GtexData gtex, Stream input)
@@ -92,7 +84,7 @@ namespace Pulse.DirectX
         {
             Texture2DDescription descriptor = GetTextureCubeDescription(gtex);
 
-            using (SafeUnmanagedArray array = new SafeUnmanagedArray(gtex.MipMapData.Sum(d => d.Length)))
+            using (SafeUnmanagedArray array = new(gtex.MipMapData.Sum(d => d.Length)))
             {
                 DataRectangle[] rects = new DataRectangle[gtex.MipMapData.Length];
                 using (UnmanagedMemoryStream io = array.OpenStream(FileAccess.Write))
@@ -108,12 +100,12 @@ namespace Pulse.DirectX
                     }
                 }
 
-                Texture2D texture = new Texture2D(_device.Device, descriptor, rects);
+                Texture2D texture = new(_device.Device, descriptor, rects);
 
                 // Workaround
                 _textureCreatingWorkaround(_device.Device.ImmediateContext, texture, ImageFileFormat.Dds);
 
-                return new DxTexture(texture, descriptor);
+                return new(texture, descriptor);
             }
         }
 
@@ -121,7 +113,7 @@ namespace Pulse.DirectX
         {
             Texture2DDescription descriptor = Get2DTextureDescription(gtex);
 
-            using (SafeUnmanagedArray array = new SafeUnmanagedArray(gtex.MipMapData.Sum(d => d.Length)))
+            using (SafeUnmanagedArray array = new(gtex.MipMapData.Sum(d => d.Length)))
             {
                 DataRectangle[] rects = new DataRectangle[gtex.MipMapData.Length];
                 using (UnmanagedMemoryStream io = array.OpenStream(FileAccess.Write))
@@ -137,7 +129,7 @@ namespace Pulse.DirectX
                     }
                 }
                 
-                Texture2D texture = new Texture2D(_device.Device, descriptor, rects);
+                Texture2D texture = new(_device.Device, descriptor, rects);
 
                 // Workaround
                 _textureCreatingWorkaround(_device.Device.ImmediateContext, texture, ImageFileFormat.Dds);
@@ -179,20 +171,20 @@ namespace Pulse.DirectX
 
         private static DataRectangle CreateDataRectangle(SafeUnmanagedArray array, UnmanagedMemoryStream input, int pitch)
         {
-            return new DataRectangle(new IntPtr(array.DangerousGetHandle().ToInt64() + input.Position), pitch);
+            return new(new(array.DangerousGetHandle().ToInt64() + input.Position), pitch);
         }
 
         private static DataBox CreateDataBox(SafeUnmanagedArray array, UnmanagedMemoryStream input, int rowPitch, int depthPitch)
         {
-            return new DataBox(new IntPtr(array.DangerousGetHandle().ToInt64() + input.Position), rowPitch, depthPitch);
+            return new(new(array.DangerousGetHandle().ToInt64() + input.Position), rowPitch, depthPitch);
         }
 
         private static Texture2DDescription GetTextureCubeDescription(GtexData gtex)
         {
             if (!gtex.Header.IsCubeMap)
-                throw new Exception("IsCubeMap: false");
+                throw new("IsCubeMap: false");
 
-            return new Texture2DDescription
+            return new()
             {
                 ArraySize = 6,
                 Width = gtex.Header.Width,
@@ -206,16 +198,16 @@ namespace Pulse.DirectX
                 
                 Usage = ResourceUsage.Default,
                 CpuAccessFlags = CpuAccessFlags.None,
-                SampleDescription = new SampleDescription(1, 0)
+                SampleDescription = new(1, 0)
             };
         }
 
         private static Texture2DDescription Get2DTextureDescription(GtexData gtex)
         {
             if (gtex.Header.IsCubeMap)
-                throw new Exception("IsCubeMap: true");
+                throw new("IsCubeMap: true");
 
-            return new Texture2DDescription
+            return new()
             {
                 ArraySize = 1,
                 Width = gtex.Header.Width,
@@ -229,7 +221,7 @@ namespace Pulse.DirectX
                 
                 Usage = ResourceUsage.Default,
                 CpuAccessFlags = CpuAccessFlags.None,
-                SampleDescription = new SampleDescription(1, 0)
+                SampleDescription = new(1, 0)
             };
         }
 

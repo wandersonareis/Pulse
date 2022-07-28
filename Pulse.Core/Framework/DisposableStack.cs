@@ -9,7 +9,7 @@ namespace Pulse.Core
 
         public DisposableStack(int capacity = 4)
         {
-            _stack = new Stack<IDisposable>(capacity);
+            _stack = new(capacity);
         }
 
         public void Dispose()

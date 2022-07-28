@@ -23,7 +23,7 @@ namespace Pulse.FS
 
         public override void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
 
             SourceX = br.ReadInt32();
             SourceY = br.ReadInt32();
@@ -41,7 +41,7 @@ namespace Pulse.FS
 
         public override void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
 
             bw.Write(SourceX);
             bw.Write(SourceY);

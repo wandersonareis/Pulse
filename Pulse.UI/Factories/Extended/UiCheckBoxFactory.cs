@@ -4,7 +4,7 @@
     {
         public static UiCheckBox Create(object content, bool? isChecked)
         {
-            return new UiCheckBox
+            return new()
             {
                 Content = content,
                 IsChecked = isChecked

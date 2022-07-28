@@ -88,7 +88,7 @@ namespace Pulse.UI
                     archiveUrls[i] = urls.GetChildElement(i).GetString("Value");
             }
 
-            LocalizatorEnvironmentInfo result = new LocalizatorEnvironmentInfo(patherVersion, patherUrls, archiveUrls)
+            LocalizatorEnvironmentInfo result = new(patherVersion, patherUrls, archiveUrls)
             {
                 IsFullScreen = xmlElement.FindBoolean("IsFullScreen") ?? true,
                 IsFullHd = xmlElement.FindBoolean("IsFullHd") ?? true,

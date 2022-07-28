@@ -6,7 +6,7 @@ namespace Pulse.UI
     {
         public static UiStackPanel Create(Orientation orientation)
         {
-            UiStackPanel stackPanel = new UiStackPanel
+            UiStackPanel stackPanel = new()
             {
                 Orientation = orientation
             };

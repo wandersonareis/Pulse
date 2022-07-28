@@ -9,7 +9,7 @@ namespace Pulse.Core
         {
             unsafe
             {
-                return new UnmanagedMemoryStream((byte*)self.ToPointer(), size, size, access);
+                return new((byte*)self.ToPointer(), size, size, access);
             }
         }
     }

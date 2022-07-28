@@ -21,13 +21,13 @@ namespace Pulse.UI
 
         public void Extract(IUiExtractionTarget target)
         {
-            using (UiArchiveExtractor extractor = new UiArchiveExtractor(_listing, _leafs, _conversion, target))
+            using (UiArchiveExtractor extractor = new(_listing, _leafs, _conversion, target))
                 extractor.Extract();
         }
 
         public void Inject(IUiInjectionSource source, UiInjectionManager manager)
         {
-            using (UiArchiveInjector injector = new UiArchiveInjector(_listing, _leafs, _conversion, _compression, source))
+            using (UiArchiveInjector injector = new(_listing, _leafs, _conversion, _compression, source))
                 injector.Inject(manager);
         }
     }

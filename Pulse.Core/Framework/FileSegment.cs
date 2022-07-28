@@ -7,7 +7,7 @@ namespace Pulse.Core
     {
         private readonly MemoryMappedFile _mmf;
         private readonly Stream _stream;
-        private long _length;
+        private readonly long _length;
 
         public FileSegment(MemoryMappedFile mmf, long offset, long length, MemoryMappedFileAccess access)
         {

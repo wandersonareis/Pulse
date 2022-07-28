@@ -26,7 +26,7 @@ namespace Pulse.UI
 
             UiGrid root = UiGridFactory.Create(3, 1);
             root.SetRowsHeight(GridLength.Auto);
-            root.Margin = new Thickness(5);
+            root.Margin = new(5);
 
             UiTextBlock titleTextBlock = UiTextBlockFactory.Create(title);
             {
@@ -72,7 +72,7 @@ namespace Pulse.UI
             Loaded += OnLoaded;
             Closing += OnClosing;
 
-            _timer = new Timer(500);
+            _timer = new(500);
             _timer.Elapsed += OnTimer;
         }
 
@@ -84,7 +84,7 @@ namespace Pulse.UI
 
         private readonly Timer _timer;
 
-        private UiProgressUnits _units;
+        private readonly UiProgressUnits _units;
         private long _processedCount, _totalCount;
         private DateTime _begin;
 
@@ -153,7 +153,7 @@ namespace Pulse.UI
 
         public static void Execute(string title, IProgressSender progressSender, Action action, UiProgressUnits units = UiProgressUnits.Items)
         {
-            using (UiProgressWindow window = new UiProgressWindow(title, units))
+            using (UiProgressWindow window = new(title, units))
             {
                 progressSender.ProgressTotalChanged += window.SetTotal;
                 progressSender.ProgressIncremented += window.Incremented;
@@ -164,7 +164,7 @@ namespace Pulse.UI
 
         public static T Execute<T>(string title, IProgressSender progressSender, Func<T> func, UiProgressUnits units = UiProgressUnits.Items)
         {
-            using (UiProgressWindow window = new UiProgressWindow(title, units))
+            using (UiProgressWindow window = new(title, units))
             {
                 progressSender.ProgressTotalChanged += window.SetTotal;
                 progressSender.ProgressIncremented += window.Incremented;
@@ -176,7 +176,7 @@ namespace Pulse.UI
 
         public static void Execute(string title, Action<Action<long>, Action<long>> action, UiProgressUnits units = UiProgressUnits.Items)
         {
-            using (UiProgressWindow window = new UiProgressWindow(title, units))
+            using (UiProgressWindow window = new(title, units))
             {
                 Task.Run(() => ExecuteAction(window, action));
                 window.ShowDialog();
@@ -185,7 +185,7 @@ namespace Pulse.UI
 
         public static T Execute<T>(string title, Func<Action<long>, Action<long>, T> action, UiProgressUnits units = UiProgressUnits.Items)
         {
-            using (UiProgressWindow window = new UiProgressWindow(title, units))
+            using (UiProgressWindow window = new(title, units))
             {
                 Task<T> task = Task.Run(() => ExecuteFunction(window, action));
                 window.ShowDialog();

@@ -36,12 +36,12 @@ namespace Pulse.FS
                 {
                     int offset = i * 32;
 
-                    Entries[i] = new WpdEntry(
+                    Entries[i] = new(
                         i,
-                        new string((sbyte*)b + offset),
+                        new((sbyte*)b + offset),
                         Endian.ToBigInt32(b + offset + 16),
                         Endian.ToBigInt32(b + offset + 20),
-                        new string((sbyte*)b + offset + 24));
+                        new((sbyte*)b + offset + 24));
                 }
             }
         }
@@ -53,7 +53,7 @@ namespace Pulse.FS
 
             Count = Entries.Length;
 
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
             bw.Write(MagicNumber);
             bw.WriteBig(Count);
             bw.Write(0L);

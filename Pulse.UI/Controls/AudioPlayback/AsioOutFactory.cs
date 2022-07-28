@@ -11,7 +11,7 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         public UserControl CreateSettingsPanel()
         {
-            _settingsPanel = new AsioOutSettingsPanel();
+            _settingsPanel = new();
             return _settingsPanel;
         }
 

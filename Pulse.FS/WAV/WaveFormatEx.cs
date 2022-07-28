@@ -48,7 +48,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
             FormatTag = (WaveFormatEncoding)br.ReadInt16();
             Channels = br.ReadInt16();
             SamplesPerSec = br.ReadInt32();
@@ -61,7 +61,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
             bw.Write((short)FormatTag);
             bw.Write(Channels);
             bw.Write(SamplesPerSec);

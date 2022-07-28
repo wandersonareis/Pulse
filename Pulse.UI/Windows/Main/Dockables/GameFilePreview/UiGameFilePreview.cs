@@ -21,10 +21,10 @@ namespace Pulse.UI
 
             _grid = UiGridFactory.Create(1, 1);
 
-            _textureViewer = new UiDxTextureViewer();
-            _sound = new UiAudioPlayback();
-            _ykd = new UiGameFilePreviewYkd();
-            _ztr = new UiGameFilePreviewZtr();
+            _textureViewer = new();
+            _sound = new();
+            _ykd = new();
+            _ztr = new();
             HideControls();
 
             _grid.AddUiElement(_textureViewer, 0, 0);
@@ -53,15 +53,13 @@ namespace Pulse.UI
         {
             HideControls();
 
-            UiWpdTableLeaf wpdLeaf = leaf as UiWpdTableLeaf;
-            if (wpdLeaf != null)
+            if (leaf is UiWpdTableLeaf wpdLeaf)
             {
                 OnWpdLeafSelected(wpdLeaf);
                 return;
             }
 
-            UiArchiveLeaf archiveLeaf = leaf as UiArchiveLeaf;
-            if (archiveLeaf != null)
+            if (leaf is UiArchiveLeaf archiveLeaf)
                 OnArchiveLeafSelected(archiveLeaf);
         }
 

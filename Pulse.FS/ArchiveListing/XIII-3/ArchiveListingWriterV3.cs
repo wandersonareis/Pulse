@@ -11,7 +11,7 @@ namespace Pulse.FS
     {
         public static void Write(ArchiveListing listing)
         {
-            ArchiveListingWriterV3 writer = new ArchiveListingWriterV3(listing);
+            ArchiveListingWriterV3 writer = new(listing);
             writer.Write();
         }
 
@@ -26,10 +26,10 @@ namespace Pulse.FS
 
         public void Write()
         {
-            using (MemoryStream headerBuff = new MemoryStream(32768))
-            using (MemoryStream textBuff = new MemoryStream(32768))
+            using (MemoryStream headerBuff = new(32768))
+            using (MemoryStream textBuff = new(32768))
             {
-                ArchiveListingTextWriterV3 textWriter = new ArchiveListingTextWriterV3(textBuff);
+                ArchiveListingTextWriterV3 textWriter = new(textBuff);
                 textWriter.Write(_listing, out ArchiveListingBlockInfo[] blocksInfo, out ArchiveListingEntryInfoV3[] entriesInfoV3);
 
                 for (int i = 0; i < entriesInfoV3.Length; i++)

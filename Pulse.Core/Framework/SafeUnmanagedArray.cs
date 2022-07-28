@@ -33,7 +33,7 @@ namespace Pulse.Core
 
         public UnmanagedMemoryStream OpenStream(FileAccess access)
         {
-            return new UnmanagedMemoryStream(this, 0, (long)ByteLength, access);
+            return new(this, 0, (long)ByteLength, access);
         }
     }
 }

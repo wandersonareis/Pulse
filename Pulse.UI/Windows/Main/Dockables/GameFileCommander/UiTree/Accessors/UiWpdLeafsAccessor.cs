@@ -19,13 +19,13 @@ namespace Pulse.UI
 
         public void Extract(IUiExtractionTarget target)
         {
-            using (UiWpdExtractor extractor = new UiWpdExtractor(_listing, _leafs, _conversion, target))
+            using (UiWpdExtractor extractor = new(_listing, _leafs, _conversion, target))
                 extractor.Extract();
         }
 
         public void Inject(IUiInjectionSource source, UiInjectionManager manager)
         {
-            using (UiWpdInjector injector = new UiWpdInjector(_listing, _leafs, _conversion, source))
+            using (UiWpdInjector injector = new(_listing, _leafs, _conversion, source))
                 injector.Inject(manager);
         }
     }

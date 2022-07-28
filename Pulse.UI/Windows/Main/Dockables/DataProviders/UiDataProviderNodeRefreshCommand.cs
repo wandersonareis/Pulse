@@ -8,7 +8,7 @@ namespace Pulse.UI
     public sealed class UiDataProviderNodeRefreshCommand : ICommand
     {
         private int _canExecute = 1;
-        private Action _action;
+        private readonly Action _action;
 
         public UiDataProviderNodeRefreshCommand(Action action)
         {
@@ -23,7 +23,7 @@ namespace Pulse.UI
         public void Execute(object parameter)
         {
             if (Interlocked.Exchange(ref _canExecute, 0) != 1) return;
-            CanExecuteChanged.NullSafeInvoke(this, new EventArgs());
+            CanExecuteChanged.NullSafeInvoke(this, new());
 
             try
             {
@@ -35,7 +35,7 @@ namespace Pulse.UI
             }
 
             Interlocked.Exchange(ref _canExecute, 1);
-            CanExecuteChanged.NullSafeInvoke(this, new EventArgs());
+            CanExecuteChanged.NullSafeInvoke(this, new());
         }
 
         public event EventHandler CanExecuteChanged;

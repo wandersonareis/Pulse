@@ -40,7 +40,7 @@ namespace Pulse.UI
         
         private UiNode[] ExpandWpdChilds()
         {
-            ImgbArchiveAccessor imgbAccessor = new ImgbArchiveAccessor(_listing, _indices, _binary);
+            ImgbArchiveAccessor imgbAccessor = new(_listing, _indices, _binary);
             WpdArchiveListing wpdListing = WpdArchiveListingReader.Read(imgbAccessor);
 
             UiNode[] result = new UiNode[wpdListing.Count];
@@ -54,13 +54,13 @@ namespace Pulse.UI
 
         private UiNode[] ExpandTrbChilds()
         {
-            ImgbArchiveAccessor imgbAccessor = new ImgbArchiveAccessor(_listing, _indices, _binary);
+            ImgbArchiveAccessor imgbAccessor = new(_listing, _indices, _binary);
 
             SeDbArchiveListing sedbListing = SeDbArchiveListingReader.Read(imgbAccessor);
             UiNode[] result = new UiNode[sedbListing.Count];
             int offset = sedbListing.Count * 16 + 0x40;
             using (Stream headers = imgbAccessor.ExtractHeaders())
-            using (BinaryReader br = new BinaryReader(headers))
+            using (BinaryReader br = new(headers))
             {
                 for (int i = 0; i < result.Length; i++)
                 {

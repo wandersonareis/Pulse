@@ -9,10 +9,10 @@ namespace Pulse.UI
 
         public LocalizatorEnvironmentInfo Provide()
         {
-            Version version = new Version(1,0,0,0);
+            Version version = new(1,0,0,0);
             string[] patherUrls = {DefaultPatherUrl};
             string[] translationUrls = {DefaultTranslationUrl};
-            return new LocalizatorEnvironmentInfo(version, patherUrls, translationUrls);
+            return new(version, patherUrls, translationUrls);
         }
 
         public string Title => "LocalizatorEnvironmentNewProvider";

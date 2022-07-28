@@ -21,7 +21,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
             Type = (YkdResourceViewportType)br.ReadInt32();
             Index = br.ReadInt32();
             Dummy2 = br.Check(r => r.ReadInt32(), 0);
@@ -32,7 +32,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
 
             bw.Write((int)Type);
             bw.Write(Index);
@@ -48,7 +48,7 @@ namespace Pulse.FS
 
         public YkdResource Clone()
         {
-            return new YkdResource
+            return new()
             {
                 Type = Type,
                 Index = Index,

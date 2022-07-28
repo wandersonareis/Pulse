@@ -41,7 +41,7 @@ namespace Pulse.UI
                 menu.AddChild(menuItem);
             }
 
-            UiDataProviderNode node = new UiDataProviderNode(providers.Title, providers.Description, menu);
+            UiDataProviderNode node = new(providers.Title, providers.Description, menu);
 
             providers.InfoLost += node.OnInfoLost;
             providers.InfoProvided += node.OnInfoProvided;
@@ -64,7 +64,7 @@ namespace Pulse.UI
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new(propertyName));
         }
     }
 }

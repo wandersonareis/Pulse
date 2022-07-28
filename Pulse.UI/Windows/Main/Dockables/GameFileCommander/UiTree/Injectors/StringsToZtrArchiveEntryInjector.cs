@@ -22,7 +22,7 @@ namespace Pulse.UI
                 if (input != null)
                 {
                     string entryName;
-                    ZtrTextReader reader = new ZtrTextReader(input, StringsZtrFormatter.Instance);
+                    ZtrTextReader reader = new(input, StringsZtrFormatter.Instance);
                     sourceEntries = reader.Read(out entryName).ToDictionary(e => e.Key, e => e.Value);
                     using (Stream output = data.OuputStreamFactory(entry))
                         Inject(data.Listing, entry, sourceEntries, output);
@@ -47,7 +47,7 @@ namespace Pulse.UI
             ZtrFileEntry[] targetEntries;
             using (Stream original = listing.Accessor.ExtractBinary(entry))
             {
-                ZtrFileUnpacker unpacker = new ZtrFileUnpacker(original, InteractionService.TextEncoding.Provide().Encoding);
+                ZtrFileUnpacker unpacker = new(original, InteractionService.TextEncoding.Provide().Encoding);
                 targetEntries = unpacker.Unpack();
 
                 if (InteractionService.GamePart == FFXIIIGamePart.Part2)
@@ -59,13 +59,13 @@ namespace Pulse.UI
 
             MergeEntries(sourceEntries, targetEntries);
 
-            ZtrFilePacker packer = new ZtrFilePacker(output, InteractionService.TextEncoding.Provide().Encoding, type);
+            ZtrFilePacker packer = new(output, InteractionService.TextEncoding.Provide().Encoding, type);
             packer.Pack(targetEntries);
         }
 
         private static void MergeEntries(Dictionary<string, string> newEntries, ZtrFileEntry[] targetEntries)
         {
-            StringBuilder sb = new StringBuilder(1024);
+            StringBuilder sb = new(1024);
             foreach (ZtrFileEntry entry in targetEntries)
             {
                 string oldText = entry.Value;
@@ -193,9 +193,9 @@ namespace Pulse.UI
             return result;
         }
 
-        private static readonly FFXIIITextTag NewLineTag = new FFXIIITextTag(FFXIIITextTagCode.Text, FFXIIITextTagText.NewLine);
+        private static readonly FFXIIITextTag NewLineTag = new(FFXIIITextTagCode.Text, FFXIIITextTagText.NewLine);
 
-        private static readonly Dictionary<string, string> AnimatedText = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> AnimatedText = new()
         {
             {"$btl_guard", "BLOCK"},
             {"$btl_help", "HELP"},

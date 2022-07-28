@@ -4,7 +4,7 @@
     {
         public static UiTreeView Create()
         {
-            return new UiTreeView();
+            return new();
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Pulse.DirectX
         public static void ToFileStream(DdsHeader header, Stream output)
         {
             byte[] buff = new byte[128];
-            using (SafeGCHandle handle = new SafeGCHandle(buff, GCHandleType.Pinned))
+            using (SafeGCHandle handle = new(buff, GCHandleType.Pinned))
             {
                 IntPtr ptr = handle.AddrOfPinnedObject();
 

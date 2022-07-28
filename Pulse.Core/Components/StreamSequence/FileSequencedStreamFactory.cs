@@ -5,10 +5,10 @@ namespace Pulse.Core
 {
     public sealed class FileSequencedStreamFactory : ISequencedStreamFactory
     {
-        private string _extension;
-        private string _filePath;
-        private FileMode _mode;
-        private FileAccess _access;
+        private readonly string _extension;
+        private readonly string _filePath;
+        private readonly FileMode _mode;
+        private readonly FileAccess _access;
 
         public FileSequencedStreamFactory(string filePath, FileMode mode, FileAccess access)
         {

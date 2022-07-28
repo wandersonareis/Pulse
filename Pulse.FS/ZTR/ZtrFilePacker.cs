@@ -15,7 +15,7 @@ namespace Pulse.FS
         {
             _encoding = encoding;
             _output = output;
-            _bw = new BinaryWriter(_output);
+            _bw = new(_output);
             _type = type;
         }
 

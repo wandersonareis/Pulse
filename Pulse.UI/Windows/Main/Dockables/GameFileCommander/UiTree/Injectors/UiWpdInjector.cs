@@ -25,8 +25,8 @@ namespace Pulse.UI
             _source = source;
             _conversion = conversion;
             _injectors = ProvideInjectors();
-            _headers = new Lazy<Stream>(AcquireHeaders);
-            _content = new Lazy<Stream>(AcquireContent);
+            _headers = new(AcquireHeaders);
+            _content = new(AcquireContent);
         }
 
         public void Dispose()
@@ -114,7 +114,7 @@ namespace Pulse.UI
         {
             int uncompressedSize = (int)_listing.Accessor.HeadersEntry.UncompressedSize;
 
-            MemoryStream result = new MemoryStream((int)(uncompressedSize * 1.3));
+            MemoryStream result = new((int)(uncompressedSize * 1.3));
             using (Stream input = _listing.Accessor.ExtractHeaders())
                 input.CopyToStream(result, uncompressedSize, _buff);
 
@@ -125,7 +125,7 @@ namespace Pulse.UI
         {
             int uncompressedSize = (int)_listing.Accessor.ContentEntry.UncompressedSize;
 
-            MemoryStream result = new MemoryStream((int)(uncompressedSize * 1.3));
+            MemoryStream result = new((int)(uncompressedSize * 1.3));
             using (Stream input = _listing.Accessor.ExtractContent())
                 input.CopyToStream(result, uncompressedSize, _buff);
 
@@ -145,7 +145,7 @@ namespace Pulse.UI
 
         private static Dictionary<string, IWpdEntryInjector> RegisterConverters()
         {
-            return new Dictionary<string, IWpdEntryInjector>
+            return new()
             {
                 {"txbh", new DdsToTxbhWpdEntryInjector()},
                 {"vtex", new DdsToVtexWpdEntryInjector()}
@@ -156,12 +156,12 @@ namespace Pulse.UI
 
         public static void InjectSingle(WpdArchiveListing listing, WpdEntry entry, MemoryStream output)
         {
-            using (MemoryInjectionSource source = new MemoryInjectionSource())
+            using (MemoryInjectionSource source = new())
             {
                 source.RegisterStream(string.Empty, output);
-                UiWpdInjector injector = new UiWpdInjector(listing, new[] {entry}, false, source);
+                UiWpdInjector injector = new(listing, new[] {entry}, false, source);
 
-                UiInjectionManager manager = new UiInjectionManager();
+                UiInjectionManager manager = new();
                 injector.Inject(manager);
                 manager.WriteListings();
             }

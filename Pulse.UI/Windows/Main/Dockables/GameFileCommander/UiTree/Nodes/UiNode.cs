@@ -60,7 +60,7 @@ namespace Pulse.UI
         {
             try
             {
-                StringBuilder sb = new StringBuilder(256);
+                StringBuilder sb = new(256);
                 UiNode node = this;
                 while (node != null)
                 {
@@ -194,7 +194,7 @@ namespace Pulse.UI
         [NotifyPropertyChangedInvocator]
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new(propertyName));
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace Yusnaan.Compressor
 {
     public static class CompressionLevel
     {
-        private static List<byte[]> _Default = new List<byte[]>()
+        private static readonly List<byte[]> _Default = new()
         { 
             new byte[] { 0x0, 0x0 },
             /*new byte[] { 0x0, 0x1 },
@@ -19,7 +20,7 @@ namespace Yusnaan.Compressor
         };
         public static Dictionary<byte, byte[]> Default(ref byte[] unusedBytes, ref int unusedBytesIndex)
         {
-            Dictionary<byte, byte[]> dict = new Dictionary<byte, byte[]>();
+            Dictionary<byte, byte[]> dict = new();
             for (int i = 0; i < unusedBytes.Length && i < _Default.Count; i++)
             {
                 dict.Add(unusedBytes[unusedBytesIndex++], _Default[i]);
@@ -36,7 +37,7 @@ namespace Yusnaan.Compressor
         private static byte[] GetDictionaryValue(byte[] data)
         {
             int len = data.Length - 1;
-            if (len < 1) return null;
+            if (len < 1) throw new ArgumentNullException(nameof(data), @"len < 1");
             int max = 0;
             int found = 0;
             int[] dict = new int[ushort.MaxValue + 1];
@@ -50,9 +51,13 @@ namespace Yusnaan.Compressor
                     found = num;
                 }
             }
-            string hex = found == 0 ? "0000" : found.ToString("X2");
-            byte firstByte = byte.Parse(hex.Length == 2 ? hex.Substring(1, hex.Length - 1) : hex.Substring(2, hex.Length - 2), NumberStyles.HexNumber);
-            byte lastByte = byte.Parse(hex.Length == 2 ? hex.Substring(0, hex.Length - 1) : hex.Substring(0, hex.Length - 2), NumberStyles.HexNumber);
+            string hex = found != 0 ? found.ToString("X2", CultureInfo.InvariantCulture) : "0000";
+            byte firstByte =
+                byte.Parse(hex.Length == 2 ? hex.Substring(1, hex.Length - 1) : hex.Substring(2, hex.Length - 2),
+                    NumberStyles.HexNumber, CultureInfo.InvariantCulture);
+            byte lastByte =
+                byte.Parse(hex.Length == 2 ? hex.Substring(0, hex.Length - 1) : hex.Substring(0, hex.Length - 2),
+                    NumberStyles.HexNumber, CultureInfo.InvariantCulture);
             return new byte[] { firstByte, lastByte };
         }
     }

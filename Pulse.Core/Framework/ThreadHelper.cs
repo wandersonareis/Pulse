@@ -6,7 +6,7 @@ namespace Pulse.Core
     {
         public static Thread StartBackground(string name, ThreadStart action)
         {
-            Thread result = new Thread(action) {Name = name, IsBackground = true};
+            Thread result = new(action) {Name = name, IsBackground = true};
             result.Start();
             return result;
         }

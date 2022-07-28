@@ -13,7 +13,7 @@ namespace Pulse.FS
         public WflFileWriter(Stream output)
         {
             _output = Exceptions.CheckArgumentNull(output, "output");
-            _bw = new BinaryWriter(_output);
+            _bw = new(_output);
         }
 
         public void Write(WflContent content)

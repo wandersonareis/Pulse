@@ -35,7 +35,7 @@ namespace Pulse.Core
             }
 
             if (size != 0)
-                throw new Exception("The unexpected end of the stream.");
+                throw new("The unexpected end of the stream.");
         }
 
         public static byte[] EnsureRead(this Stream self, int size)
@@ -75,7 +75,7 @@ namespace Pulse.Core
             }
 
             if (left != 0)
-                throw new Exception($"Unexpected end of stream: {size - left}/{size}");
+                throw new($"Unexpected end of stream: {size - left}/{size}");
 
             if (flush)
                 output.Flush();
@@ -90,7 +90,7 @@ namespace Pulse.Core
 
             int size = Marshal.SizeOf(TypeCache<T>.Type);
             byte[] buff = new byte[size];
-            using (SafeGCHandle handle = new SafeGCHandle(buff, GCHandleType.Pinned))
+            using (SafeGCHandle handle = new(buff, GCHandleType.Pinned))
             {
                 for (int i = 0; i < result.Length; i++)
                 {
@@ -125,11 +125,11 @@ namespace Pulse.Core
 
         public static SafeUnmanagedArray ReadBuff(this Stream input, int size)
         {
-            SafeUnmanagedArray handle = new SafeUnmanagedArray(size);
+            SafeUnmanagedArray handle = new(size);
 
             try
             {
-                using (UnmanagedMemoryStream output = new UnmanagedMemoryStream(handle, 0, size, FileAccess.Write))
+                using (UnmanagedMemoryStream output = new(handle, 0, size, FileAccess.Write))
                 {
                     byte[] buff = new byte[Math.Min(32 * 1024, size)];
                     input.CopyToStream(output, size, buff);
@@ -148,7 +148,7 @@ namespace Pulse.Core
         {
             try
             {
-                using (UnmanagedMemoryStream output = new UnmanagedMemoryStream(buffer, offset, length, FileAccess.Write))
+                using (UnmanagedMemoryStream output = new(buffer, offset, length, FileAccess.Write))
                 {
                     byte[] buff = new byte[Math.Min(32 * 1024, length)];
                     input.CopyToStream(output, length, buff);
@@ -163,7 +163,7 @@ namespace Pulse.Core
 
         public static T ReadContent<T>(this Stream input) where T : IStreamingContent, new()
         {
-            T result = new T();
+            T result = new();
             result.ReadFromStream(input);
             return result;
         }
@@ -195,7 +195,7 @@ namespace Pulse.Core
             int size = Marshal.SizeOf(pack);
             byte[] buff = new byte[size];
 
-            using (SafeGCHandle handle = new SafeGCHandle(buff, GCHandleType.Pinned))
+            using (SafeGCHandle handle = new(buff, GCHandleType.Pinned))
             {
                 Marshal.StructureToPtr(pack, handle.AddrOfPinnedObject(), false);
                 output.Write(buff, 0, size);
@@ -204,22 +204,22 @@ namespace Pulse.Core
 
         public static BinaryReader GetBinaryReader(this Stream input, Encoding encoding = null)
         {
-            return new BinaryReader(Exceptions.CheckArgumentNull(input, "input"), encoding ?? Encoding.Default, true);
+            return new(Exceptions.CheckArgumentNull(input, "input"), encoding ?? Encoding.Default, true);
         }
 
         public static BinaryWriter GetBinaryWriter(this Stream output, Encoding encoding = null)
         {
-            return new BinaryWriter(Exceptions.CheckArgumentNull(output, "output"), encoding ?? Encoding.Default, true);
+            return new(Exceptions.CheckArgumentNull(output, "output"), encoding ?? Encoding.Default, true);
         }
 
         public static StreamReader GetStreamReader(this Stream input, Encoding encoding = null)
         {
-            return new StreamReader(Exceptions.CheckArgumentNull(input, "input"), encoding ?? Encoding.Default, true, 4096, true);
+            return new(Exceptions.CheckArgumentNull(input, "input"), encoding ?? Encoding.Default, true, 4096, true);
         }
 
         public static StreamSegment GetStreamSegment(this Stream output, long offset, long size = -1)
         {
-            return new StreamSegment(output, offset, size < 0 ? output.Length - offset : size, FileAccess.ReadWrite);
+            return new(output, offset, size < 0 ? output.Length - offset : size, FileAccess.ReadWrite);
         }
 
         #region Strings
@@ -243,7 +243,7 @@ namespace Pulse.Core
 
         public static string ReadNullTerminatedString(this Stream input, Encoding encoding, int zeroCount)
         {
-            using (MemoryStream ms = new MemoryStream(4096))
+            using (MemoryStream ms = new(4096))
             {
                 int nc, count = 0;
                 while ((nc = input.ReadByte()) != -1)

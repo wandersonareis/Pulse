@@ -2,16 +2,23 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <TargetFramework>net7.0-windows10.0.19041.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
     <StartupObject>Yusnaan.App</StartupObject>
     <ApplicationIcon>Images\LR13.ico</ApplicationIcon>
-    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>x64</PlatformTarget>
+    <AnalysisLevel>preview</AnalysisLevel>
+	  <LangVersion>preview</LangVersion>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <PublishSingleFile>true</PublishSingleFile>
+    <PublishTrimmed>true</PublishTrimmed>
+  </PropertyGroup>
+  
   <ItemGroup>
     <Content Remove="Resources\fundo.jpg" />
   </ItemGroup>
@@ -25,27 +32,33 @@
     <None Remove="LogoXIII-1.png" />
     <None Remove="LogoXIII-2.png" />
     <None Remove="LogoXIII-3.png" />
+    <None Remove="Formats\**" />
+    <None Remove="Model\Formats\Extractors\**" />
+    <None Remove="Model\Formats\Injectors\**" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Images\final-fantasy-xiii-image.jpg">
+    <Content Include="Images\final-fantasy-xiii-image.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Images\LogoXIII-1.png">
+    </Content>
+    <Content Include="Images\LogoXIII-1.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Images\LogoXIII-2.png">
+    </Content>
+    <Content Include="Images\LogoXIII-2.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Images\LogoXIII-3.png">
+    </Content>
+    <Content Include="Images\LogoXIII-3.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    </Content>
     <Content Include="Images\LR13.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Be.IO-multi" Version="1.0.0" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.0.0" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview4" />
+    <PackageReference Include="Meziantou.Framework.FullPath" Version="1.0.9" />
+    <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
+    <PackageReference Include="SimpleLogger" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -55,18 +68,25 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="ResourceLr.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>ResourceLr.resx</DependentUpon>
-    </Compile>
+    <Folder Include="Views" />
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="ResourceLr.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>ResourceLr.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <Compile Remove="Formats\**" />
+    <Compile Remove="Model\Formats\Extractors\**" />
+    <Compile Remove="Model\Formats\Injectors\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="Formats\**" />
+    <EmbeddedResource Remove="Model\Formats\Extractors\**" />
+    <EmbeddedResource Remove="Model\Formats\Injectors\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Remove="Formats\**" />
+    <Page Remove="Model\Formats\Extractors\**" />
+    <Page Remove="Model\Formats\Injectors\**" />
   </ItemGroup>
 
 </Project>

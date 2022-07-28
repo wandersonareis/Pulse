@@ -8,7 +8,7 @@ namespace Pulse.UI
         {
             Exceptions.CheckArgumentNull(watermark, "watermark");
 
-            UiWatermarkTextBox textBlock = new UiWatermarkTextBox {Watermark = watermark, Text = text ?? string.Empty};
+            UiWatermarkTextBox textBlock = new() {Watermark = watermark, Text = text ?? string.Empty};
 
             return textBlock;
         }

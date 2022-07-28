@@ -7,7 +7,7 @@ namespace Pulse.Core
     {
         public static XmlElement CreateDocument(string rootName)
         {
-            XmlDocument doc = new XmlDocument();
+            XmlDocument doc = new();
             
             XmlDeclaration dec = doc.CreateXmlDeclaration("1.0", null, null);
             doc.AppendChild(dec);
@@ -20,7 +20,7 @@ namespace Pulse.Core
 
         public static XmlElement LoadDocument(string xmlPath)
         {
-            XmlDocument doc = new XmlDocument();
+            XmlDocument doc = new();
             doc.Load(xmlPath);
 
             return doc.GetDocumentElement();
@@ -31,7 +31,7 @@ namespace Pulse.Core
             if (!File.Exists(xmlPath))
                 return null;
 
-            XmlDocument doc = new XmlDocument();
+            XmlDocument doc = new();
             doc.Load(xmlPath);
 
             return doc.GetDocumentElement();

@@ -25,7 +25,7 @@ namespace Pulse.UI
             _source = source;
             _conversion = conversion;
             _compression = compression;
-            _injectionData = new ArchiveEntryInjectionData(_listing, OpenOutputStream);
+            _injectionData = new(_listing, OpenOutputStream);
             _injectors = ProvideInjectors();
         }
 
@@ -85,9 +85,9 @@ namespace Pulse.UI
 
         private Stream OpenOutputStream(ArchiveEntry entry)
         {
-            MemoryStream ms = new MemoryStream((int)(entry.UncompressedSize * 1.3));
+            MemoryStream ms = new((int)(entry.UncompressedSize * 1.3));
 
-            DisposableStream writer = new DisposableStream(ms);
+            DisposableStream writer = new(ms);
             writer.BeforeDispose.Add(new DisposableAction(() => _listing.Accessor.OnWritingCompleted(entry, ms, _compression)));
 
             return writer;
@@ -101,7 +101,7 @@ namespace Pulse.UI
         #region Static
 
         private static readonly IArchiveEntryInjector DefaultInjector = ProvideDefaultInjector();
-        private static readonly Dictionary<string, IArchiveEntryInjector> Emptry = new Dictionary<string, IArchiveEntryInjector>(0);
+        private static readonly Dictionary<string, IArchiveEntryInjector> Emptry = new(0);
         private static readonly Dictionary<string, IArchiveEntryInjector> Converters = RegisterConverters();
 
         private static IArchiveEntryInjector ProvideDefaultInjector()
@@ -111,7 +111,7 @@ namespace Pulse.UI
 
         private static Dictionary<string, IArchiveEntryInjector> RegisterConverters()
         {
-            return new Dictionary<string, IArchiveEntryInjector>
+            return new()
             {
                 {".ztr", new StringsToZtrArchiveEntryInjector()}
             };

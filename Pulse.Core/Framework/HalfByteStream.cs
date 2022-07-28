@@ -90,7 +90,7 @@ namespace Pulse.Core
                 {
                     _leftHalf = (byte)((buff[i] >> 4) & 0xF);
                     if (i + 1 != readed)
-                        throw new Exception("Abnormal error.");
+                        throw new("Abnormal error.");
                 }
             }
 

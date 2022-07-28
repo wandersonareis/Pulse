@@ -44,7 +44,7 @@ namespace Pulse.FS
             List<byte>[] lists = new List<byte>[256];
             for (int i = 0; i < 256; i++)
             {
-                List<byte> list = lists[i] = new List<byte>(16);
+                List<byte> list = lists[i] = new(16);
                 DecodeByte(values, encoding, (byte)i, list);
             }
 
@@ -52,12 +52,12 @@ namespace Pulse.FS
             for (int i = 0; i < 256; i++)
                 result[i] = lists[i].ToArray();
 
-            return new ZtrFileEncoding(blockSize, result);
+            return new(blockSize, result);
         }
 
         public unsafe void WriteToStream(Stream output)
         {
-            BinaryWriter bw = new BinaryWriter(output);
+            BinaryWriter bw = new(output);
             bw.WriteBig(BlockSize);
 
             if (BlockSize > 0)
@@ -91,8 +91,8 @@ namespace Pulse.FS
             int[] pairCounter = new int[ushort.MaxValue + 1];
             byte[,] encoding = new byte[256, 2];
 
-            List<byte> unused = new List<byte>(256);
-            List<byte> used = new List<byte>(256);
+            List<byte> unused = new(256);
+            List<byte> used = new(256);
             fixed (byte* dataPtr = &data[dataIndex])
             fixed (int* pairCounterPtr = pairCounter)
             fixed (int* singleCounterPtr = singleCounter)

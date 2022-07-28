@@ -28,7 +28,7 @@ namespace Pulse.Core
 
         public static IEnumerable<T> DistinctBy<T, TValue>(this IEnumerable<T> self, Func<T, TValue> predicate)
         {
-            HashSet<TValue> set = new HashSet<TValue>();
+            HashSet<TValue> set = new();
             return self.Where(item => set.Add(predicate(item)));
         }
     }

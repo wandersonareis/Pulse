@@ -4,7 +4,7 @@
     {
         public static UiProgressBar Create()
         {
-            return new UiProgressBar();
+            return new();
         }
     }
 }

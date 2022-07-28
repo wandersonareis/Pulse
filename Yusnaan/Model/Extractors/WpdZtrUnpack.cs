@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 using Be.IO;
 using Meziantou.Framework;
 using Pulse.Core;
@@ -50,9 +51,9 @@ internal class WpdZtrUnpack
         using FileStream fileStream = new(fileName.Value.Value ?? throw new ArgumentNullException(nameof(fileName)), FileMode.Create, FileAccess.ReadWrite);
         ms.WriteTo(fileStream);
     }
-    public void ExtractInfo(FileInfo wpdFile) => ExtractInfo(wpdFile, out _);
+    public void ExtractInfo(FileInfo wpdFile) => ZtrEntryExtract(wpdFile, out _);
 
-    public void ExtractInfo(FileInfo wpdFile, out FullPath? fileName)
+    public void ZtrEntryExtract(FileInfo wpdFile, out FullPath? fileName)
     {
         using Stream wpdFileStream = wpdFile.OpenRead();
         Logger.Log<WpdZtrUnpack>(Logger.Level.Info, $"Opening file: {wpdFile.Name}");
@@ -93,8 +94,8 @@ internal class WpdZtrUnpack
         ms.Write(arrayByte, 0, arrayByte.Length);
 
         using FileStream fileStream = new(fileName.Value.Value ?? throw new ArgumentNullException(nameof(fileName)), FileMode.Create, FileAccess.ReadWrite);
-        Logger.Log<WpdZtrUnpack>(Logger.Level.Info, $"Extracted file: {fileName.Value.Name}");
-
         ms.WriteTo(fileStream);
+        
+        Logger.Log<WpdZtrUnpack>(Logger.Level.Info, $"Extracted file: {fileName.Value.Name}");
     }
 }

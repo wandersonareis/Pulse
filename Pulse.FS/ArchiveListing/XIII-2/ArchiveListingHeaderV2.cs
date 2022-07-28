@@ -37,7 +37,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
             stream.EnsureRead(KeyData, 0, KeyDataSize);
 
             RawBlockOffset = br.ReadInt32();
@@ -47,7 +47,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
             stream.Write(KeyData, 0, KeyDataSize);
 
             bw.Write(RawBlockOffset);

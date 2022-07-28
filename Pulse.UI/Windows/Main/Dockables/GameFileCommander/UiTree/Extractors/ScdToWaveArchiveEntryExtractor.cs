@@ -15,7 +15,7 @@ namespace Pulse.UI
             if (size == 0)
                 return;
 
-            ScdFileReader reader = new ScdFileReader(input);
+            ScdFileReader reader = new(input);
             WaveStream[] waveStreams = reader.Read();
             if (waveStreams.Length == 0)
                 return;
@@ -36,7 +36,7 @@ namespace Pulse.UI
             if (waveStream == null)
                 return;
 
-            using (WaveFileWriter writer = new WaveFileWriter(output, waveStream.WaveFormat))
+            using (WaveFileWriter writer = new(output, waveStream.WaveFormat))
             {
                 int count;
                 while ((count = waveStream.Read(buffer, 0, buffer.Length)) != 0)

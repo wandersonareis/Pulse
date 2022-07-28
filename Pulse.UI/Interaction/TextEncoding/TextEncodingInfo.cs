@@ -15,7 +15,7 @@ namespace Pulse.UI
 
         public static TextEncodingInfo CreateDefault()
         {
-            return new TextEncodingInfo(FFXIIITextEncodingFactory.CreateEuro());
+            return new(FFXIIITextEncodingFactory.CreateEuro());
         }
 
         public static TextEncodingInfo Load()
@@ -37,9 +37,9 @@ namespace Pulse.UI
         private static TextEncodingInfo FromXml(XmlElement codepageNode)
         {
             FFXIIICodePage codepage = FFXIIICodePageHelper.FromXml(codepageNode);
-            FFXIIITextEncoding encoding = new FFXIIITextEncoding(codepage);
+            FFXIIITextEncoding encoding = new(codepage);
 
-            return new TextEncodingInfo(encoding);
+            return new(encoding);
         }
 
         private void ToXml(XmlElement codepageNode)

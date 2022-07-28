@@ -18,7 +18,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
 
             Unknown1 = br.ReadInt32();
             Unknown2 = br.ReadSingle();
@@ -32,7 +32,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
 
             bw.Write(Unknown1);
             bw.Write(Unknown2);

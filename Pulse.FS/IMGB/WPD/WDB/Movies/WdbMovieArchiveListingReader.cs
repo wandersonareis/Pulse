@@ -7,7 +7,7 @@ namespace Pulse.FS
     {
         public static WdbMovieArchiveListing Read(DbArchiveAccessor accessor)
         {
-            WdbMovieArchiveListingReader reader = new WdbMovieArchiveListingReader(accessor);
+            WdbMovieArchiveListingReader reader = new(accessor);
             return reader.Read();
         }
 
@@ -23,7 +23,7 @@ namespace Pulse.FS
             using (Stream input = _accessor.ExtractHeaders())
             {
                 WdbMovieHeader header = input.ReadContent<WdbMovieHeader>();
-                WdbMovieArchiveListing result = new WdbMovieArchiveListing(_accessor, header.Count);
+                WdbMovieArchiveListing result = new(_accessor, header.Count);
                 if (header.Movies != null)
                     result.AddRange(header.Movies);
                 return result;

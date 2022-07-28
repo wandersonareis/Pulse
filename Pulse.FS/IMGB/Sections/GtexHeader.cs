@@ -33,7 +33,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
             Magic = br.ReadBigUInt32();
             Unknown1 = br.ReadByte();
             Unknown2 = br.ReadByte();
@@ -50,7 +50,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
             bw.WriteBig(Magic);
             bw.Write(Unknown1);
             bw.Write(Unknown2);

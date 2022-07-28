@@ -65,12 +65,12 @@ namespace Pulse.DirectX
 
         public static implicit operator DdsPixelFormatFourDescriptor(uint d)
         {
-            return new DdsPixelFormatFourDescriptor(d);
+            return new(d);
         }
 
         public static implicit operator DdsPixelFormatFourDescriptor(int d)
         {
-            return new DdsPixelFormatFourDescriptor(d);
+            return new(d);
         }
 
         public static implicit operator string(DdsPixelFormatFourDescriptor d)
@@ -80,12 +80,12 @@ namespace Pulse.DirectX
 
         public static implicit operator DdsPixelFormatFourDescriptor(string d)
         {
-            return new DdsPixelFormatFourDescriptor(d);
+            return new(d);
         }
 
         public override string ToString()
         {
-            return new string(new[]
+            return new(new[]
             {
                 (char)(_value & 0xFF),
                 (char)((_value >> 8) & 0xFF),

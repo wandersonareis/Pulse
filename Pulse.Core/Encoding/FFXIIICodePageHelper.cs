@@ -45,7 +45,7 @@ namespace Pulse.Core
                 bytes[chars[i]] = (short)i;
             }
 
-            return new FFXIIICodePage(chars, bytes);
+            return new(chars, bytes);
         }
 
         private static void CreateAdditionalCharacters(char[] chars)
@@ -124,7 +124,7 @@ namespace Pulse.Core
                     charsNode.Name, charsNode.ChildNodes.Count);
 
             char[] chars = new char[256 + 0x2C10];
-            Dictionary<char, short> bytes = new Dictionary<char, short>(256);
+            Dictionary<char, short> bytes = new(256);
 
             for (int i = 0; i < chars.Length; i++)
             {
@@ -135,7 +135,7 @@ namespace Pulse.Core
             foreach (XmlElement byteNode in bytesNode)
                 bytes[byteNode.GetChar("Char")] = byteNode.GetInt16("Byte");
 
-            return new FFXIIICodePage(chars, bytes);
+            return new(chars, bytes);
         }
     }
 }

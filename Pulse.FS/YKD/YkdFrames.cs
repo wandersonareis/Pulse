@@ -29,7 +29,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
 
             Unknown1 = br.ReadInt32();
             Unknown2 = br.ReadInt32();
@@ -54,7 +54,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
 
             int count = Count;
             int alignment = ((4 - (count % 4)) % 4);

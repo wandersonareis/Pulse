@@ -7,7 +7,7 @@ namespace Pulse.UI
 {
     public class UiLazyContainerNode : UiContainerNode
     {
-        private static readonly Semaphore Semaphore = new Semaphore(Environment.ProcessorCount, Environment.ProcessorCount);
+        private static readonly Semaphore Semaphore = new(Environment.ProcessorCount, Environment.ProcessorCount);
 
         private volatile object _lock;
         private bool _childsCreated;
@@ -15,7 +15,7 @@ namespace Pulse.UI
         public UiLazyContainerNode(string name, UiNodeType type)
             : base(name, type)
         {
-            _lock = new object();
+            _lock = new();
         }
 
         protected override UiNode[] RequestChilds()

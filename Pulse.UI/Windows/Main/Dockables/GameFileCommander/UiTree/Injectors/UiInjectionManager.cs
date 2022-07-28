@@ -8,7 +8,7 @@ namespace Pulse.UI
 {
     public sealed class UiInjectionManager
     {
-        private readonly HashSet<ArchiveListing> _set = new HashSet<ArchiveListing>();
+        private readonly HashSet<ArchiveListing> _set = new();
 
         public UiInjectionManager()
         {
@@ -23,7 +23,7 @@ namespace Pulse.UI
 
         public void WriteListings()
         {
-            HashSet<ArchiveListing> set = new HashSet<ArchiveListing>();
+            HashSet<ArchiveListing> set = new();
             foreach (ArchiveListing listing in _set)
             {
                 ArchiveListing item = listing;

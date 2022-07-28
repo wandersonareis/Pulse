@@ -9,7 +9,7 @@ namespace Pulse.UI
         public string Title { get; }
         public string Description { get; }
 
-        private readonly object _lock = new object();
+        private readonly object _lock = new();
         private T _current;
 
         public event Action<T> InfoProvided;
@@ -28,7 +28,7 @@ namespace Pulse.UI
                 if (_current != null)
                     return _current;
 
-                List<Exception> exceptions = new List<Exception>();
+                List<Exception> exceptions = new();
                 foreach (IInfoProvider<T> provider in this)
                 {
                     try

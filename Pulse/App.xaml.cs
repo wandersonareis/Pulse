@@ -18,6 +18,35 @@ namespace Pulse
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
             DispatcherUnhandledException += OnDispatcherUnhandledException;
 
+            switch (e.Args)
+            {
+                case { Length: > 0 }:
+                {
+                    void SetGamePart(FFXIIIGamePart gamePart)
+                    {
+                        UiMainWindow m = new();
+                        InteractionService.SetGamePart(gamePart);
+                        m.Show();
+                    }
+
+                    switch (e.Args[0])
+                    {
+                        case "-ff13":
+                            SetGamePart(FFXIIIGamePart.Part1);
+                            break;
+                        case "-ff132":
+                            SetGamePart(FFXIIIGamePart.Part2);
+                            break;
+                        case "-ff133":
+                            SetGamePart(FFXIIIGamePart.Part3);
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+
+                    return;
+                }
+            }
             // Compression test
             //using (var input = File.OpenRead(@"D:\Steam\SteamApps\common\FINAL FANTASY XIII-2\Work\Extracted\txtres\resident\system.strings"))
             //using (var output = File.Create(@"D:\Steam\SteamApps\common\FINAL FANTASY XIII-2\Work\Extracted\txtres\resident\system_enc.strings"))
@@ -81,8 +110,8 @@ namespace Pulse
             //
             //Environment.Exit(1);
 
-            UiMainWindow main = new UiMainWindow();
-            UiGamePartSelectDialog dlg = new UiGamePartSelectDialog();
+            UiMainWindow main = new();
+            UiGamePartSelectDialog dlg = new();
             if (dlg.ShowDialog() != true)
                 Environment.Exit(1);
 

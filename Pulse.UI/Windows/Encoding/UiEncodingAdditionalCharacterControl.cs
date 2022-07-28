@@ -31,14 +31,14 @@ namespace Pulse.UI.Encoding
 
             _indexLabel = UiTextBlockFactory.Create("#");
             {
-                _indexLabel.Margin = new Thickness(5);
+                _indexLabel.Margin = new(5);
                 _indexLabel.VerticalAlignment = VerticalAlignment.Center;
                 Children.Add(_indexLabel);
             }
 
             UiTextBlock rowLabel = UiTextBlockFactory.Create(Lang.EncodingEditor.Extra.Row);
             {
-                rowLabel.Margin = new Thickness(5, 5, 2, 5);
+                rowLabel.Margin = new(5, 5, 2, 5);
                 rowLabel.VerticalAlignment = VerticalAlignment.Center;
                 Children.Add(rowLabel);
             }
@@ -46,14 +46,14 @@ namespace Pulse.UI.Encoding
             _rowNumber = UiIntegerUpDownFactory.Create(0, byte.MaxValue);
             {
                 _rowNumber.Width = 50;
-                _rowNumber.Margin = new Thickness(2, 5, 5, 5);
+                _rowNumber.Margin = new(2, 5, 5, 5);
                 _rowNumber.ValueChanged += OnRowValueChanged;
                 Children.Add(_rowNumber);
             }
 
             UiTextBlock colLabel = UiTextBlockFactory.Create(Lang.EncodingEditor.Extra.Column);
             {
-                colLabel.Margin = new Thickness(5, 5, 2, 5);
+                colLabel.Margin = new(5, 5, 2, 5);
                 colLabel.VerticalAlignment = VerticalAlignment.Center;
                 Children.Add(colLabel);
             }
@@ -61,14 +61,14 @@ namespace Pulse.UI.Encoding
             _colNumber = UiIntegerUpDownFactory.Create(0, byte.MaxValue);
             {
                 _colNumber.Width = 50;
-                _colNumber.Margin = new Thickness(2, 5, 5, 5);
+                _colNumber.Margin = new(2, 5, 5, 5);
                 _colNumber.ValueChanged += OnColValueChanged;
                 Children.Add(_colNumber);
             }
 
             UiTextBlock outputLabel = UiTextBlockFactory.Create(Lang.EncodingEditor.Extra.ToText);
             {
-                outputLabel.Margin = new Thickness(5, 5, 2, 5);
+                outputLabel.Margin = new(5, 5, 2, 5);
                 outputLabel.VerticalAlignment = VerticalAlignment.Center;
                 Children.Add(outputLabel);
             }
@@ -76,14 +76,14 @@ namespace Pulse.UI.Encoding
             _output = UiWatermarkTextBoxFactory.Create("0x31->\"1\"");
             {
                 _output.Width = 60;
-                _output.Margin = new Thickness(2, 5, 5, 5);
+                _output.Margin = new(2, 5, 5, 5);
                 _output.TextChanged += OnOutputTextChanged;
                 Children.Add(_output);
             }
 
             UiTextBlock inputLabel = UiTextBlockFactory.Create(Lang.EncodingEditor.Extra.FromText);
             {
-                inputLabel.Margin = new Thickness(5, 5, 2, 5);
+                inputLabel.Margin = new(5, 5, 2, 5);
                 inputLabel.VerticalAlignment = VerticalAlignment.Center;
                 Children.Add(inputLabel);
             }
@@ -91,7 +91,7 @@ namespace Pulse.UI.Encoding
             _input = UiWatermarkTextBoxFactory.Create("0x31<-\"1\"");
             {
                 _input.Width = 100;
-                _input.Margin = new Thickness(2, 5, 5, 5);
+                _input.Margin = new(2, 5, 5, 5);
                 _input.TextChanged += OnInputTextChanged;
                 Children.Add(_input);
             }

@@ -10,8 +10,8 @@ namespace Pulse.UI
 {
     public sealed class UiChildPackageBuilder
     {
-        private readonly ConcurrentDictionary<UiArchiveExtension, ConcurrentBag<UiNode>> _nodes = new ConcurrentDictionary<UiArchiveExtension, ConcurrentBag<UiNode>>();
-        private readonly ConcurrentDictionary<string, Pair<ArchiveEntry, ArchiveEntry>> _pairs = new ConcurrentDictionary<string, Pair<ArchiveEntry, ArchiveEntry>>();
+        private readonly ConcurrentDictionary<UiArchiveExtension, ConcurrentBag<UiNode>> _nodes = new();
+        private readonly ConcurrentDictionary<string, Pair<ArchiveEntry, ArchiveEntry>> _pairs = new();
 
         private readonly string _areasDirectory;
 
@@ -43,7 +43,7 @@ namespace Pulse.UI
                 return null;
 
             int counter = 0;
-            UiContainerNode result = new UiContainerNode(Lang.Dockable.GameFileCommander.ArchivesNode, UiNodeType.Group);
+            UiContainerNode result = new(Lang.Dockable.GameFileCommander.ArchivesNode, UiNodeType.Group);
             UiNode[] extensions = new UiNode[_nodes.Count];
             foreach (KeyValuePair<UiArchiveExtension, ConcurrentBag<UiNode>> pair in _nodes)
             {
@@ -59,8 +59,8 @@ namespace Pulse.UI
         {
             string separator = Path.AltDirectorySeparatorChar.ToString();
 
-            UiContainerNode extensionNode = new UiContainerNode(key.ToString().ToUpper(), UiNodeType.Group);
-            Dictionary<string, UiContainerNode> dirs = new Dictionary<string, UiContainerNode>(entries.Count);
+            UiContainerNode extensionNode = new(key.ToString().ToUpper(), UiNodeType.Group);
+            Dictionary<string, UiContainerNode> dirs = new(entries.Count);
             foreach (UiNode leaf in entries)
             {
                 UiNode parent = extensionNode;
@@ -72,7 +72,7 @@ namespace Pulse.UI
                     string directoryPath = string.Join(separator, path, 0, i + 1);
                     if (!dirs.TryGetValue(directoryPath, out directory))
                     {
-                        directory = new UiContainerNode(directoryName, UiNodeType.Directory) {Parent = parent};
+                        directory = new(directoryName, UiNodeType.Directory) {Parent = parent};
                         dirs.Add(directoryPath, directory);
                     }
                     parent = directory;
@@ -105,12 +105,12 @@ namespace Pulse.UI
 
         private ConcurrentBag<UiNode> ProvideRootNodeChilds(UiArchiveExtension extension)
         {
-            return _nodes.GetOrAdd(extension, e => new ConcurrentBag<UiNode>());
+            return _nodes.GetOrAdd(extension, e => new());
         }
 
         private Pair<ArchiveEntry, ArchiveEntry> ProvidePair(string entryPathWithoutExtension)
         {
-            return _pairs.GetOrAdd(entryPathWithoutExtension, p => new Pair<ArchiveEntry, ArchiveEntry>());
+            return _pairs.GetOrAdd(entryPathWithoutExtension, p => new());
         }
 
         private bool TryAddDbFiles(ArchiveListing listing, ArchiveEntry entry, string entryPath, string entryName)
@@ -119,7 +119,7 @@ namespace Pulse.UI
             
             UiArchiveExtension extension = UiArchiveExtension.Bin;
 
-            UiFileTableNode node = new UiFileTableNode(listing, extension, entry, entry);
+            UiFileTableNode node = new(listing, extension, entry, entry);
             ConcurrentBag<UiNode> container = ProvideRootNodeChilds(extension);
             container.Add(node);
             return true;
@@ -173,7 +173,7 @@ namespace Pulse.UI
 
             UiArchiveExtension extension = GetArchiveExtension(entry);
 
-            UiDataTableNode node = new UiDataTableNode(parentListing, extension, entry);
+            UiDataTableNode node = new(parentListing, extension, entry);
             ConcurrentBag<UiNode> container = ProvideRootNodeChilds(extension);
             container.Add(node);
 
@@ -221,7 +221,7 @@ namespace Pulse.UI
             if (pair.IsAnyEmpty) return true;
             UiArchiveExtension extension = GetArchiveExtension(pair.Item1);
 
-            UiFileTableNode node = new UiFileTableNode(listing, extension, pair.Item1, pair.Item2);
+            UiFileTableNode node = new(listing, extension, pair.Item1, pair.Item2);
             ConcurrentBag<UiNode> container = ProvideRootNodeChilds(extension);
             container.Add(node);
 

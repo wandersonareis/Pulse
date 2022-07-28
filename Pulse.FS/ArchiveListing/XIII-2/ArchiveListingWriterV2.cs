@@ -10,7 +10,7 @@ namespace Pulse.FS
     {
         public static void Write(ArchiveListing listing)
         {
-            ArchiveListingWriterV2 writer = new ArchiveListingWriterV2(listing);
+            ArchiveListingWriterV2 writer = new(listing);
             writer.Write();
         }
 
@@ -25,12 +25,12 @@ namespace Pulse.FS
 
         public void Write()
         {
-            using (MemoryStream headerBuff = new MemoryStream(32768))
-            using (MemoryStream textBuff = new MemoryStream(32768))
+            using (MemoryStream headerBuff = new(32768))
+            using (MemoryStream textBuff = new(32768))
             {
                 ArchiveListingBlockInfo[] blocksInfo;
                 ArchiveListingEntryInfoV2[] entriesInfoV2;
-                ArchiveListingTextWriterV2 textWriter = new ArchiveListingTextWriterV2(textBuff);
+                ArchiveListingTextWriterV2 textWriter = new(textBuff);
                 textWriter.Write(_listing, out blocksInfo, out entriesInfoV2);
 
                 for (int i = 0; i < entriesInfoV2.Length; i++)
@@ -77,7 +77,7 @@ namespace Pulse.FS
 
         private void RecreateEncryptedListing(MemoryStream headerBuff, int hederSize, MemoryStream textBuff, int blocksSize, byte[] buff)
         {
-            using (TempFileProvider tmpProvider = new TempFileProvider("filelist", ".win32.bin"))
+            using (TempFileProvider tmpProvider = new("filelist", ".win32.bin"))
             {
                 using (Stream output = tmpProvider.Create())
                 {
@@ -85,9 +85,9 @@ namespace Pulse.FS
                     textBuff.CopyToStream(output, blocksSize, buff);
                 }
 
-                Process encrypter = new Process
+                Process encrypter = new()
                 {
-                    StartInfo = new ProcessStartInfo()
+                    StartInfo = new()
                     {
                         FileName = @"Resources\Executable\ffxiiicrypt.exe",
                         Arguments = "-e \"" + tmpProvider.FilePath + "\" 2",
@@ -103,7 +103,7 @@ namespace Pulse.FS
                 encrypter.WaitForExit();
                 if (encrypter.ExitCode >= 0)
                 {
-                    StringBuilder sb = new StringBuilder("Decryption error! Code: ");
+                    StringBuilder sb = new("Decryption error! Code: ");
                     sb.AppendLine(encrypter.ExitCode.ToString());
                     sb.AppendLine("Error: ");
                     sb.AppendLine(erroMessage.Result);

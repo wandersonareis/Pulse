@@ -21,7 +21,7 @@ namespace Pulse.FS
         public int CalcSize()
         {
             YkdBlockEntry[] entries = Entries ?? new YkdBlockEntry[0];
-            YkdOffsets offsets = new YkdOffsets {Offsets = new int[entries.Length]};
+            YkdOffsets offsets = new() {Offsets = new int[entries.Length]};
 
             int result = 4 * 4 + TransformationMatrixSize + offsets.CalcSize() + entries.Sum(t => t.CalcSize());
 
@@ -37,7 +37,7 @@ namespace Pulse.FS
 
         public void ReadFromStream(Stream stream)
         {
-            BinaryReader br = new BinaryReader(stream);
+            BinaryReader br = new(stream);
 
             IsFirstBlock = stream.Position == YkdHeader.Size;
 
@@ -79,7 +79,7 @@ namespace Pulse.FS
 
         public void WriteToStream(Stream stream)
         {
-            BinaryWriter bw = new BinaryWriter(stream);
+            BinaryWriter bw = new(stream);
 
             bw.Write(Type);
             bw.Write(Index);

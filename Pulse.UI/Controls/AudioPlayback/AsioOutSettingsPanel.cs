@@ -29,7 +29,7 @@ namespace NAudioDemo.AudioPlaybackDemo
         {
             try
             {
-                using (AsioOut asio = new AsioOut(SelectedDeviceName))
+                using (AsioOut asio = new(SelectedDeviceName))
                 {
                     asio.ShowControlPanel();
                 }

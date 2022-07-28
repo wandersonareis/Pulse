@@ -34,15 +34,15 @@ namespace Pulse.UI.Encoding
         {
             #region Construct
 
-            RowDefinitions.Add(new RowDefinition {Height = GridLength.Auto});
-            RowDefinitions.Add(new RowDefinition {Height = GridLength.Auto});
-            ColumnDefinitions.Add(new ColumnDefinition {Width = GridLength.Auto});
+            RowDefinitions.Add(new() {Height = GridLength.Auto});
+            RowDefinitions.Add(new() {Height = GridLength.Auto});
+            ColumnDefinitions.Add(new() {Width = GridLength.Auto});
 
-            _mainControls = new LazyArray<UiEncodingMainCharacterControl>(ProvideMainControl);
+            _mainControls = new(ProvideMainControl);
             _mainPanel = UiStackPanelFactory.Create(Orientation.Vertical);
             AddUiElement(_mainPanel, 0, 0);
 
-            _additionalControls = new LazyArray<UiEncodingAdditionalCharacterControl>(ProvideAdditionalControl);
+            _additionalControls = new(ProvideAdditionalControl);
             _additionalPanel = UiStackPanelFactory.Create(Orientation.Vertical);
             AddUiElement(_additionalPanel, 1, 0);
 
@@ -54,7 +54,7 @@ namespace Pulse.UI.Encoding
             if (!CheckAccess())
                 return Dispatcher.Invoke(() => ProvideMainControl(index));
 
-            UiEncodingMainCharacterControl control = new UiEncodingMainCharacterControl();
+            UiEncodingMainCharacterControl control = new();
             {
                 control.Visibility = Visibility.Collapsed;
                 control.DrawEvent = _drawEvent;
@@ -68,7 +68,7 @@ namespace Pulse.UI.Encoding
             if (!CheckAccess())
                 return Dispatcher.Invoke(() => ProvideAdditionalControl(index));
 
-            UiEncodingAdditionalCharacterControl control = new UiEncodingAdditionalCharacterControl();
+            UiEncodingAdditionalCharacterControl control = new();
             {
                 control.Visibility = Visibility.Collapsed;
                 control.DrawEvent = _drawEvent;

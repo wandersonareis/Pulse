@@ -63,30 +63,30 @@ namespace Pulse.DirectX
         /// </summary>
         public uint AlphaBitMask;
 
-        public static readonly DdsPixelFormat DXT1 = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '1'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat DXT2 = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '2'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat DXT3 = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '3'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat DXT4 = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '4'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat DXT5 = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '5'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat BC4_UNorm = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('B', 'C', '4', 'U'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat BC4_SNorm = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('B', 'C', '4', 'S'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat BC5_UNorm = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('B', 'C', '5', 'U'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat BC5_SNorm = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('B', 'C', '5', 'S'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat R8G8_B8G8 = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('R', 'G', 'B', 'G'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat G8R8_G8B8 = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('G', 'R', 'G', 'B'), 0, 0, 0, 0, 0);
-        public static readonly DdsPixelFormat A8R8G8B8 = new DdsPixelFormat(DdsPixelFormatFlags.RGB | DdsPixelFormatFlags.AlphaPixels, 0, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
-        public static readonly DdsPixelFormat X8R8G8B8 = new DdsPixelFormat(DdsPixelFormatFlags.RGB, 0, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
-        public static readonly DdsPixelFormat A8B8G8R8 = new DdsPixelFormat(DdsPixelFormatFlags.RGB | DdsPixelFormatFlags.AlphaPixels, 0, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
-        public static readonly DdsPixelFormat X8B8G8R8 = new DdsPixelFormat(DdsPixelFormatFlags.RGB, 0, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0x00000000);
-        public static readonly DdsPixelFormat G16R16 = new DdsPixelFormat(DdsPixelFormatFlags.RGB, 0, 32, 0x0000ffff, 0xffff0000, 0x00000000, 0x00000000);
-        public static readonly DdsPixelFormat R5G6B5 = new DdsPixelFormat(DdsPixelFormatFlags.RGB, 0, 16, 0x0000f800, 0x000007e0, 0x0000001f, 0x00000000);
-        public static readonly DdsPixelFormat A1R5G5B5 = new DdsPixelFormat(DdsPixelFormatFlags.RGB | DdsPixelFormatFlags.AlphaPixels, 0, 16, 0x00007c00, 0x000003e0, 0x0000001f, 0x00008000);
-        public static readonly DdsPixelFormat A4R4G4B4 = new DdsPixelFormat(DdsPixelFormatFlags.RGB | DdsPixelFormatFlags.AlphaPixels, 0, 16, 0x00000f00, 0x000000f0, 0x0000000f, 0x0000f000);
-        public static readonly DdsPixelFormat R8G8B8 = new DdsPixelFormat(DdsPixelFormatFlags.RGB, 0, 24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
-        public static readonly DdsPixelFormat L8 = new DdsPixelFormat(DdsPixelFormatFlags.Luminance, 0, 8, 0xff, 0x00, 0x00, 0x00);
-        public static readonly DdsPixelFormat L16 = new DdsPixelFormat(DdsPixelFormatFlags.Luminance, 0, 16, 0xffff, 0x0000, 0x0000, 0x0000);
-        public static readonly DdsPixelFormat A8L8 = new DdsPixelFormat(DdsPixelFormatFlags.Luminance | DdsPixelFormatFlags.AlphaPixels, 0, 16, 0x00ff, 0x0000, 0x0000, 0xff00);
-        public static readonly DdsPixelFormat A8 = new DdsPixelFormat(DdsPixelFormatFlags.Alpha, 0, 8, 0x00, 0x00, 0x00, 0xff);
-        public static readonly DdsPixelFormat DX10 = new DdsPixelFormat(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', '1', '0'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat DXT1 = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '1'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat DXT2 = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '2'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat DXT3 = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '3'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat DXT4 = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '4'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat DXT5 = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', 'T', '5'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat BC4_UNorm = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('B', 'C', '4', 'U'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat BC4_SNorm = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('B', 'C', '4', 'S'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat BC5_UNorm = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('B', 'C', '5', 'U'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat BC5_SNorm = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('B', 'C', '5', 'S'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat R8G8_B8G8 = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('R', 'G', 'B', 'G'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat G8R8_G8B8 = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('G', 'R', 'G', 'B'), 0, 0, 0, 0, 0);
+        public static readonly DdsPixelFormat A8R8G8B8 = new(DdsPixelFormatFlags.RGB | DdsPixelFormatFlags.AlphaPixels, 0, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0xff000000);
+        public static readonly DdsPixelFormat X8R8G8B8 = new(DdsPixelFormatFlags.RGB, 0, 32, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
+        public static readonly DdsPixelFormat A8B8G8R8 = new(DdsPixelFormatFlags.RGB | DdsPixelFormatFlags.AlphaPixels, 0, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000);
+        public static readonly DdsPixelFormat X8B8G8R8 = new(DdsPixelFormatFlags.RGB, 0, 32, 0x000000ff, 0x0000ff00, 0x00ff0000, 0x00000000);
+        public static readonly DdsPixelFormat G16R16 = new(DdsPixelFormatFlags.RGB, 0, 32, 0x0000ffff, 0xffff0000, 0x00000000, 0x00000000);
+        public static readonly DdsPixelFormat R5G6B5 = new(DdsPixelFormatFlags.RGB, 0, 16, 0x0000f800, 0x000007e0, 0x0000001f, 0x00000000);
+        public static readonly DdsPixelFormat A1R5G5B5 = new(DdsPixelFormatFlags.RGB | DdsPixelFormatFlags.AlphaPixels, 0, 16, 0x00007c00, 0x000003e0, 0x0000001f, 0x00008000);
+        public static readonly DdsPixelFormat A4R4G4B4 = new(DdsPixelFormatFlags.RGB | DdsPixelFormatFlags.AlphaPixels, 0, 16, 0x00000f00, 0x000000f0, 0x0000000f, 0x0000f000);
+        public static readonly DdsPixelFormat R8G8B8 = new(DdsPixelFormatFlags.RGB, 0, 24, 0x00ff0000, 0x0000ff00, 0x000000ff, 0x00000000);
+        public static readonly DdsPixelFormat L8 = new(DdsPixelFormatFlags.Luminance, 0, 8, 0xff, 0x00, 0x00, 0x00);
+        public static readonly DdsPixelFormat L16 = new(DdsPixelFormatFlags.Luminance, 0, 16, 0xffff, 0x0000, 0x0000, 0x0000);
+        public static readonly DdsPixelFormat A8L8 = new(DdsPixelFormatFlags.Luminance | DdsPixelFormatFlags.AlphaPixels, 0, 16, 0x00ff, 0x0000, 0x0000, 0xff00);
+        public static readonly DdsPixelFormat A8 = new(DdsPixelFormatFlags.Alpha, 0, 8, 0x00, 0x00, 0x00, 0xff);
+        public static readonly DdsPixelFormat DX10 = new(DdsPixelFormatFlags.FourCC, new DdsPixelFormatFourDescriptor('D', 'X', '1', '0'), 0, 0, 0, 0, 0);
     }
 }
