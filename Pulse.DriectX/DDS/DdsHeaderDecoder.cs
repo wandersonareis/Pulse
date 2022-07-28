@@ -10,7 +10,7 @@ namespace Pulse.DirectX
     {
         public static DdsHeader FromFileStream(Stream input)
         {
-            byte[] buff = new byte[128];
+            var buff = new byte[128];
             using (SafeGCHandle handle = new SafeGCHandle(buff, GCHandleType.Pinned))
             {
                 input.EnsureRead(buff, 0, buff.Length);

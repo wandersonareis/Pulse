@@ -278,6 +278,8 @@ namespace Yusnaan
         {
             string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
             if (xfvFile == null) return;
+            string unpackPath = Path.Combine(Path.GetDirectoryName(xfvFile) ?? throw new NullReferenceException(), Path.GetFileNameWithoutExtension(xfvFile), ".unpack");
+            Directory.CreateDirectory(unpackPath);
             using Stream xfvFileStream = File.OpenRead(xfvFile);
             using Stream imgbFileStream = File.OpenRead(Path.ChangeExtension(xfvFile, ".imgb"));
             WdbHeader wdbHeader = xfvFileStream.ReadContent<WdbHeader>();
@@ -291,7 +293,7 @@ namespace Yusnaan
                 var textureHeader = xfvFileStream.ReadContent<VtexHeader>();
                 xfvFileStream.Seek(textureHeader.GtexOffset - VtexHeader.Size, SeekOrigin.Current);
                 var gtex = xfvFileStream.ReadContent<GtexData>();
-                using Stream output = File.Create(textureHeader.Name + ".dds");
+                using Stream output = File.Create(Path.Combine(unpackPath, textureHeader.Name + ".dds"));
 
                 DdsHeader header = DdsHeaderDecoder.FromGtexHeader(gtex.Header);
                 DdsHeaderEncoder.ToFileStream(header, output);
@@ -342,6 +344,7 @@ namespace Yusnaan
 
                     var xfv = new XfvInject(entry, input, xfvFileStream, imgbFileStream, buff);
                     xfv.InjectAll();
+                    input.Close();
                 }
             }
             catch (NotImplementedException notImplementedException)

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Windows;
 using Pulse.Core;
 using Pulse.DirectX;
 using Pulse.FS;
@@ -51,7 +48,9 @@ namespace Yusnaan.Formats.imgb
             var data = _header.ReadContent<GtexData>();
 
             if (data.MipMapData.Length != 1)
-                throw new NotImplementedException();
+            {
+                throw new MipMapException($"{_entry.NameWithoutExtension} with mipmap! Skipped this file.");
+            }
 
             DdsHeader ddsHeader = DdsHeaderDecoder.FromFileStream(_input);
             DdsHeaderEncoder.ToGtexHeader(ddsHeader, data.Header);
@@ -90,7 +89,10 @@ namespace Yusnaan.Formats.imgb
                 var data = _header.ReadContent<GtexData>();
 
                 if (data.MipMapData.Length != 1)
-                    throw new NotImplementedException();
+                {
+                    MessageBox.Show($"{entry.NameWithoutExtension} with mipmap! Skipped this file.");
+                    continue;
+                }
 
                 DdsHeader ddsHeader = DdsHeaderDecoder.FromFileStream(_input);
                 DdsHeaderEncoder.ToGtexHeader(ddsHeader, data.Header);

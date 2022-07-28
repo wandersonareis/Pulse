@@ -4,7 +4,7 @@ using System.Linq;
 using Pulse.FS;
 using Yusnaan.Compressor;
 
-namespace Yusnaan.Formats;
+namespace Yusnaan.Model.Extractors;
 
 internal class ZtrToStringsWpdEntryExtractor
 {

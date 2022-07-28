@@ -27,20 +27,20 @@ namespace Pulse.UI
             try
             {
                 char[] chars = new char[256 + WflContent.AdditionalTableCount];
-                ConcurrentDictionary<char, short> codes = new ConcurrentDictionary<char, short>();
+                ConcurrentDictionary<char, short> codes = new();
                 if (_oldEncoding == null)
                     _oldEncoding = InteractionService.TextEncoding.Provide();
 
                 UiEncodingWindowSource[] sources = PrepareWindowSources(fontContent, textures, names, chars, codes);
-                UiEncodingWindow wnd = new UiEncodingWindow();
+                UiEncodingWindow wnd = new();
                 foreach (UiEncodingWindowSource source in sources)
                     wnd.Add(source);
 
                 if (wnd.ShowDialog() == true)
                 {
-                    FFXIIICodePage codepage = new FFXIIICodePage(chars, new Dictionary<char, short>(codes));
-                    FFXIIITextEncoding encoding = new FFXIIITextEncoding(codepage);
-                    TextEncodingInfo result = new TextEncodingInfo(encoding);
+                    FFXIIICodePage codepage = new(chars, new(codes));
+                    FFXIIITextEncoding encoding = new(codepage);
+                    TextEncodingInfo result = new(encoding);
 
                     result.Save();
 
@@ -59,8 +59,8 @@ namespace Pulse.UI
 
         private void Inject(WpdArchiveListing listing, WpdEntry[] fontEntries, WflContent[] fontContent)
         {
-            UiInjectionManager manager = new UiInjectionManager();
-            using (MemoryInjectionSource source = new MemoryInjectionSource())
+            UiInjectionManager manager = new();
+            using (MemoryInjectionSource source = new())
             {
                 string injectionRoot = Path.Combine(source.ProvideRootDirectory(), listing.ExtractionSubpath);
                 for (int i = 0; i < fontEntries.Length; i++)
@@ -69,15 +69,15 @@ namespace Pulse.UI
                     WflContent content = fontContent[i];
                     string injectionPath = Path.Combine(injectionRoot, entry.Name);
 
-                    MemoryStream stream = new MemoryStream(1024);
+                    MemoryStream stream = new(1024);
                     source.RegisterStream(injectionPath, stream);
 
-                    WflFileWriter writer = new WflFileWriter(stream);
+                    WflFileWriter writer = new(stream);
                     writer.Write(content);
                     stream.SetPosition(0);
                 }
 
-                UiWpdInjector injector = new UiWpdInjector(listing, fontEntries, false, source);
+                UiWpdInjector injector = new(listing, fontEntries, false, source);
                 injector.Inject(manager);
             }
             manager.WriteListings();
@@ -208,7 +208,7 @@ namespace Pulse.UI
 
             UiEncodingWindowSource[] result = new UiEncodingWindowSource[names.Length];
             for (int i = 0; i < result.Length; i++)
-                result[i] = new UiEncodingWindowSource(names[i], textures[i], wflContents[i], chars, codes);
+                result[i] = new(names[i], textures[i], wflContents[i], chars, codes);
 
             return result;
         }
@@ -217,15 +217,15 @@ namespace Pulse.UI
         {
             UiArchives archives = InteractionService.GameLocation.Provide().ArchivesTree.Result;
 
-            UiNodePathBuilder pathBuilder = new UiNodePathBuilder(5);
+            UiNodePathBuilder pathBuilder = new(5);
             pathBuilder.Add(UiNodeType.Group);
-            pathBuilder.Add(UiNodeType.Group, new Wildcard(UiArchiveExtension.Xgr.ToString()));
-            pathBuilder.Add(UiNodeType.Directory, new Wildcard("gui"));
-            pathBuilder.Add(UiNodeType.Directory, new Wildcard("resident"));
+            pathBuilder.Add(UiNodeType.Group, new(UiArchiveExtension.Xgr.ToString()));
+            pathBuilder.Add(UiNodeType.Directory, new("gui"));
+            pathBuilder.Add(UiNodeType.Directory, new("resident"));
             if (InteractionService.GamePart == FFXIIIGamePart.Part1)
-                pathBuilder.Add(UiNodeType.FileTable, new Wildcard("system.win32.xgr"));
+                pathBuilder.Add(UiNodeType.FileTable, new("system.win32.xgr"));
             else
-                pathBuilder.Add(UiNodeType.FileTable, new Wildcard("system_jp.win32.xgr"));
+                pathBuilder.Add(UiNodeType.FileTable, new("system_jp.win32.xgr"));
             UiNodePath path = pathBuilder.Build();
 
             foreach (UiContainerNode archive in archives)
@@ -253,12 +253,12 @@ namespace Pulse.UI
             string binaryPath = Path.Combine(gameLocation.SystemDirectory, "white_imgc.win32.bin");
             string listingPath = Path.Combine(gameLocation.SystemDirectory, "filelistc.win32.bin");
 
-            ArchiveAccessor accessor = new ArchiveAccessor(binaryPath, listingPath);
+            ArchiveAccessor accessor = new(binaryPath, listingPath);
             ArchiveListing listing = ArchiveListingReaderV1.Read(accessor, null, null);
             ArchiveEntry xgrEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.xgr"));
             ArchiveEntry imgbEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.imgb"));
 
-            return new ImgbArchiveAccessor(listing, xgrEntry, imgbEntry);
+            return new(listing, xgrEntry, imgbEntry);
         }
 
         private ImgbArchiveAccessor CreateAccessorV2()
@@ -267,12 +267,12 @@ namespace Pulse.UI
             string binaryPath = Path.Combine(gameLocation.SystemDirectory, "white_imgc.win32.bin");
             string listingPath = Path.Combine(gameLocation.SystemDirectory, "filelistc.win32.bin");
 
-            ArchiveAccessor accessor = new ArchiveAccessor(binaryPath, listingPath);
+            ArchiveAccessor accessor = new(binaryPath, listingPath);
             ArchiveListing listing = ArchiveListingReaderV1.Read(accessor, null, null);
             ArchiveEntry xgrEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.xgr"));
             ArchiveEntry imgbEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.imgb"));
 
-            return new ImgbArchiveAccessor(listing, xgrEntry, imgbEntry);
+            return new(listing, xgrEntry, imgbEntry);
         }
         private ImgbArchiveAccessor CreateAccessorV3()
         {
@@ -280,12 +280,12 @@ namespace Pulse.UI
             string binaryPath = Path.Combine(gameLocation.SystemDirectory, "white_img2a.win32.bin");
             string listingPath = Path.Combine(gameLocation.SystemDirectory, "filelist2a.win32.bin");
 
-            ArchiveAccessor accessor = new ArchiveAccessor(binaryPath, listingPath);
+            ArchiveAccessor accessor = new(binaryPath, listingPath);
             ArchiveListing listing = ArchiveListingReaderV1.Read(accessor, null, null);
             ArchiveEntry xgrEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.xgr"));
             ArchiveEntry imgbEntry = listing.Single(n => n.Name.EndsWith(@"gui/resident/system.win32.imgb"));
 
-            return new ImgbArchiveAccessor(listing, xgrEntry, imgbEntry);
+            return new(listing, xgrEntry, imgbEntry);
         }
 
         private void ReadXgrContent(ImgbArchiveAccessor accessor, out WpdArchiveListing listing, out WpdEntry[] fontEntries, out WflContent[] fontContent, out TextureSection[] textureHeaders, out string[] names)
@@ -303,8 +303,8 @@ namespace Pulse.UI
         {
             listing = WpdArchiveListingReader.Read(accessor);
 
-            List<WpdEntry> textures = new List<WpdEntry>(4);
-            List<WpdEntry> fonts = new List<WpdEntry>(4);
+            List<WpdEntry> textures = new(4);
+            List<WpdEntry> fonts = new(4);
 
             foreach (WpdEntry entry in listing)
             {
@@ -331,14 +331,14 @@ namespace Pulse.UI
 
         private static string[] SortAndExcludeNotPaired(List<WpdEntry> textures, List<WpdEntry> fonts)
         {
-            Dictionary<string, Pair<WpdEntry, WpdEntry>> dic = new Dictionary<string, Pair<WpdEntry, WpdEntry>>(Math.Max(textures.Count, fonts.Count));
+            Dictionary<string, Pair<WpdEntry, WpdEntry>> dic = new(Math.Max(textures.Count, fonts.Count));
 
             foreach (WpdEntry entry in textures)
             {
                 string name = entry.NameWithoutExtension.Substring(0, 6);
                 if (!dic.TryGetValue(name, out Pair<WpdEntry, WpdEntry> pair))
                 {
-                    pair = new Pair<WpdEntry, WpdEntry>();
+                    pair = new();
                     dic.Add(name, pair);
                 }
                 pair.Item1 = entry;
@@ -349,7 +349,7 @@ namespace Pulse.UI
                 string name = entry.NameWithoutExtension.Substring(0, 6);
                 if (!dic.TryGetValue(name, out Pair<WpdEntry, WpdEntry> pair))
                 {
-                    pair = new Pair<WpdEntry, WpdEntry>();
+                    pair = new();
                     dic.Add(name, pair);
                 }
                 pair.Item2 = entry;
@@ -358,7 +358,7 @@ namespace Pulse.UI
             textures.Clear();
             fonts.Clear();
 
-            List<string> names = new List<string>(dic.Count);
+            List<string> names = new(dic.Count);
             foreach (KeyValuePair<string, Pair<WpdEntry, WpdEntry>> pair in dic.Where(p => !p.Value.IsAnyEmpty).OrderBy(p => p.Key))
             {
                 names.Add(pair.Key);
@@ -375,9 +375,9 @@ namespace Pulse.UI
             for (int i = 0; i < result.Length; i++)
             {
                 WpdEntry entry = fontEntries[i];
-                using (StreamSegment wflInput = new StreamSegment(xgr, entry.Offset, entry.Length, FileAccess.Read))
+                using (StreamSegment wflInput = new(xgr, entry.Offset, entry.Length, FileAccess.Read))
                 {
-                    WflFileReader reader = new WflFileReader(wflInput);
+                    WflFileReader reader = new(wflInput);
                     result[i] = reader.Read();
                 }
             }
@@ -390,7 +390,7 @@ namespace Pulse.UI
             for (int i = 0; i < result.Length; i++)
             {
                 WpdEntry entry = textureEntries[i];
-                using (StreamSegment textureHeaderInput = new StreamSegment(xgrStream, entry.Offset, entry.Length, FileAccess.Read))
+                using (StreamSegment textureHeaderInput = new(xgrStream, entry.Offset, entry.Length, FileAccess.Read))
                     result[i] = textureHeaderInput.ReadContent<TextureSection>();
             }
             return result;
@@ -401,7 +401,7 @@ namespace Pulse.UI
             DxTexture[] textures = new DxTexture[gtexDatas.Length];
 
             using (Stream imgbStream = accessor.ExtractContent())
-            using (DisposableStack insurance = new DisposableStack())
+            using (DisposableStack insurance = new())
             {
                 for (int i = 0; i < gtexDatas.Length; i++)
                 {

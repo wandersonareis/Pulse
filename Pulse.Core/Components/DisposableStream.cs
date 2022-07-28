@@ -6,8 +6,8 @@ namespace Pulse.Core
     {
         private readonly Stream _stream;
 
-        public readonly DisposableStack BeforeDispose = new DisposableStack(0);
-        public readonly DisposableStack AfterDispose = new DisposableStack(0);
+        public readonly DisposableStack BeforeDispose = new(0);
+        public readonly DisposableStack AfterDispose = new(0);
 
         public DisposableStream(Stream stream)
         {
