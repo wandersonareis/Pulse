@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -10,8 +9,8 @@ using Pulse.Core;
 using Pulse.DirectX;
 using Pulse.FS;
 using Pulse.UI;
-using SimpleLogger.Logging.Handlers;
 using SimpleLogger;
+using SimpleLogger.Logging.Handlers;
 using Yusnaan.Common;
 using Yusnaan.Formats.imgb;
 using Yusnaan.Model.Extractors;

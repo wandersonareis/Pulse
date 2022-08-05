@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Yusnaan"
         xmlns:vm="clr-namespace:Yusnaan.ViewModels"
+        xmlns:control="clr-namespace:Yusnaan.Controls"
         mc:Ignorable="d"
         Title="Yusnaan Resources" Height="484" Width="1000" Closing="Window_Closing">
     <Window.DataContext>
@@ -14,7 +15,11 @@
         <Style TargetType="{x:Type Button}">
             <Setter Property="Background" Value="#373737" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FontFamily" Value="TBUDGothic Std B"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13" />
             <Setter Property="SnapsToDevicePixels" Value="True" />
 
             <Setter Property="Template">
@@ -52,9 +57,9 @@
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="61*" />
-            <RowDefinition Height=" 300*" />
-            <RowDefinition Height="341*" />
+            <RowDefinition Height="41*" />
+            <RowDefinition Height="236*" />
+            <RowDefinition Height="191*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0*" />
@@ -66,13 +71,13 @@
                        VerticalAlignment="Center"
                        FontFamily="Concielian Bold" FontSize="36" Foreground="#FFFDFFFD" />
         </Grid>
-        <Grid HorizontalAlignment="Center" Height="56" VerticalAlignment="Center" Width="380" Grid.Row="0"
+        <Grid HorizontalAlignment="Center" Height="56" VerticalAlignment="Center" Width="380"
               Grid.Column="1">
             <TextBlock x:Name="TbZtrBlock" TextWrapping="Wrap" Text="ZtrCompressor" HorizontalAlignment="Center"
                        VerticalAlignment="Center" FontFamily="Concielian Bold" FontSize="32" Foreground="#FFFDFFFD" />
         </Grid>
-        <Grid HorizontalAlignment="Center" Height="352" Grid.Row="1" VerticalAlignment="Top" Width="380"
-              Grid.Column="1">
+        <Grid HorizontalAlignment="Center" Height="352" VerticalAlignment="Top" Width="380"
+              Grid.Column="1" Margin="0,41,0,0" Grid.RowSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="33*" />
                 <ColumnDefinition Width="347*" />
@@ -107,27 +112,10 @@
                             ToolTip="Converts strings files to ztr with compression using ZtrDecompressor encoding."
                             FontSize="13" />
                 </DockPanel>
-                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Center" Margin="0,10,0,0">
-                    <Button x:Name="PackStringsToZtrDecompressor" Content=" Wpd to Strings"
-                            FontFamily="TBUDGothic Std B"
-                            FontWeight="Normal" HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Command="{Binding WpdToStringsDecompressorCommand}"
-                            Width="151" Height="35" Margin="5"
-                            ToolTip="Converts scenario wpd file to strings using ZtrDecompressor encoding."
-                            FontSize="13" />
-                    <Button x:Name="PackAllStringsToZtrDecompressor" Content="Strings to Wpd"
-                            FontFamily="TBUDGothic Std B"
-                            FontWeight="Normal"
-                            HorizontalAlignment="Center" VerticalAlignment="Center"
-                            Command="{Binding StringsToWpdCompressorCommand}"
-                            Width="151" Height="35" Margin="5"
-                            ToolTip="Converts strings files to ztr with compression using ZtrDecompressor encoding."
-                            FontSize="13" />
-                </DockPanel>
+                <control:WpdFilesControl HorizontalAlignment="Center"/>
             </StackPanel>
         </Grid>
-        <Grid Grid.Column="2" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Top">
+        <Grid Grid.Column="2" HorizontalAlignment="Center" Grid.Row="1" VerticalAlignment="Center" Height="208" Width="484">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -181,7 +169,7 @@
                 </DockPanel>
             </StackPanel>
         </Grid>
-        <Grid Grid.Column="2" Grid.Row="2">
+        <Grid Grid.Column="2" Grid.Row="1" Margin="0,208,0,0" Grid.RowSpan="2">
             <StackPanel VerticalAlignment="Bottom">
                 <DockPanel HorizontalAlignment="Center" Margin="0,30,0,0">
                     <Button x:Name="PulsePt1" Click="OnPart1ButtonClick" Width="110" Height="106" Margin="5">
