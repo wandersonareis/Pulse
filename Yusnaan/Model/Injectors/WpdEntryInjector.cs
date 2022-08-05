@@ -3,105 +3,105 @@ using System.IO;
 using Pulse.Core;
 using Pulse.FS;
 using SimpleLogger;
-using Yusnaan.Common;
 
-namespace Yusnaan.Model.Injectors
+namespace Yusnaan.Model.Injectors;
+
+internal class WpdEntryInjector
 {
-    internal class WpdEntryInjector
+    public void Pack(string? wpdFile)
     {
-        public void Pack(string? wpdFile)
+        ArgumentNullException.ThrowIfNull(wpdFile);
+            
+        using MemoryStream ms = new();
+        string? wpdFileName = Path.GetFileName(wpdFile);
+        FileInfo ztrFile;
+
+        using (Stream wpdFileStream = File.OpenRead(wpdFile ?? throw new ArgumentNullException(nameof(wpdFile))))
         {
-            using MemoryStream ms = new();
-            string? wpdFileName = Path.GetFileName(wpdFile);
-            FileInfo ztrFile;
+            var header = wpdFileStream.ReadContent<WdbHeader>();
+            WpdEntry entry = header.Entries[1];
 
-            using (Stream wpdFileStream = File.OpenRead(wpdFile ?? throw new ArgumentNullException(nameof(wpdFile))))
+            if (!string.Equals(entry.Extension, "ztr", StringComparison.Ordinal))
             {
-                var header = wpdFileStream.ReadContent<WdbHeader>();
-                WpdEntry entry = header.Entries[1];
-
-                if (!string.Equals(entry.Extension, "ztr", StringComparison.Ordinal))
-                {
-                    throw new ScenarieIncompatibleException("This is a file with scenario texts?");
-                }
-
-                string path = Path.Combine(Path.GetDirectoryName(wpdFile) ?? throw new InvalidOperationException(), entry.NameWithoutExtension);
-                string ztrFilePath = Path.Combine(path, entry.Name);
-                ztrFile = new((File.Exists(ztrFilePath) ? ztrFilePath : Dialogs.GetNewZtrFile(ztrFilePath)) ?? throw new InvalidOperationException());
-
-                if (!string.Equals(ztrFile.Name, entry.Name, StringComparison.Ordinal) && !ztrFile.Exists)
-                {
-                    new TaskDialogs().ShowWarningDialog("", "", $@"File {ztrFile.Name} not exist or is not correct ztr file.");
-                    return;
-                }
-
-                using FileStream fileRead = File.OpenRead(ztrFile.FullName);
-                entry.Length = (int)fileRead.Length;
-                header.WriteToStream(ms);
-                wpdFileStream.CopyTo(ms);
-                ms.Position = entry.Offset;
-
-                fileRead.CopyTo(ms);
+                throw new ScenarieIncompatibleException("This is a file with scenario texts?");
             }
 
-            string newPath = Path.Combine(ztrFile.DirectoryName ?? throw new InvalidOperationException(), "_reImported");
-            Directory.CreateDirectory(newPath);
+            string path = Path.Combine(Path.GetDirectoryName(wpdFile) ?? throw new InvalidOperationException(), entry.NameWithoutExtension);
+            string ztrFilePath = Path.Combine(path, entry.Name);
+            ztrFile = new((File.Exists(ztrFilePath) ? ztrFilePath : Dialogs.GetNewZtrFile(ztrFilePath)) ?? throw new InvalidOperationException());
 
-            using FileStream file = new($"{newPath}\\{wpdFileName}", FileMode.OpenOrCreate, FileAccess.Write);
-            ms.WriteTo(file);
+            if (!string.Equals(ztrFile.Name, entry.Name, StringComparison.Ordinal) && !ztrFile.Exists)
+            {
+                new TaskDialogs().ShowWarningDialog("", "", $@"File {ztrFile.Name} not exist or is not correct ztr file.");
+                return;
+            }
 
-            //File.WriteAllBytes($"{newPath}\\{wpdFileName}", ms.ToArray());
+            using FileStream fileRead = File.OpenRead(ztrFile.FullName);
+            entry.Length = (int)fileRead.Length;
+            header.WriteToStream(ms);
+            wpdFileStream.CopyTo(ms);
+            ms.Position = entry.Offset;
+
+            fileRead.CopyTo(ms);
         }
 
-        public void TestPack(FileInfo? wpdFile)
+        string newPath = Path.Combine(ztrFile.DirectoryName ?? throw new InvalidOperationException(), "_reImported");
+        Directory.CreateDirectory(newPath);
+
+        using FileStream file = new($"{newPath}\\{wpdFileName}", FileMode.OpenOrCreate, FileAccess.Write);
+        ms.WriteTo(file);
+
+        //File.WriteAllBytes($"{newPath}\\{wpdFileName}", ms.ToArray());
+    }
+
+    public async ValueTask PackAsync(FileInfo? wpdFile)
+    {
+        ArgumentNullException.ThrowIfNull(wpdFile);
+
+        using MemoryStream ms = new();
+        string wpdFileName = wpdFile.Name;
+        Logger.Log<WpdEntryInjector>(Logger.Level.Info, $"Opening file: {wpdFileName}");
+
+        FileInfo ztrFile;
+
+        await using (Stream wpdFileStream = wpdFile.OpenRead())
         {
-            ArgumentNullException.ThrowIfNull(wpdFile);
+            var header = wpdFileStream.ReadContent<WdbHeader>();
+            WpdEntry entry = header.Entries[1];
 
-            using MemoryStream ms = new();
-            string wpdFileName = wpdFile.Name;
-            Logger.Log<WpdEntryInjector>(Logger.Level.Info, $"Opening file: {wpdFileName}");
-
-            FileInfo ztrFile;
-
-            using (Stream wpdFileStream = wpdFile.OpenRead())
+            if (!string.Equals(entry.Extension, "ztr", StringComparison.Ordinal))
             {
-                var header = wpdFileStream.ReadContent<WdbHeader>();
-                WpdEntry entry = header.Entries[1];
+                throw new ScenarieIncompatibleException("This is a file with scenario texts?");
+            }
 
-                if (!string.Equals(entry.Extension, "ztr", StringComparison.Ordinal))
-                {
-                    throw new ScenarieIncompatibleException("This is a file with scenario texts?");
-                }
+            string ztrFilePath = Path.Combine(wpdFile.DirectoryName ?? throw new InvalidOperationException(), entry.NameWithoutExtension, entry.Name);
+            ztrFile = new FileInfo((File.Exists(ztrFilePath) ? ztrFilePath : Dialogs.GetNewZtrFile(ztrFilePath)) ?? throw new InvalidOperationException());
 
-                string ztrFilePath = Path.Combine(wpdFile.DirectoryName ?? throw new InvalidOperationException(), entry.NameWithoutExtension, entry.Name);
-                ztrFile = new FileInfo((File.Exists(ztrFilePath) ? ztrFilePath : Dialogs.GetNewZtrFile(ztrFilePath)) ?? throw new InvalidOperationException());
+            if (!string.Equals(ztrFile.Name, entry.Name, StringComparison.Ordinal) && !ztrFile.Exists)
+            {
+                new TaskDialogs().ShowWarningDialog("", "", $@"File {ztrFile.Name} not exist or is not correct ztr file.");
+                return;
+            }
 
-                if (!string.Equals(ztrFile.Name, entry.Name, StringComparison.Ordinal) && !ztrFile.Exists)
-                {
-                    new TaskDialogs().ShowWarningDialog("", "", $@"File {ztrFile.Name} not exist or is not correct ztr file.");
-                    return;
-                }
+            await using FileStream fileRead = ztrFile.OpenRead();
+            Logger.Log<WpdEntryInjector>(Logger.Level.Info, $"Opening file: {ztrFile.Name}");
+            Logger.Log<WpdEntryInjector>(Logger.Level.Info, FormattableString.Invariant($"Ztr file position: {entry.Offset:X}"));
+            Logger.Log<WpdEntryInjector>(Logger.Level.Info, FormattableString.Invariant($"Ztr old size: {entry.Length:X}"));
 
-                using FileStream fileRead = ztrFile.OpenRead();
-                Logger.Log<WpdEntryInjector>(Logger.Level.Info, $"Opening file: {ztrFile.Name}");
-                Logger.Log<WpdEntryInjector>(Logger.Level.Info, FormattableString.Invariant($"Ztr file position: {entry.Offset:X}"));
-                Logger.Log<WpdEntryInjector>(Logger.Level.Info, FormattableString.Invariant($"Ztr old size: {entry.Length:X}"));
+            entry.Length = (int)fileRead.Length;
+            header.WriteToStream(ms);
+            await wpdFileStream.CopyToAsync(ms);
+            ms.Position = entry.Offset;
 
-                entry.Length = (int)fileRead.Length;
-                header.WriteToStream(ms);
-                wpdFileStream.CopyTo(ms);
-                ms.Position = entry.Offset;
-
-                fileRead.CopyTo(ms);
+            await fileRead.CopyToAsync(ms);
                 
-                Logger.Log<WpdEntryInjector>(Logger.Level.Info, FormattableString.Invariant($"Ztr file new size: {entry.Length:X}"));
-            }
-
-            string newPath = Path.Combine(ztrFile.DirectoryName ?? throw new InvalidOperationException(), "_reImported");
-            Directory.CreateDirectory(newPath);
-
-            using FileStream file = new($"{newPath}\\{wpdFileName}", FileMode.Create, FileAccess.Write);
-            ms.WriteTo(file);
+            Logger.Log<WpdEntryInjector>(Logger.Level.Info, FormattableString.Invariant($"Ztr file new size: {entry.Length:X}"));
         }
+
+        string newPath = Path.Combine(ztrFile.DirectoryName ?? throw new InvalidOperationException(), "_reImported");
+        Directory.CreateDirectory(newPath);
+
+        await using FileStream file = new($"{newPath}\\{wpdFileName}", FileMode.Create, FileAccess.Write);
+        ms.WriteTo(file);
     }
 }

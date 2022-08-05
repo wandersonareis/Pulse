@@ -12,6 +12,8 @@
     <AnalysisLevel>preview</AnalysisLevel>
 	  <LangVersion>preview</LangVersion>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <AssemblyVersion>1.0.3</AssemblyVersion>
+    <FileVersion>1.0.3</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
@@ -68,13 +70,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Formats\**" />
     <Compile Remove="Model\Formats\Extractors\**" />
     <Compile Remove="Model\Formats\Injectors\**" />
+    <Compile Remove="Controls\ZtrPulseManagerControl.cs" />
+    <Compile Remove="Controls\ZtrPulseManagerControl.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -87,6 +87,16 @@
     <Page Remove="Formats\**" />
     <Page Remove="Model\Formats\Extractors\**" />
     <Page Remove="Model\Formats\Injectors\**" />
+    <Page Update="Controls\WpdFilesControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Views\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <XamlRuntime>Wpf</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

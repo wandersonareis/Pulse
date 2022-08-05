@@ -20,7 +20,7 @@ internal class ZtrToStringsWpdEntryExtractor
 
         Dictionary<string, string> entries = unpack.DecompressorDict(stream, encodingCode);
 
-        using FileStream output = File.Create(Path.ChangeExtension(file, ".strings"));
+        using FileStream output = File.Create(Path.ChangeExtension(file, ".strings") ?? throw new InvalidOperationException());
         ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
         writer.Write(fileName, entries);
     }

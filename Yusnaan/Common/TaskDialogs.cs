@@ -5,7 +5,7 @@ namespace Yusnaan.Common;
 
 internal class TaskDialogs
 {
-    public static bool skip = false;
+    public static bool Skip;
     public void ShowTaskDialog(string title, string instruction, string content, string path)
     {
         if (TaskDialog.OSSupportsTaskDialogs)
@@ -27,7 +27,7 @@ internal class TaskDialogs
             if (button == yesButton && !string.IsNullOrEmpty(path))
                 System.Diagnostics.Process.Start("explorer.exe", $"/select,\"{path}\"");
             if (button == skipButton && !string.IsNullOrEmpty(path))
-                skip = true;
+                Skip = true;
         }
         else
         {

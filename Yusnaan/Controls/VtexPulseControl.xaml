@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Yusnaan.Controls.VtexPulseControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:Yusnaan.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.DataContext>
+        <vm:VtexPulseViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="{Binding VtexUnpackContent}" Width="151" Height="35" Margin="5"
+                    Command="{Binding PulseVtexUnpackCommand}"
+                    ToolTip="{Binding VtexUnpackTooltips}"/>
+            <Button Content="{Binding VtexPackContent}" Width="151" Height="35" Margin="5"
+                    Command="{Binding PulseVtexPackCommand}"
+                    ToolTip="{Binding VtexPackTooltips}"/>
+            <Button Content="{Binding AllVtexUnpackContent}" Width="151" Height="35" Margin="5"
+                    Command="{Binding PulseAllDdsPackCommand}"
+                    ToolTip="{Binding AllVtexUnpackTooltips}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

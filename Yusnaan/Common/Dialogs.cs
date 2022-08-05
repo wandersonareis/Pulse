@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Windows;
 using Meziantou.Framework;
 using Ookii.Dialogs.Wpf;
@@ -36,7 +33,7 @@ internal class Dialogs
     {
         return GetFiles("Get Scenarie Files", ScenarioFilters, oldPath);
     }
-    internal static FileInfo[]? TestGetScenarioFiles(string? oldPath = "")
+    internal static FileInfo[]? GetScenarioFilesAsync(string? oldPath = "")
     {
         return GetFilesAsync("Get Scenarie Files", ScenarioFilters, oldPath);
     }
@@ -68,7 +65,8 @@ internal class Dialogs
         bool? folder = dialog.ShowDialog();
         return folder == VistaFileDialog.IsVistaFileDialogSupported ? FullPath.FromPath(dialog.FileName) : null;
     }
-    public static FileInfo? GetFileAsync(string title, string filters = "", string? initial = "")
+
+    private static FileInfo? GetFileAsync(string title, string filters = "", string? initial = "")
     {
         VistaOpenFileDialog dialog = new()
         {

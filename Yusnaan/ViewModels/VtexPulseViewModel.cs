@@ -1,84 +1,34 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Windows;
+﻿using System.Linq;
+using System.Windows.Input;
 using Pulse.Core;
 using Pulse.DirectX;
 using Pulse.FS;
-using Pulse.UI;
 using SimpleLogger;
-using SimpleLogger.Logging.Handlers;
-using Yusnaan.Common;
 using Yusnaan.Formats.imgb;
-using Yusnaan.Model.Extractors;
-using Yusnaan.Model.Injectors;
-using Yusnaan.Model.ztr;
 
-namespace Yusnaan;
+namespace Yusnaan.ViewModels;
 
-/// <summary>
-/// Interaction logic for MainWindow.xaml
-/// </summary>
-public partial class MainWindow : Window
+public class VtexPulseViewModel
 {
-    public FFXIIIGamePart Result { get; set; }
-
-    public MainWindow()
+    public string VtexUnpackContent => "Vtex to DDS";
+    public string AllVtexUnpackContent => "All DDS to Vtex";
+    public string VtexPackContent => "DDS to Vtex";
+    public string VtexUnpackTooltips => "Extracts all dds files from vtex file using Pulse tool.";
+    public string AllVtexUnpackTooltips => "Inserts all dds files into vtex file using Pulse tool.";
+    public string VtexPackTooltips => "Inserts selected dds file into vtex file using the Pulse tool.";
+    
+    public VtexPulseViewModel()
     {
-        InitializeComponent();
-        Logger.LoggerHandlerManager
-            .AddHandler(new FileLoggerHandler());
+        PulseVtexPackCommand = new AsyncRelayCommand(PackXvf);
+        PulseVtexUnpackCommand = new AsyncRelayCommand(UnpackXvf);
+        PulseAllDdsPackCommand = new AsyncRelayCommand(PackAllXfv);
     }
-
-    #region PulseButton
-
-    private void OnPart1ButtonClick(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            Process.Start("Pulse", "-ff13");
-        }
-        catch (Exception ex)
-        {
-            UiHelper.ShowError(this, ex);
-            Environment.Exit(1);
-        }
-    }
-    private void OnPart2ButtonClick(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            Process.Start("Pulse", "-ff132");
-        }
-        catch (Exception ex)
-        {
-            UiHelper.ShowError(this, ex);
-            Environment.Exit(1);
-        }
-    }
-    private void OnPart3ButtonClick(object sender, RoutedEventArgs e)
-    {
-        try
-        {
-            Process.Start("Pulse", "-ff133");
-        }
-        catch (Exception ex)
-        {
-            UiHelper.ShowError(this, ex);
-            Environment.Exit(1);
-        }
-    }
-
-    #endregion
-
-    private void Window_Closing(object sender, CancelEventArgs e)
-    {
-        Environment.Exit(1);
-    }
-
-    [SuppressMessage("ReSharper", "UnusedVariable")]
-    private void UnpackXvf_Click(object sender, RoutedEventArgs e)
+    
+    public ICommand PulseVtexPackCommand { get; }
+    public ICommand PulseVtexUnpackCommand { get; }
+    public ICommand PulseAllDdsPackCommand { get; }
+    
+    private async Task UnpackXvf()
     {
         try
         {
@@ -86,8 +36,8 @@ public partial class MainWindow : Window
             if (xfvFile == null) return;
             string unpackPath = Path.Combine(Path.GetDirectoryName(xfvFile)!, $"{xfvFile.GetFileNameMultiDotExtension()}.unpack");
             Directory.CreateDirectory(unpackPath);
-            using Stream xfvFileStream = File.OpenRead(xfvFile);
-            using Stream imgbFileStream = File.OpenRead(Path.ChangeExtension(xfvFile, ".imgb"));
+            await using Stream xfvFileStream = File.OpenRead(xfvFile);
+            await using Stream imgbFileStream = File.OpenRead(Path.ChangeExtension(xfvFile, ".imgb"));
             var wdbHeader = xfvFileStream.ReadContent<WdbHeader>();
             var buff = new byte[32 * 1024];
 
@@ -95,11 +45,11 @@ public partial class MainWindow : Window
             {
                 xfvFileStream.Position = entry.Offset;
 
-                var sectionHeader = xfvFileStream.ReadContent<SectionHeader>();
+                var dummy = xfvFileStream.ReadContent<SectionHeader>();
                 var textureHeader = xfvFileStream.ReadContent<VtexHeader>();
                 xfvFileStream.Seek(textureHeader.GtexOffset - VtexHeader.Size, SeekOrigin.Current);
                 var gtex = xfvFileStream.ReadContent<GtexData>();
-                using Stream output = File.Create(Path.Combine(unpackPath, textureHeader.Name + ".dds"));
+                await using Stream output = File.Create(Path.Combine(unpackPath, textureHeader.Name + ".dds"));
 
                 DdsHeader header = DdsHeaderDecoder.FromGtexHeader(gtex.Header);
                 DdsHeaderEncoder.ToFileStream(header, output);
@@ -117,8 +67,7 @@ public partial class MainWindow : Window
             throw;
         }
     }
-        
-    private void PackXvf_Click(object sender, RoutedEventArgs e)
+    private async Task PackXvf()
     {
         try
         {
@@ -127,8 +76,8 @@ public partial class MainWindow : Window
             FileStream input = File.OpenRead(ddsFile);
             string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
             if (xfvFile == null) return;
-            using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
-            using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open, FileAccess.ReadWrite);
+            await using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
+            await using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open, FileAccess.ReadWrite);
 
             var xfv = new XfvInject(Path.GetFileNameWithoutExtension(ddsFile),input, xfvFileStream, imgbFileStream);
             xfv.Inject();
@@ -139,8 +88,7 @@ public partial class MainWindow : Window
             throw;
         }
     }
-
-    private void PackAllXfv_Click(object sender, RoutedEventArgs e)
+    private async Task PackAllXfv()
     {
         try
         {
@@ -148,8 +96,8 @@ public partial class MainWindow : Window
             if (ddsPath == null) return;
             string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
             if (xfvFile == null) return;
-            using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
-            using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open,
+            await using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
+            await using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open,
                 FileAccess.ReadWrite);
 
             var wdbHeader = xfvFileStream.ReadContent<WdbHeader>();
@@ -159,7 +107,7 @@ public partial class MainWindow : Window
             {
                 string? ddsFile = Directory.GetFiles(ddsPath, entry.NameWithoutExtension + ".dds").FirstOrDefault();
                 if (ddsFile == null) continue;
-                FileStream input = File.OpenRead(ddsFile);
+                await using FileStream input = File.OpenRead(ddsFile);
 
                 var xfv = new XfvInject(entry, input, xfvFileStream, imgbFileStream, buff);
                 xfv.InjectAll();

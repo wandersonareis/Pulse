@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Yusnaan.Controls.ZtrPulseManagerControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vm="clr-namespace:Yusnaan.ViewModels"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="600">
+    <UserControl.DataContext>
+        <vm:ZtrPulseViewModel/>
+    </UserControl.DataContext>
+    <Grid>
+        <StackPanel Orientation="Horizontal">
+            <Button Content="{Binding PulseZtrUnpackContent}" Width="151" Height="35" Margin="5"
+                    Command="{Binding ZtrPulseUnpackCommand}"
+                    ToolTip="{Binding PulseZtrUnpackTooltips}"/>
+            <Button Content="{Binding PulseAllZtrUnpackContent}" Width="151" Height="35" Margin="5"
+                    Command="{Binding AllZtrPulseUnpackCommand}"
+                    ToolTip="{Binding PulseAllZtrUnpackTooltips}"/>
+            <Button Content="{Binding PulseZtrPackContent}" Width="151" Height="35" Margin="5"
+                    Command="{Binding ZtrPulsePackCommand}"
+                    ToolTip="{Binding PulseZtrPackTooltips}"/>
+        </StackPanel>
+    </Grid>
+</UserControl>

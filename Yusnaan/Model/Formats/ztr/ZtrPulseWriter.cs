@@ -1,9 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
 using Pulse.Core;
 using Pulse.FS;
-using Yusnaan.Common;
 
 namespace Yusnaan.Model.ztr;
 
@@ -26,7 +23,7 @@ internal class ZtrPulseWriter
         ZtrFilePacker packer = new(output, FFXIIITextEncodingFactory.CreateEuro(), ZtrFileType.BigEndianCompressedDictionary);
         packer.Pack(entries);
         PulseLog();
-        if (!TaskDialogs.skip)
+        if (!TaskDialogs.Skip)
             new TaskDialogs().ShowTaskDialog("Task completed!", "Ztr file Writed!", "Open folder in file manager?", output.Name);
     }
 
