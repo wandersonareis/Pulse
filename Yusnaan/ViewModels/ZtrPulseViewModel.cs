@@ -4,7 +4,7 @@ using Yusnaan.Model.ztr;
 
 namespace Yusnaan.ViewModels;
 
-public class ZtrPulseViewModel
+public sealed class ZtrPulseViewModel
 {
     public string PulseZtrUnpackContent => "Unpack Ztr";
     public string PulseAllZtrUnpackContent => "Unpack All Ztr";
@@ -52,10 +52,12 @@ public class ZtrPulseViewModel
             foreach (string f in Directory.EnumerateFiles(folder, "*.ztr", SearchOption.AllDirectories))
             {
                 await using Stream input = File.OpenRead(f);
-                await using Stream output = File.Create(Path.ChangeExtension(f, ".strings"));
-
-                var reader = new ZtrFileReader(input, output);
+                Stream output = File.Create(Path.ChangeExtension(f, ".strings"));
+                await using (output.ConfigureAwait(false))
+                {
+                    var reader = new ZtrFileReader(input, output);
                 reader.PulseUnpack(f);
+                }
             }
         }
         catch (Exception ex)
@@ -70,9 +72,12 @@ public class ZtrPulseViewModel
         {
             string? stringsFile = Dialogs.GetFile("Get strings file!");
             if (stringsFile is null) return;
-            await using FileStream fileStream = new(stringsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-            var writer = new ZtrPulseWriter(fileStream, stringsFile);
+            FileStream stringsFileStream = new(stringsFile, FileEx.FileStreamInputOptions());
+            await using (stringsFileStream.ConfigureAwait(false))
+            {
+                var writer = new ZtrPulseWriter(stringsFileStream, stringsFile);
             writer.PackStringsWithPulse();
+            }
         }
         catch (Exception ex)
         {

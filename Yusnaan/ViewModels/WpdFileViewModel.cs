@@ -24,6 +24,7 @@ internal class WpdFileViewModel
     public ICommand StringsToWpdCompressorCommand { get; }
     public ICommand WpdToStringsDecompressorCommand { get; }
 
+    
     private async Task StringsToWpdCompressor()
     {
         try
@@ -33,41 +34,45 @@ internal class WpdFileViewModel
             string? stringsFolder = Dialogs.ShowFolderBrowserDialog("Set strings files directories.");
             if (stringsFolder == null) return;
 
-            foreach (FileInfo f in wpdFile)
+            for (var index = 0; index < wpdFile.Length; index++)
             {
+                FileInfo fileInfo = wpdFile[index];
                 Logger.Log(Logger.Level.Info, $"Wpd files count: {wpdFile.Length}");
 
-                OldPath = f.DirectoryName ?? string.Empty;
-                
+                OldPath = fileInfo.DirectoryName ?? string.Empty;
+
                 var wpdUnpack = new WpdZtrUnpack();
-                FullPath ztrFileName = await wpdUnpack.ZtrEntryExtractAsync(f);
-                
+                FullPath ztrFileName = await wpdUnpack.ZtrEntryExtractAsync(fileInfo);
+
                 if (string.IsNullOrEmpty(ztrFileName.Value))
                 {
-                    new TaskDialogs().ShowSkipDialog("It's was skipped." , $"Ztr file name not founded inside {f.FullName}!", "");
-                    Logger.Log<WpdZtrUnpack>(Logger.Level.Error, $"Ztr file name not founded inside {f.FullName}!");
+                    new TaskDialogs().ShowSkipDialog("It's was skipped.",
+                        $"Ztr file name not founded inside {fileInfo.FullName}!", "");
+                    Logger.Log<WpdZtrUnpack>(Logger.Level.Error,
+                        $"Ztr file name not founded inside {fileInfo.FullName}!");
                     continue;
                 }
 
                 string? stringsFile =
                     Dialogs.CheckStringsFile($"{stringsFolder}\\{ztrFileName.NameWithoutExtension}.strings");
-                
+
                 if (stringsFile == null)
                 {
-                    new TaskDialogs().ShowSkipDialog("File not founded!", "It's was skipped.", $"Strings file not founded for {f.Name}!");
-                    Logger.Log<WpdZtrUnpack>(Logger.Level.Error, $"Strings file not founded for {f.Name}!");
+                    new TaskDialogs().ShowSkipDialog("File not founded!", "It's was skipped.",
+                        $"Strings file not founded for {fileInfo.Name}!");
+                    Logger.Log<WpdZtrUnpack>(Logger.Level.Error, $"Strings file not founded for {fileInfo.Name}!");
                     continue;
                 }
 
-                FileStream fileStream = new(stringsFile, FileMode.Open, FileAccess.Read, FileShare.Read);
-                await using (fileStream.ConfigureAwait(false))
+                FileStream inputFileStream = new(stringsFile, FileEx.FileStreamInputOptions());
+                await using (inputFileStream.ConfigureAwait(false))
                 {
-                    var writer = new ZtrFileCompressorWriter(fileStream, ztrFileName.Value);
+                    var writer = new ZtrFileCompressorWriter(inputFileStream, ztrFileName.Value);
                     await writer.PackStringsNewCompression();
 
                     var wpdInjector = new WpdEntryInjector();
-                    await wpdInjector.PackAsync(f);
-                
+                    await wpdInjector.PackAsync(fileInfo);
+
                     Logger.Log("//////////////////////////////////////////////");
                 }
             }
@@ -78,6 +83,7 @@ internal class WpdFileViewModel
             throw;
         }
     }
+
     private async Task WpdToStringsDecompressor()
     {
         try
@@ -96,7 +102,7 @@ internal class WpdFileViewModel
             }
                 
             var reader = new ZtrFileReader();
-            await Task.Run(() => reader.ToStrings(ztrFileName)).ConfigureAwait(false);
+            await reader.ZtrTextReader(new FileInfo(ztrFileName.Value));
         }
         catch (Exception ex)
         {

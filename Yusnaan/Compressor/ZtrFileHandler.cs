@@ -1,14 +1,14 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Yusnaan.Compressor;
 using Be.IO;
 using Pulse.Core;
+
 #pragma warning disable CS8600
 
 namespace Yusnaan.Compressor;
 
-public class ZtrFileHandler
+public sealed class ZtrFileHandler
 {
 #nullable disable
     #region Structures
@@ -83,7 +83,7 @@ public class ZtrFileHandler
             byte key = reader.ReadByte();
             byte valueFirst = reader.ReadByte();
             byte valueLast = reader.ReadByte();
-#nullable disable
+
             if (dict.Dict.TryGetValue(valueFirst, out byte[] valueFirstKey)) { value.AddRange(valueFirstKey); }
             else
             {
@@ -95,7 +95,6 @@ public class ZtrFileHandler
             {
                 value.Add(valueLast);
             }
-#nullable enable
             dict.Dict.Add(key, value.ToArray());
         }
         return dict;
@@ -145,7 +144,7 @@ public class ZtrFileHandler
             }
         }
         var result = new string[header.TextCount];
-        Dictionary<string, byte[]> gameCode = GameEncoding.GameCode.ToDictionary(entry => entry.Key, entry => entry.Value);
+        Dictionary<string, byte[]> gameCode = GameEncoding.GameCode.ToDictionary(entry => entry.Key, entry => entry.Value, StringComparer.OrdinalIgnoreCase);
         if (encodingCode == 65001) foreach (KeyValuePair<string, byte[]> entry in GameEncoding.JapaneseSymbol) gameCode.Add(entry.Key, entry.Value);
         var index = 0;
         for (var i = 0; i < result.Length; i++)
@@ -204,7 +203,7 @@ public class ZtrFileHandler
         string[] idsDecompressed = DecompressIDs(ref reader, header);
         string[] textDecompressed = DecompressText(ref reader, header, encodingCode);
         //string[] result = new string[idsDecompressed.Length];
-        Dictionary<string, string> dict = new(idsDecompressed.Length);
+        Dictionary<string, string> dict = new(idsDecompressed.Length, StringComparer.OrdinalIgnoreCase);
         for (var i = 0; i < idsDecompressed.Length; i++)
         {
             //result[i] = $"/*{idsDecompressed[i]}\n{textDecompressed[i]}\n*/";
@@ -213,7 +212,7 @@ public class ZtrFileHandler
         return dict;
     }
         
-    public byte[] Compressor(string ztr, Dictionary<string, string> input, int encodingCode = 65001)
+    public byte[] Compressor(string ztr, IDictionary<string, string> input, int encodingCode = 65001)
     {
         MemoryStream result = new();
 
@@ -228,7 +227,7 @@ public class ZtrFileHandler
             long idsCompressedPointer = reader.BaseStream.Position;
             string[] idsDecompressed = DecompressIDs(ref reader, header);
             long textCompressedPointer = reader.BaseStream.Position;
-            Dictionary<string, byte[]> gameCode = GameEncoding.GameCode.ToDictionary(entry => entry.Key, entry => entry.Value);
+            Dictionary<string, byte[]> gameCode = GameEncoding.GameCode.ToDictionary(entry => entry.Key, entry => entry.Value, StringComparer.OrdinalIgnoreCase);
             if (encodingCode == 65001) foreach (KeyValuePair<string, byte[]> entry in GameEncoding.JapaneseSymbol) gameCode.Add(entry.Key, entry.Value);
             for (var i = 0; i < idsDecompressed.Length; i++)
             {
@@ -334,14 +333,14 @@ public class ZtrFileHandler
         return result.ToArray();
     }
 
-    public byte[] PulseEncodingCompressor(string ztr, Dictionary<string, string> input, int encodingCode = 65001)
+    public byte[] PulseEncodingCompressor(string ztr, IDictionary<string, string> input, int encodingCode = 65001)
     {
         MemoryStream result = new();
             
         //const int maxBlockSize = 4096 * 4;
         const int maxBlockSize = 4096;
         using BeBinaryWriter writer = new(result);
-        using FileStream ztrStream = File.Open(ztr, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
+        using FileStream ztrStream = File.OpenRead(ztr);
         BeBinaryReader reader = new(ztrStream);
         Header header = ReadHeader(ref reader);
         TextInfo[] textInfos = ReadTextInfos(ref reader, header);

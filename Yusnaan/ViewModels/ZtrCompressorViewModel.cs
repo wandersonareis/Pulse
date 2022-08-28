@@ -25,8 +25,8 @@ public class ZtrCompressorViewModel
         {
             string? stringsFile = Dialogs.GetFile("Get strings file!", "Strings File|*.strings");
             if (stringsFile == null) return;
-            await using FileStream fileStream = new(stringsFile, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-            var writer = new ZtrFileCompressorWriter(fileStream, stringsFile);
+            await using FileStream inputFileStream = new(stringsFile, FileEx.FileStreamInputOptions());
+            var writer = new ZtrFileCompressorWriter(inputFileStream, stringsFile);
             await writer.PackStringsNewCompression();
         }
         catch (Exception ex)
@@ -42,10 +42,10 @@ public class ZtrCompressorViewModel
             string? folder = Dialogs.ShowFolderBrowserDialog("Target strings folder");
             if (folder == null) return;
 
-            foreach (string f in Directory.EnumerateFiles(folder, "*.strings", SearchOption.AllDirectories))
+            foreach (string file in Directory.EnumerateFiles(folder, "*.strings", SearchOption.AllDirectories))
             {
-                await using FileStream fileStream = new(f, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite);
-                var writer = new ZtrFileCompressorWriter(fileStream, f);
+                await using FileStream inputFileStream = new(file, FileEx.FileStreamInputOptions());
+                var writer = new ZtrFileCompressorWriter(inputFileStream, file);
                 await writer.PackStringsNewCompression();
             }
         }

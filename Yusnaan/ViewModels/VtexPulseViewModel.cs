@@ -5,6 +5,7 @@ using Pulse.DirectX;
 using Pulse.FS;
 using SimpleLogger;
 using Yusnaan.Formats.imgb;
+using FileEx = Yusnaan.Common.FileEx;
 
 namespace Yusnaan.ViewModels;
 
@@ -76,10 +77,10 @@ public class VtexPulseViewModel
             FileStream input = File.OpenRead(ddsFile);
             string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
             if (xfvFile == null) return;
-            await using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
-            await using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open, FileAccess.ReadWrite);
+            await using Stream xfvFileStream = File.Open(xfvFile, FileEx.FileStreamInputOptions());
+            await using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileEx.FileStreamInputOptions());
 
-            var xfv = new XfvInject(Path.GetFileNameWithoutExtension(ddsFile),input, xfvFileStream, imgbFileStream);
+            var xfv = new XfvInject(Path.GetFileNameWithoutExtension(ddsFile), input, xfvFileStream, imgbFileStream);
             xfv.Inject();
         }
         catch (Exception ex)
@@ -96,9 +97,8 @@ public class VtexPulseViewModel
             if (ddsPath == null) return;
             string? xfvFile = Dialogs.GetFile("Get Vtex File", "xfv file|*.xfv");
             if (xfvFile == null) return;
-            await using Stream xfvFileStream = File.Open(xfvFile, FileMode.Open, FileAccess.ReadWrite);
-            await using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileMode.Open,
-                FileAccess.ReadWrite);
+            await using Stream xfvFileStream = File.Open(xfvFile, FileEx.FileStreamInputOptions());
+            await using Stream imgbFileStream = File.Open(Path.ChangeExtension(xfvFile, ".imgb"), FileEx.FileStreamInputOptions());
 
             var wdbHeader = xfvFileStream.ReadContent<WdbHeader>();
             var buff = new byte[32 * 1024];

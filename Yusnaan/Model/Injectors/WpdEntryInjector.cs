@@ -3,6 +3,7 @@ using System.IO;
 using Pulse.Core;
 using Pulse.FS;
 using SimpleLogger;
+using FileEx = Yusnaan.Common.FileEx;
 
 namespace Yusnaan.Model.Injectors;
 
@@ -36,7 +37,7 @@ internal class WpdEntryInjector
                 return;
             }
 
-            using FileStream fileRead = File.OpenRead(ztrFile.FullName);
+            using FileStream fileRead = new(ztrFile.FullName, FileEx.FileStreamInputOptions());
             entry.Length = (int)fileRead.Length;
             header.WriteToStream(ms);
             wpdFileStream.CopyTo(ms);
@@ -48,8 +49,8 @@ internal class WpdEntryInjector
         string newPath = Path.Combine(ztrFile.DirectoryName ?? throw new InvalidOperationException(), "_reImported");
         Directory.CreateDirectory(newPath);
 
-        using FileStream file = new($"{newPath}\\{wpdFileName}", FileMode.OpenOrCreate, FileAccess.Write);
-        ms.WriteTo(file);
+        using FileStream outputFileStream = new($"{newPath}\\{wpdFileName}", FileEx.FileStreamOutputOptions());
+        ms.WriteTo(outputFileStream);
 
         //File.WriteAllBytes($"{newPath}\\{wpdFileName}", ms.ToArray());
     }
@@ -101,7 +102,7 @@ internal class WpdEntryInjector
         string newPath = Path.Combine(ztrFile.DirectoryName ?? throw new InvalidOperationException(), "_reImported");
         Directory.CreateDirectory(newPath);
 
-        await using FileStream file = new($"{newPath}\\{wpdFileName}", FileMode.Create, FileAccess.Write);
+        await using FileStream file = new($"{newPath}\\{wpdFileName}", FileEx.FileStreamOutputOptions());
         ms.WriteTo(file);
     }
 }

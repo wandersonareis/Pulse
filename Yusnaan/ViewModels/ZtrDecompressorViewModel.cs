@@ -29,7 +29,7 @@ public class ZtrDecompressorViewModel
             if (ztrFile == null) return;
 
             var reader = new ZtrFileReader();
-            await reader.ToStrings(ztrFile);
+            await reader.ZtrTextReader(ztrFile);
         }
         catch (Exception ex)
         {

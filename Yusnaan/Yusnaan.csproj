@@ -57,8 +57,12 @@
 
   <ItemGroup>
     <PackageReference Include="Be.IO-multi" Version="1.0.0" />
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0-preview4" />
-    <PackageReference Include="Meziantou.Framework.FullPath" Version="1.0.9" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
+    <PackageReference Include="Meziantou.Analyzer" Version="1.0.713">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Meziantou.Framework.FullPath" Version="1.0.10" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageReference Include="SimpleLogger" Version="1.0.0" />
   </ItemGroup>
@@ -97,6 +101,14 @@
       <XamlRuntime>Wpf</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\wande\source\repos\Pulse\Yusnaan\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\Users\wande\source\repos\Pulse\Yusnaan\.editorconfig" />
   </ItemGroup>
 
 </Project>

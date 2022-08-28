@@ -6,10 +6,11 @@ using Meziantou.Framework;
 using Pulse.Core;
 using Pulse.FS;
 using SimpleLogger;
+using FileEx = Yusnaan.Common.FileEx;
 
 namespace Yusnaan.Model.Extractors;
 
-internal class WpdZtrUnpack
+internal sealed class WpdZtrUnpack
 {
     /*public void Extract(string wpdFile, out FullPath? fileName)
     {
@@ -87,8 +88,8 @@ internal class WpdZtrUnpack
         ReadOnlyMemory<byte> arrayBytes = beBinaryReader.ReadBytes(header.Entries[1].Length);
         await ms.WriteAsync(arrayBytes);
 
-        await using FileStream fileStream = new(ztrFileName.Value ?? throw new ArgumentNullException(nameof(ztrFileName)), FileMode.Create, FileAccess.ReadWrite);
-        ms.WriteTo(fileStream);
+        await using FileStream outputFileStream = new(ztrFileName.Value ?? throw new ArgumentNullException(nameof(ztrFileName)), FileEx.FileStreamOutputOptions());
+        ms.WriteTo(outputFileStream);
         
         Logger.Log<WpdZtrUnpack>(Logger.Level.Info, $"Extracted file: {ztrFileName.Name}");
         return ztrFileName;

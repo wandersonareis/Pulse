@@ -3,10 +3,11 @@ using Meziantou.Framework;
 using Pulse.Core;
 using Pulse.FS;
 using Yusnaan.Compressor;
+using FileEx = Yusnaan.Common.FileEx;
 
 namespace Yusnaan.Model.ztr;
 
-internal class ZtrFileReader
+internal sealed class ZtrFileReader
 {
     private readonly Stream _input;
     private readonly Stream _output;
@@ -37,7 +38,7 @@ internal class ZtrFileReader
         string[] result = unpack.Decompressor(file, encoding);
         File.WriteAllLines(Path.Combine(Path.GetDirectoryName(file) ?? throw new InvalidOperationException(), $"{fileName}.txt"), result);
     }
-    public async ValueTask ToStrings([DisallowNull] FullPath? file)
+    public async ValueTask ZtrTextReader([DisallowNull] FullPath? file)
     {
         ArgumentNullException.ThrowIfNull(file);
             
@@ -51,9 +52,12 @@ internal class ZtrFileReader
 
         Dictionary<string, string> entries = unpack.DecompressorDict(file.Value.Value, encodingCode);
 
-        await using FileStream output = File.Create(Path.ChangeExtension(file.Value.Value, ".strings")!);
-        ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
+        FileStream output = new(Path.ChangeExtension(file.Value.Value, ".strings"), FileEx.FileStreamOutputOptions());
+        await using (output.ConfigureAwait(false))
+        {
+            ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
         writer.Write(fileName, entries);
+        }
     }
     public async ValueTask ZtrTextReader(FileInfo file)
     {
@@ -69,10 +73,13 @@ internal class ZtrFileReader
 
         Dictionary<string, string> entries = unpack.DecompressorDict(file.FullName, encodingCode);
 
-        await using FileStream output = new(Path.ChangeExtension(file.FullName, ".strings"), FileMode.Create, FileAccess.ReadWrite);
-
-        ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
+        FileStream output = new(Path.ChangeExtension(file.FullName, ".strings"), FileEx.FileStreamOutputOptions());
+        await using (output.ConfigureAwait(false))
+        {
+            ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
         writer.Write(fileName, entries);
+        output.Close();
+        }
     }
 
 }
