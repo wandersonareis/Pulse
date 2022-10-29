@@ -1,9 +1,15 @@
-﻿using System.Windows.Input;
+﻿using System.Linq;
+using System.Windows;
+using System.Windows.Input;
 using Meziantou.Framework;
+using Pulse.Core;
+using Pulse.FS;
 using SimpleLogger;
+using Yusnaan.Common;
 using Yusnaan.Model.Extractors;
 using Yusnaan.Model.Injectors;
 using Yusnaan.Model.ztr;
+using FileEx = Yusnaan.Common.FileEx;
 
 namespace Yusnaan.ViewModels;
 
@@ -34,22 +40,21 @@ internal class WpdFileViewModel
             string? stringsFolder = Dialogs.ShowFolderBrowserDialog("Set strings files directories.");
             if (stringsFolder == null) return;
 
-            for (var index = 0; index < wpdFile.Length; index++)
+            foreach (FileInfo fileInfo in wpdFile)
             {
-                FileInfo fileInfo = wpdFile[index];
                 Logger.Log(Logger.Level.Info, $"Wpd files count: {wpdFile.Length}");
 
                 OldPath = fileInfo.DirectoryName ?? string.Empty;
 
-                var wpdUnpack = new WpdZtrUnpack();
+                if (fileInfo.CheckDummyFile()) continue;
+
+                WpdZtrUnpack wpdUnpack = new();
                 FullPath ztrFileName = await wpdUnpack.ZtrEntryExtractAsync(fileInfo);
 
                 if (string.IsNullOrEmpty(ztrFileName.Value))
                 {
-                    new TaskDialogs().ShowSkipDialog("It's was skipped.",
-                        $"Ztr file name not founded inside {fileInfo.FullName}!", "");
-                    Logger.Log<WpdZtrUnpack>(Logger.Level.Error,
-                        $"Ztr file name not founded inside {fileInfo.FullName}!");
+                    new TaskDialogs().ShowSkipDialog("It's was skipped.", $"Ztr file name not founded inside {fileInfo.FullName}!", "");
+                    Logger.Log<WpdZtrUnpack>(Logger.Level.Error, $"Ztr file name not founded inside {fileInfo.FullName}!");
                     continue;
                 }
 
@@ -67,8 +72,23 @@ internal class WpdFileViewModel
                 FileStream inputFileStream = new(stringsFile, FileEx.FileStreamInputOptions());
                 await using (inputFileStream.ConfigureAwait(false))
                 {
-                    var writer = new ZtrFileCompressorWriter(inputFileStream, ztrFileName.Value);
-                    await writer.PackStringsNewCompression();
+                    var writer = new StringsFileCompressor(inputFileStream, ztrFileName.Value);
+
+                    switch (ztrFileName.NameWithoutExtension)
+                    {
+                        case "auto_ded_us":
+                        case "auto_lux_us":
+                        case "auto_res_us":
+                        case "auto_wil_us":
+                        case "auto_yus_us":
+                            await writer.PackStringsNewCompression();
+                            break;
+                        default:
+                            writer.PackStringsWithPulse();
+                            break;
+                    }
+
+                    //await writer.PackStringsNewCompression();
 
                     var wpdInjector = new WpdEntryInjector();
                     await wpdInjector.PackAsync(fileInfo);
@@ -83,7 +103,6 @@ internal class WpdFileViewModel
             throw;
         }
     }
-
     private async Task WpdToStringsDecompressor()
     {
         try
@@ -109,5 +128,39 @@ internal class WpdFileViewModel
             Logger.Log(ex);
             throw;
         }
+    }
+}
+sealed class TempFile : IDisposable
+{
+    string? _path;
+    public TempFile() : this(System.IO.Path.GetTempFileName()) { }
+
+    public TempFile(string? path)
+    {
+        if (string.IsNullOrEmpty(path)) throw new ArgumentNullException("path");
+        _path = path;
+    }
+    public string? Path
+    {
+        get
+        {
+            if (_path == null) throw new ObjectDisposedException(GetType().Name);
+            return _path;
+        }
+    }
+    ~TempFile() { Dispose(false); }
+    public void Dispose() { Dispose(true); }
+    private void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            GC.SuppressFinalize(this);
+        }
+
+        if (string.IsNullOrEmpty(_path)) return;
+
+        try { File.Delete(_path); }
+        catch { } // best effort
+        _path = "";
     }
 }

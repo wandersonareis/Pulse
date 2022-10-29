@@ -144,7 +144,7 @@ public sealed class ZtrFileHandler
             }
         }
         var result = new string[header.TextCount];
-        Dictionary<string, byte[]> gameCode = GameEncoding.GameCode.ToDictionary(entry => entry.Key, entry => entry.Value, StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, byte[]> gameCode = GameEncoding.GameCode.ToDictionary(entry => entry.Key, entry => entry.Value);
         if (encodingCode == 65001) foreach (KeyValuePair<string, byte[]> entry in GameEncoding.JapaneseSymbol) gameCode.Add(entry.Key, entry.Value);
         var index = 0;
         for (var i = 0; i < result.Length; i++)
@@ -203,7 +203,7 @@ public sealed class ZtrFileHandler
         string[] idsDecompressed = DecompressIDs(ref reader, header);
         string[] textDecompressed = DecompressText(ref reader, header, encodingCode);
         //string[] result = new string[idsDecompressed.Length];
-        Dictionary<string, string> dict = new(idsDecompressed.Length, StringComparer.OrdinalIgnoreCase);
+        Dictionary<string, string> dict = new(idsDecompressed.Length);
         for (var i = 0; i < idsDecompressed.Length; i++)
         {
             //result[i] = $"/*{idsDecompressed[i]}\n{textDecompressed[i]}\n*/";
@@ -227,7 +227,7 @@ public sealed class ZtrFileHandler
             long idsCompressedPointer = reader.BaseStream.Position;
             string[] idsDecompressed = DecompressIDs(ref reader, header);
             long textCompressedPointer = reader.BaseStream.Position;
-            Dictionary<string, byte[]> gameCode = GameEncoding.GameCode.ToDictionary(entry => entry.Key, entry => entry.Value, StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, byte[]> gameCode = GameEncoding.GameCode.ToDictionary(entry => entry.Key, entry => entry.Value);
             if (encodingCode == 65001) foreach (KeyValuePair<string, byte[]> entry in GameEncoding.JapaneseSymbol) gameCode.Add(entry.Key, entry.Value);
             for (var i = 0; i < idsDecompressed.Length; i++)
             {

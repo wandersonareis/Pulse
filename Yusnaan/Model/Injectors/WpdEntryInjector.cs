@@ -99,10 +99,13 @@ internal class WpdEntryInjector
             Logger.Log<WpdEntryInjector>(Logger.Level.Info, FormattableString.Invariant($"Ztr file new size: {entry.Length:X}"));
         }
 
-        string newPath = Path.Combine(ztrFile.DirectoryName ?? throw new InvalidOperationException(), "_reImported");
-        Directory.CreateDirectory(newPath);
+        if (ztrFile.Directory?.Parent != null)
+        {
+            string newPath = Path.Combine(ztrFile.Directory.Parent.FullName, "_reImported");
+            Directory.CreateDirectory(newPath);
 
-        await using FileStream file = new($"{newPath}\\{wpdFileName}", FileEx.FileStreamOutputOptions());
-        ms.WriteTo(file);
+            await using FileStream file = new($"{newPath}\\{wpdFileName}", FileEx.FileStreamOutputOptions());
+            ms.WriteTo(file);
+        }
     }
 }

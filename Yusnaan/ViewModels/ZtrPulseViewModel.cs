@@ -15,7 +15,7 @@ public sealed class ZtrPulseViewModel
 
     public ZtrPulseViewModel()
     {
-        ZtrPulsePackCommand = new AsyncRelayCommand(ZtrPulsePack);
+        ZtrPulsePackCommand = new RelayCommand(AllZtrPulsePack);
         ZtrPulseUnpackCommand = new AsyncRelayCommand(PulseZtrUnpack);
         AllZtrPulseUnpackCommand = new AsyncRelayCommand(PulseAllZtrUnpack);
     }
@@ -76,7 +76,30 @@ public sealed class ZtrPulseViewModel
             await using (stringsFileStream.ConfigureAwait(false))
             {
                 var writer = new ZtrPulseWriter(stringsFileStream, stringsFile);
-            writer.PackStringsWithPulse();
+                writer.PackStringsWithPulse();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Log(ex);
+            throw;
+        }
+    }
+    
+    private void AllZtrPulsePack()
+    {
+        try
+        {
+            string? stringsFolder = Dialogs.ShowFolderBrowserDialog("Strings files");
+            if (stringsFolder == null) return;
+
+            IEnumerable<FileInfo> files =
+                new DirectoryInfo(stringsFolder).EnumerateFiles("*.strings", SearchOption.AllDirectories);
+            var writer = new ZtrPulseWriter();
+
+            foreach (FileInfo stringsFile in files)
+            {
+                writer.PackAllStringsWithPulse(stringsFile);
             }
         }
         catch (Exception ex)

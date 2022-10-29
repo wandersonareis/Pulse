@@ -26,7 +26,8 @@ public class ZtrCompressorViewModel
             string? stringsFile = Dialogs.GetFile("Get strings file!", "Strings File|*.strings");
             if (stringsFile == null) return;
             await using FileStream inputFileStream = new(stringsFile, FileEx.FileStreamInputOptions());
-            var writer = new ZtrFileCompressorWriter(inputFileStream, stringsFile);
+            var writer = new StringsFileCompressor(inputFileStream, stringsFile);
+            //await writer.PackStringsNewCompression();
             await writer.PackStringsNewCompression();
         }
         catch (Exception ex)
@@ -45,7 +46,7 @@ public class ZtrCompressorViewModel
             foreach (string file in Directory.EnumerateFiles(folder, "*.strings", SearchOption.AllDirectories))
             {
                 await using FileStream inputFileStream = new(file, FileEx.FileStreamInputOptions());
-                var writer = new ZtrFileCompressorWriter(inputFileStream, file);
+                var writer = new StringsFileCompressor(inputFileStream, file);
                 await writer.PackStringsNewCompression();
             }
         }

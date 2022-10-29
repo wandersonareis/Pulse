@@ -58,16 +58,13 @@
   <ItemGroup>
     <PackageReference Include="Be.IO-multi" Version="1.0.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.0.0" />
-    <PackageReference Include="Meziantou.Analyzer" Version="1.0.713">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Meziantou.Framework.FullPath" Version="1.0.10" />
+    <PackageReference Include="Meziantou.Framework.FullPath" Version="1.0.11" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
     <PackageReference Include="SimpleLogger" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj" />
     <ProjectReference Include="..\Pulse.Core\Pulse.Core.csproj" />
     <ProjectReference Include="..\Pulse.FS\Pulse.FS.csproj" />
     <ProjectReference Include="..\Pulse\Pulse.csproj" />

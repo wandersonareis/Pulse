@@ -37,6 +37,10 @@ internal class Dialogs
     {
         return GetFilesAsync("Get Scenarie Files", ScenarioFilters, oldPath);
     }
+    internal static FileInfo[]? GetStringsFilesAsync()
+    {
+        return GetFilesAsync("Get Strings Files");
+    }
     public static string? CheckStringsFile(IEnumerable<string> file)
     {
         return file.Select(s => File.Exists(s) ? s : GetStringsFile(s)).FirstOrDefault();

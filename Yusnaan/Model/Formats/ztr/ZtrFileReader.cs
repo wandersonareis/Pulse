@@ -38,7 +38,8 @@ internal sealed class ZtrFileReader
         string[] result = unpack.Decompressor(file, encoding);
         File.WriteAllLines(Path.Combine(Path.GetDirectoryName(file) ?? throw new InvalidOperationException(), $"{fileName}.txt"), result);
     }
-    public async ValueTask ZtrTextReader([DisallowNull] FullPath? file)
+
+    public async ValueTask ZtrTextReader(FullPath? file, string outputStrings = "")
     {
         ArgumentNullException.ThrowIfNull(file);
             
@@ -52,11 +53,13 @@ internal sealed class ZtrFileReader
 
         Dictionary<string, string> entries = unpack.DecompressorDict(file.Value.Value, encodingCode);
 
-        FileStream output = new(Path.ChangeExtension(file.Value.Value, ".strings"), FileEx.FileStreamOutputOptions());
+        string stringsFile = string.IsNullOrEmpty(outputStrings) ? Path.ChangeExtension(file.Value.Value, ".strings") : outputStrings;
+        FileStream output = new(stringsFile, FileEx.FileStreamOutputOptions());
+
         await using (output.ConfigureAwait(false))
         {
             ZtrTextWriter writer = new(output, StringsZtrFormatter.Instance);
-        writer.Write(fileName, entries);
+            writer.Write(fileName, entries);
         }
     }
     public async ValueTask ZtrTextReader(FileInfo file)

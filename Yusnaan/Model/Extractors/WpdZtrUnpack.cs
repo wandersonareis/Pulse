@@ -69,13 +69,6 @@ internal sealed class WpdZtrUnpack
             return FullPath.Empty;
         }
 
-        if (string.Equals(entry.NameWithoutExtension, "dummy", StringComparison.Ordinal))
-        {
-            new TaskDialogs().ShowSkipDialog("File empty", "It's was skipped.", $"This {wpdFile.Name} contains Dummy ztr!");
-            Logger.Log<WpdZtrUnpack>(Logger.Level.Error, $"This {wpdFile.Name} contains Dummy ztr!");
-            return FullPath.Empty;
-        }
-            
         Logger.Log<WpdZtrUnpack>(Logger.Level.Info, $"Source ztr file: {entry.Name}");
         Logger.Log<WpdZtrUnpack>(Logger.Level.Info, FormattableString.Invariant($"Ztr file position: {entry.Offset:X}"));
         Logger.Log<WpdZtrUnpack>(Logger.Level.Info, FormattableString.Invariant($"Ztr file size: {entry.Length:X}"));
