@@ -13,3 +13,7 @@ obj/
 *.DotSettings*
 *.dgml
 .cr
+
+# Local agent plans and runtime-generated language files
+/.kilo/
+/Languages/
