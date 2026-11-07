@@ -25,7 +25,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -46,7 +46,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
@@ -57,7 +57,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -69,7 +69,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -80,7 +80,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Be.IO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -133,6 +133,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArchiveListing\ArchiveListingCompressedData.cs" />
+    <Compile Include="ArchiveListing\Crypto\CryptFilelist.cs" />
+    <Compile Include="ArchiveListing\Crypto\CryptoBase.cs" />
+    <Compile Include="ArchiveListing\Crypto\CryptoFunctions.cs" />
+    <Compile Include="ArchiveListing\Crypto\Decryption.cs" />
+    <Compile Include="ArchiveListing\Crypto\Encryption.cs" />
+    <Compile Include="ArchiveListing\Crypto\Generator.cs" />
+    <Compile Include="ArchiveListing\Crypto\IntegersArray.cs" />
     <Compile Include="ArchiveListing\XIII-2\ArchiveListingEntryInfoV2.cs" />
     <Compile Include="ArchiveListing\XIII-3\ArchiveListingEntryInfoV3.cs" />
     <Compile Include="ArchiveListing\ArchiveAccessor.cs" />
@@ -192,8 +199,6 @@
     <Compile Include="IMGB\ImgbArchiveAccessor.cs" />
     <Compile Include="IMGB\WPD\WpdArchiveListing.cs" />
     <Compile Include="IMGB\WPD\WpdArchiveListingReader.cs" />
-    <Compile Include="WPD\Utils.cs" />
-    <Compile Include="WPD\WpdUnpack.cs" />
     <Compile Include="YKD\ResourceViewports\EmptyYkdResourceViewport.cs" />
     <Compile Include="YKD\ResourceViewports\ExtraYkdResourceViewport.cs" />
     <Compile Include="YKD\ResourceViewports\FragmentYkdResourceViewport.cs" />
@@ -217,6 +222,13 @@
     <Compile Include="ZTR\StringsZtrFormatter.cs" />
     <Compile Include="ZTR\TxtZtrFormatter.cs" />
     <Compile Include="ZTR\ZtrFileKeysPacker.cs" />
+    <Compile Include="ZTR\ZtrCompressionOptions.cs" />
+    <Compile Include="ZTR\ZtrCompressionTieRule.cs" />
+    <Compile Include="ZTR\ZtrContainer.cs" />
+    <Compile Include="ZTR\ZtrContainerType.cs" />
+    <Compile Include="ZTR\ZtrTextUnit.cs" />
+    <Compile Include="ZTR\ZtrTextUnitFile.cs" />
+    <Compile Include="ZTR\ZtrTextUnitScanner.cs" />
     <Compile Include="ZTR\ZtrFilePacker.cs" />
     <Compile Include="ZTR\ZtrFileTextPacker.cs" />
     <Compile Include="ZTR\ZtrTextWriter.cs" />
@@ -240,13 +252,10 @@
       <Name>Pulse.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <None Include="Resources\Executable\ffxiiicrypt.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <Content Include="IMGB\Sections\Partially Stolen.txt" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,7 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 using Pulse.Core;
 
 namespace Pulse.FS
@@ -60,9 +57,9 @@ namespace Pulse.FS
                 int hederSize = (int)headerBuff.Length;
                 headerBuff.Position = 0;
 
-                if (header.IsEncrypted)
+                if (header.HasCryptHeader)
                 {
-                    RecreateEncryptedListing(headerBuff, hederSize, textBuff, blocksSize, buff);
+                    RecreateEncryptedListing(headerBuff, hederSize, textBuff, blocksSize);
                 }
                 else
                 {
@@ -75,48 +72,20 @@ namespace Pulse.FS
             }
         }
 
-        private void RecreateEncryptedListing(MemoryStream headerBuff, int hederSize, MemoryStream textBuff, int blocksSize, byte[] buff)
+        private void RecreateEncryptedListing(MemoryStream headerBuff, int hederSize, MemoryStream textBuff, int blocksSize)
         {
-            using (TempFileProvider tmpProvider = new("filelist", ".win32.bin"))
-            {
-                using (Stream output = tmpProvider.Create())
-                {
-                    headerBuff.CopyToStream(output, hederSize, buff);
-                    textBuff.CopyToStream(output, blocksSize, buff);
-                }
+            byte[] plain = new byte[hederSize + blocksSize];
 
-                Process encrypter = new()
-                {
-                    StartInfo = new()
-                    {
-                        FileName = @"Resources\Executable\ffxiiicrypt.exe",
-                        Arguments = "-e \"" + tmpProvider.FilePath + "\" 2",
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true
-                    }
-                };
-                encrypter.Start();
-                Task<string> erroMessage = encrypter.StandardError.ReadToEndAsync();
-                Task<string> outputMessage = encrypter.StandardOutput.ReadToEndAsync();
-                encrypter.WaitForExit();
-                if (encrypter.ExitCode >= 0)
-                {
-                    StringBuilder sb = new("Decryption error! Code: ");
-                    sb.AppendLine(encrypter.ExitCode.ToString());
-                    sb.AppendLine("Error: ");
-                    sb.AppendLine(erroMessage.Result);
-                    sb.AppendLine("Output: ");
-                    sb.AppendLine(outputMessage.Result);
+            headerBuff.Position = 0;
+            headerBuff.EnsureRead(plain, 0, hederSize);
 
-                    throw new InvalidDataException(sb.ToString());
-                }
+            textBuff.Position = 0;
+            textBuff.EnsureRead(plain, hederSize, blocksSize);
 
-                using (Stream input = tmpProvider.OpenRead())
-                using (Stream output = _accessor.RecreateListing((int)input.Length))
-                    input.CopyToStream(output, (int)input.Length, buff);
-            }
+            byte[] encrypted = CryptFilelist.Encrypt(plain);
+
+            using (Stream output = _accessor.RecreateListing(encrypted.Length))
+                output.Write(encrypted, 0, encrypted.Length);
         }
     }
 }

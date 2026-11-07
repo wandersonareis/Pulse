@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.ExceptionServices;
 using System.Threading;
 using Pulse.Core;
 
@@ -11,6 +12,7 @@ namespace Pulse.FS
 
         private readonly byte[][] _uncompressedBlocks;
         private volatile Exception _exception;
+        private volatile bool _completed;
 
         public ArchiveListingCompressedData(IArchiveListingHeader header)
         {
@@ -23,24 +25,42 @@ namespace Pulse.FS
             stream.Position = _header.BlockOffset;
             ArchiveListingBlockInfo[] blocks = stream.ReadStructs<ArchiveListingBlockInfo>(_header.BlocksCount);
 
-            ThreadHelper.StartBackground("ArchiveListingCompressedData.ReadFromStream", () => UncompressBlocks(blocks, stream));
+            // The compressed data is copied to the memory, because the decompression
+            // is performed in the background thread and the source stream may be
+            // disposed before the thread is completed.
+            int dataSize = 0;
+            for (int i = 0; i < blocks.Length; i++)
+                dataSize = Math.Max(dataSize, blocks[i].Offset + blocks[i].CompressedSize);
+
+            byte[] compressedData = new byte[dataSize];
+            if (dataSize > 0)
+            {
+                stream.Position = _header.InfoOffset;
+                stream.EnsureRead(compressedData, 0, dataSize);
+            }
+
+            ThreadHelper.StartBackground("ArchiveListingCompressedData.ReadFromStream", () => UncompressBlocks(blocks, compressedData));
         }
 
         public byte[] AcquireData(int blockNumber)
         {
-            while (_exception == null)
+            while (true)
             {
                 byte[] result = _uncompressedBlocks[blockNumber];
                 if (result != null)
                     return result;
-                
+
+                if (_exception != null)
+                    ExceptionDispatchInfo.Capture(_exception).Throw();
+
+                if (_completed)
+                    throw new InvalidDataException($"The block {blockNumber} of the listing is missing.");
+
                 Thread.Sleep(100);
             }
-
-            throw _exception;
         }
 
-        private void UncompressBlocks(ArchiveListingBlockInfo[] blocks, Stream stream)
+        private void UncompressBlocks(ArchiveListingBlockInfo[] blocks, byte[] compressedData)
         {
             try
             {
@@ -49,16 +69,17 @@ namespace Pulse.FS
                     ArchiveListingBlockInfo block = blocks[i];
                     int uncompressedSize = block.UncompressedSize;
 
-                    stream.Position = _header.InfoOffset + block.Offset;
-                    _uncompressedBlocks[i] = ZLibHelper.Uncompress(stream, uncompressedSize);
+                    using (MemoryStream ms = new(compressedData, block.Offset, block.CompressedSize, false))
+                        _uncompressedBlocks[i] = ZLibHelper.Uncompress(ms, uncompressedSize);
                 }
-            }
-            catch (ObjectDisposedException)
-            {
             }
             catch (Exception ex)
             {
                 _exception = ex;
+            }
+            finally
+            {
+                _completed = true;
             }
         }
 

@@ -231,5 +231,194 @@ namespace Pulse.FS
 
             return result;
         }
+
+        /// <summary>
+        /// The size of the uncompressed data of a single ZTR chunk.
+        /// </summary>
+        public const int MaxChunkData = 4096;
+
+        /// <summary>
+        /// The page index that is never used as a dictionary pointer.
+        /// </summary>
+        private const byte PageIndexSkip = 8;
+
+        /// <summary>
+        /// Compresses the chunk with the real ZTR compression: the most frequent
+        /// pairs of bytes are replaced with the pointers to the dictionary pages.
+        /// <para>
+        /// The result is the <c>[u32 big endian dictionary size][dictionary triples][data]</c>
+        /// structure, where every triple is the <c>(page index, byte 1, byte 2)</c> tuple.
+        /// </para>
+        /// </summary>
+        /// <param name="data">The uncompressed data of the chunk.</param>
+        /// <param name="tie">The rule used to resolve the ties between the equally frequent pairs.</param>
+        public static byte[] CompressChunk(byte[] data, ZtrCompressionTieRule tie)
+        {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+
+            return CompressChunk(data, data.Length, tie);
+        }
+
+        /// <summary>
+        /// Compresses the first <paramref name="count"/> bytes of the chunk with the real
+        /// ZTR compression.
+        /// </summary>
+        public static byte[] CompressChunk(byte[] data, int count, ZtrCompressionTieRule tie)
+        {
+            if (data == null)
+                throw new ArgumentNullException(nameof(data));
+
+            if (count < 0 || count > data.Length)
+                throw new ArgumentOutOfRangeException(nameof(count));
+
+            List<byte> pages = GetFreePageNumbers(data, count);
+            List<byte> dictionary = new();
+
+            byte[] current = new byte[count];
+            Buffer.BlockCopy(data, 0, current, 0, count);
+
+            for (int pageIndex = 0; pageIndex < pages.Count; pageIndex++)
+            {
+                (byte byte1, byte byte2, int occurrences) = GetLargestOccurringBytes(current, tie);
+                if (occurrences < 4)
+                    break;
+
+                byte page = pages[pageIndex];
+                dictionary.Add(page);
+                dictionary.Add(byte1);
+                dictionary.Add(byte2);
+
+                byte[] processed = new byte[current.Length];
+                int position = 0;
+
+                for (int i = 0; i < current.Length; i++)
+                {
+                    if (i == current.Length - 1)
+                    {
+                        processed[position++] = current[i];
+                    }
+                    else if (current[i] == byte1 && current[i + 1] == byte2)
+                    {
+                        processed[position++] = page;
+                        i++;
+                    }
+                    else
+                    {
+                        processed[position++] = current[i];
+                    }
+                }
+
+                if (position != processed.Length)
+                    Array.Resize(ref processed, position);
+
+                current = processed;
+            }
+
+            byte[] result = new byte[4 + dictionary.Count + current.Length];
+
+            result[0] = (byte)(dictionary.Count >> 24);
+            result[1] = (byte)(dictionary.Count >> 16);
+            result[2] = (byte)(dictionary.Count >> 8);
+            result[3] = (byte)dictionary.Count;
+
+            Buffer.BlockCopy(dictionary.ToArray(), 0, result, 4, dictionary.Count);
+            Buffer.BlockCopy(current, 0, result, 4 + dictionary.Count, current.Length);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the byte values that can be used as the dictionary page indexes:
+        /// the values that do not occur in the data, except the reserved one.
+        /// </summary>
+        private static List<byte> GetFreePageNumbers(byte[] data, int count)
+        {
+            bool[] present = new bool[256];
+            for (int i = 0; i < count; i++)
+                present[data[i]] = true;
+
+            List<byte> result = new(256);
+            for (int i = 0; i < 256; i++)
+            {
+                if (i == PageIndexSkip)
+                    continue;
+
+                if (!present[i])
+                    result.Add((byte)i);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Searches the most frequent pair of bytes. The pairs are counted from the first
+        /// occurrence of the pair, the further non overlapping matches are looked up from
+        /// the second byte of the previous match.
+        /// </summary>
+        private static (byte, byte, int) GetLargestOccurringBytes(byte[] data, ZtrCompressionTieRule tie)
+        {
+            int length = data.Length;
+            if (length < 2)
+                return (0, 0, 0);
+
+            Dictionary<int, List<int>> occurrences = new();
+            List<int> order = new();
+
+            for (int i = 0; i < length - 1; i++)
+            {
+                int key = (data[i] << 8) | data[i + 1];
+
+                if (!occurrences.TryGetValue(key, out List<int> positions))
+                {
+                    positions = new List<int>();
+                    occurrences.Add(key, positions);
+                    order.Add(key);
+                }
+
+                positions.Add(i);
+            }
+
+            int bestKey = 0;
+            int bestCount = 0;
+            int bestLastOccurrence = int.MaxValue;
+
+            foreach (int key in order)
+            {
+                List<int> positions = occurrences[key];
+
+                int currentCount = 1;
+                int next = positions[0] + 2;
+
+                for (int i = 1; i < positions.Count; i++)
+                {
+                    if (positions[i] < next)
+                        continue;
+
+                    currentCount++;
+                    next = positions[i] + 2;
+                }
+
+                int lastOccurrence = positions[positions.Count - 1];
+
+                bool better;
+                if (tie == ZtrCompressionTieRule.TieFirst)
+                    better = currentCount > bestCount;
+                else
+                    better = currentCount > bestCount || (currentCount == bestCount && lastOccurrence < bestLastOccurrence);
+
+                if (!better)
+                    continue;
+
+                bestKey = key;
+                bestCount = currentCount;
+                bestLastOccurrence = lastOccurrence;
+            }
+
+            if (bestCount == 0)
+                return (0, 0, 0);
+
+            return ((byte)(bestKey >> 8), (byte)bestKey, bestCount);
+        }
     }
 }

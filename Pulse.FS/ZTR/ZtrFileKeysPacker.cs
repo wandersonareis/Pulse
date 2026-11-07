@@ -7,11 +7,18 @@ namespace Pulse.FS
     {
         private readonly Stream _output;
         private readonly ZtrFileEntry[] _input;
+        private readonly ZtrCompressionOptions _options;
 
         public ZtrFileKeysPacker(Stream output, ZtrFileEntry[] input)
+            : this(output, input, null)
+        {
+        }
+
+        public ZtrFileKeysPacker(Stream output, ZtrFileEntry[] input, ZtrCompressionOptions options)
         {
             _output = output;
             _input = input;
+            _options = options ?? ZtrCompressionOptions.Default;
         }
 
         public unsafe void Pack(ZtrFileHeader header)
@@ -50,9 +57,8 @@ namespace Pulse.FS
         {
             uncompressedSize += engaged;
 
-            byte[] encoding = ZtrFileEncoding.CompressZtrContent(writeBuff, 0, ref engaged);
-            _output.Write(encoding, 0, encoding.Length);
-            _output.Write(writeBuff, 0, engaged);
+            byte[] chunk = ZtrFileEncoding.CompressChunk(writeBuff, engaged, _options.TieRule);
+            _output.Write(chunk, 0, chunk.Length);
 
             engaged = 0;
         }

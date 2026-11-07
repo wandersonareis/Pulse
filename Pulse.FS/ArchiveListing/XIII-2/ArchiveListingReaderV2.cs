@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using Pulse.Core;
 
 namespace Pulse.FS
@@ -68,60 +65,25 @@ namespace Pulse.FS
 
         private Stream Decrypt(out ArchiveListingHeaderV2 header)
         {
-            Stream result = _accessor.ExtractListing();
+            byte[] source = ExtractListingData();
+
+            byte[] plain = source;
+            bool isEncrypted = false;
+
+            if (CryptFilelist.HasCryptHeader(source) && !CryptFilelist.IsPlainText(source))
+            {
+                plain = CryptFilelist.Decrypt(source);
+                isEncrypted = true;
+            }
+
+            MemoryStream result = new(plain, false);
             try
             {
                 header = result.ReadContent<ArchiveListingHeaderV2>();
-                if (header.IsValid(result.Length))
-                {
-                    header.IsEncrypted = false;
-                    return result;
-                }
+                header.IsEncrypted = isEncrypted;
 
-                /*using (*/
-                TempFileProvider tmpProvider = new(_accessor.ListingEntry.Name /*"filelist"*/, ".win32.bin");/*)*/
-                {
-                    using (Stream output = tmpProvider.Create())
-                    {
-                        output.WriteContent(header);
-                        result.CopyTo(output);
-                        result.SafeDispose();
-                    }
-
-                    Process decrypter = new()
-                    {
-                        StartInfo = new()
-                        {
-                            FileName = @"Resources\Executable\ffxiiicrypt.exe",
-                            Arguments = $"-d \"{tmpProvider.FilePath}\" filelist",
-                            CreateNoWindow = true,
-                            UseShellExecute = false,
-                            RedirectStandardOutput = true,
-                            RedirectStandardError = true
-                        }
-                    };
-                    decrypter.Start();
-                    Task<string> erroMessage = decrypter.StandardError.ReadToEndAsync();
-                    Task<string> outputMessage = decrypter.StandardOutput.ReadToEndAsync();
-                    decrypter.WaitForExit();
-                    if (decrypter.ExitCode != -2)
-                    {
-                        StringBuilder sb = new("Decryption error! Code: ");
-                        sb.AppendLine(decrypter.ExitCode.ToString());
-                        sb.AppendLine("Error: ");
-                        sb.AppendLine(erroMessage.Result);
-                        sb.AppendLine("Output: ");
-                        sb.AppendLine(outputMessage.Result);
-
-                        throw new InvalidDataException(sb.ToString());
-                    }
-
-                    result = tmpProvider.OpenRead();
-                    header = result.ReadContent<ArchiveListingHeaderV2>();
-                    header.IsEncrypted = true;
-                    if (!header.IsValid(result.Length))
-                        throw new InvalidDataException();
-                }
+                if (!header.IsValid(result.Length))
+                    throw new InvalidDataException("The header of the filelist is not valid.");
 
                 return result;
             }
@@ -129,6 +91,16 @@ namespace Pulse.FS
             {
                 result.SafeDispose();
                 throw;
+            }
+        }
+
+        private byte[] ExtractListingData()
+        {
+            using (Stream input = _accessor.ExtractListing())
+            using (MemoryStream buffer = new((int)input.Length))
+            {
+                input.CopyTo(buffer);
+                return buffer.ToArray();
             }
         }
 

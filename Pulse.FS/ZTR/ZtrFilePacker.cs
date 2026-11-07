@@ -10,13 +10,20 @@ namespace Pulse.FS
         private readonly Stream _output;
         private readonly BinaryWriter _bw;
         private readonly ZtrFileType? _type;
+        private readonly ZtrCompressionOptions _options;
 
         public ZtrFilePacker(Stream output, FFXIIITextEncoding encoding, ZtrFileType? type)
+            : this(output, encoding, type, null)
+        {
+        }
+
+        public ZtrFilePacker(Stream output, FFXIIITextEncoding encoding, ZtrFileType? type, ZtrCompressionOptions options)
         {
             _encoding = encoding;
             _output = output;
             _bw = new(_output);
             _type = type;
+            _options = options ?? ZtrCompressionOptions.Default;
         }
 
         public void Pack(ZtrFileEntry[] entries)
@@ -90,10 +97,10 @@ namespace Pulse.FS
 
             using (var ms = new MemoryStream(32 * 1024))
             {
-                var keyPacker = new ZtrFileKeysPacker(ms, entries);
+                var keyPacker = new ZtrFileKeysPacker(ms, entries, _options);
                 keyPacker.Pack(header);
 
-                var textPacker = new ZtrFileTextPacker(ms, entries, _encoding);
+                var textPacker = new ZtrFileTextPacker(ms, entries, _encoding, _options);
                 textPacker.Pack(header);
 
                 header.WriteToStream(_output);
