@@ -1,5 +1,4 @@
 ﻿using System;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Pulse.Core;
 
 namespace Pulse.UI
@@ -8,7 +7,7 @@ namespace Pulse.UI
     {
         public WorkingLocationInfo Provide()
         {
-            using (CommonOpenFileDialog dlg = new("Укажите рабочий каталог..."))
+            using (CommonOpenFileDialog dlg = new("Select the working directory..."))
             {
                 dlg.IsFolderPicker = true;
                 if (dlg.ShowDialog() != CommonFileDialogResult.Ok)

@@ -4,18 +4,15 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Forms;
+using System.Windows.Input;
 using System.Windows.Media;
 using Pulse.Core;
 using Pulse.DirectX;
 using Pulse.FS;
-using SharpDX;
-using SharpDX.Direct2D1;
-using SharpDX.Direct3D11;
-using SharpDX.Toolkit.Graphics;
-using Rectangle = SharpDX.Rectangle;
 using Color = System.Windows.Media.Color;
-using SolidColorBrush = SharpDX.Direct2D1.SolidColorBrush;
+using Device = Pulse.DirectX.Device;
+using Matrix = Pulse.DirectX.Matrix;
+using SolidColorBrush = Pulse.DirectX.SolidColorBrush;
 
 namespace Pulse.UI.Encoding
 {
@@ -82,9 +79,9 @@ quick brown fox jumps over the lazy dog
                     _editViewport.DrawSprites += OnEditViewportDrawSprites;
                     _editViewport.DrawPrimitives += OnEditViewportDrawPrimitives;
 
-                    _editViewport.DxControl.Control.MouseDown += OnDxControlElementMouseDown;
-                    _editViewport.DxControl.Control.MouseUp += OnDxControlElementMouseUp;
-                    _editViewport.DxControl.Control.MouseMove += OnDxControlElementMouseMove;
+                    _editViewport.DxControl.MouseDown += OnDxControlElementMouseDown;
+                    _editViewport.DxControl.MouseUp += OnDxControlElementMouseUp;
+                    _editViewport.DxControl.MouseMove += OnDxControlElementMouseMove;
 
                     root.AddUiElement(_editViewport, 1, 0);
                 }
@@ -106,7 +103,7 @@ quick brown fox jumps over the lazy dog
                         previewGroup.AddUiElement(_previewViewport, 0, 0, 2);
                     }
 
-                    UiEncodingLabeledNumber scale = new("Масштаб:", 200, 100, 400, OnScaleValueChanged);
+                    UiEncodingLabeledNumber scale = new("Scale:", 200, 100, 400, OnScaleValueChanged);
                     {
                         scale.Value = 100;
                         scale.NumberControl.Increment = 25;
@@ -202,10 +199,14 @@ quick brown fox jumps over the lazy dog
             _comboBox.Items.Add(source);
         }
 
-        private void OnDxControlElementMouseDown(object sender, MouseEventArgs e)
+        private void OnDxControlElementMouseDown(object sender, MouseButtonEventArgs e)
         {
             if (_currentSource == null)
                 return;
+
+            Point point = e.GetPosition(_editViewport.DxControl);
+            int mouseX = (int)point.X;
+            int mouseY = (int)point.Y;
 
             int viewportX = _editViewport.X;
             int viewportY = _editViewport.Y;
@@ -223,12 +224,12 @@ quick brown fox jumps over the lazy dog
                 int offsets = info.Offsets[i];
                 int sizes = info.Sizes[i];
                 int y = (offsets >> 16) & 0xFFFF;
-                int oy = viewportY + e.Y - y;
+                int oy = viewportY + mouseY - y;
                 if (oy >= 0 && oy <= height)
                 {
                     int x = offsets & 0xFFFF;
                     int width = (sizes & 0x0000FF00) >> 8;
-                    int ox = viewportX + e.X - x;
+                    int ox = viewportX + mouseX - x;
                     if (ox >= 0 && ox <= width)
                     {
                         mainIndices.Add(i);
@@ -238,7 +239,7 @@ quick brown fox jumps over the lazy dog
             }
 
             int squareSize = info.Header.LineSpacing + info.Header.SquareDiff;
-            short value = (short)(((viewportY + e.Y) / squareSize) << 8 | ((viewportX + e.X) / squareSize));
+            short value = (short)(((viewportY + mouseY) / squareSize) << 8 | ((viewportX + mouseX) / squareSize));
             int index = Array.IndexOf(info.AdditionalTable, value);
             if (index >= 0)
                 additionalIndices.Add(index);
@@ -248,22 +249,26 @@ quick brown fox jumps over the lazy dog
                 _editViewport.Refresh();
         }
 
-        private void OnDxControlElementMouseUp(object sender, MouseEventArgs e)
+        private void OnDxControlElementMouseUp(object sender, MouseButtonEventArgs e)
         {
             _newMovable = 0;
         }
 
         private void OnDxControlElementMouseMove(object sender, MouseEventArgs e)
         {
+            Point point = e.GetPosition(_editViewport.DxControl);
+            int mouseX = (int)point.X;
+            int mouseY = (int)point.Y;
+
             if (Interlocked.Exchange(ref _oldMovable, _newMovable) == 0)
             {
-                _oldX = e.X;
-                _oldY = e.Y;
+                _oldX = mouseX;
+                _oldY = mouseY;
             }
             else
             {
-                int x = e.X;
-                int y = e.Y;
+                int x = mouseX;
+                int y = mouseY;
                 Interlocked.Add(ref _deltaX, x - _oldX);
                 Interlocked.Add(ref _deltaY, y - _oldY);
                 Interlocked.Exchange(ref _oldX, x);
@@ -413,7 +418,7 @@ quick brown fox jumps over the lazy dog
             if (source == null)
                 return;
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null, _previewViewport.DxControl.RenderContainer.GraphicsDevice.SamplerStates.PointClamp, null, null, null, SharpDX.Matrix.Scaling(_scale));
+            spriteBatch.Begin(SpriteSortMode.Deferred, null, _previewViewport.DxControl.RenderContainer.GraphicsDevice.SamplerStates.PointClamp, null, null, null, Matrix.Scaling(_scale));
 
             float x = 0, maxX = 0;
             float y = source.Info.Header.LineSpacing;

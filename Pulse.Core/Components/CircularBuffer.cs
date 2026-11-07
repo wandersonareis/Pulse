@@ -14,7 +14,7 @@ namespace Pulse.Core
         public CircularBuffer(int length)
         {
             if (length < 1)
-                throw new("Длина циклического буфера не может быть меньше 1.");
+                throw new("The circular buffer length cannot be less than 1.");
 
             _buff = new T[length];
         }

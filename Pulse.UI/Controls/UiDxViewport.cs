@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Pulse.Core;
 using Pulse.DirectX;
-using SharpDX;
 
 namespace Pulse.UI
 {
@@ -95,7 +94,7 @@ namespace Pulse.UI
 
         public void Refresh()
         {
-            DxControl.Control.BeginInvoke(new Action(()=>DxControl.Control.Refresh()));
+            DxControl.Refresh();
         }
 
         private void UpdateScrollBars()

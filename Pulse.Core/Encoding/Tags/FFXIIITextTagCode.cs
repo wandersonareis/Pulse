@@ -2,7 +2,7 @@
 {
     public enum FFXIIITextTagCode : byte
     {
-        // === 1 байт ===
+        // === 1 byte ===
         End = 0x00,
         Escape = 0x01, // OLD: Question (replace it!)
         Question = 0x01,
@@ -12,7 +12,7 @@
         Article = 0x04,
         ArticleMany = 0x05,
 
-        // --- 1 + 1 байт ---
+        // --- 1 + 1 byte ---
         //Var81 = 0x81, // Old
         //Var82 = 0x82, // Spanish chars
         //Var83 = 0x83, // Other chars
@@ -25,7 +25,7 @@
         VarF6 = 0xF6,
         VarF7 = 0xF7,
 
-        // --- 1 + 1 именованный ---
+        // --- 1 + 1 named ---
         Text = 0x40,
         Icon = 0xF0,
         Key = 0xF1,

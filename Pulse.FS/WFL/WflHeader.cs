@@ -16,7 +16,7 @@ namespace Pulse.FS
         public int TableType; // ?
         public int LineSpacing;
         public int LineHeight;
-        public int SquareDiff; // LineSpacing + SquareDiff = Размера квадратных символов
+        public int SquareDiff; // LineSpacing + SquareDiff = square glyph size
         public int Offset;
         public int ColorTableType;
         public int Unknown02;

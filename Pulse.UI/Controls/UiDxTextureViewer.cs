@@ -4,9 +4,6 @@ using System.Windows.Controls;
 using Pulse.Core;
 using Pulse.DirectX;
 using Pulse.FS;
-using SharpDX;
-using SharpDX.Direct3D11;
-using SharpDX.Toolkit.Graphics;
 
 namespace Pulse.UI
 {

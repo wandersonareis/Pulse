@@ -8,16 +8,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Pulse.Core;
 using Pulse.FS;
 using Pulse.DirectX;
-using SharpDX;
-using SharpDX.Toolkit.Graphics;
 using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 using Color = System.Windows.Media.Color;
-using Device = SharpDX.Direct3D11.Device;
 
 // ReSharper disable UnusedMember.Local
 
@@ -407,7 +403,7 @@ namespace Pulse.UI
 
             [Category("Título")]
             [DisplayName("Desconhecido 3")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(ByteUpDownEditor), typeof(ByteUpDownEditor))]
             public byte HeaderUnknown3
             {
@@ -417,7 +413,7 @@ namespace Pulse.UI
 
             [Category("Título")]
             [DisplayName("Desconhecido 4")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(ByteUpDownEditor), typeof(ByteUpDownEditor))]
             public byte HeaderUnknown4
             {
@@ -427,7 +423,7 @@ namespace Pulse.UI
 
             [Category("Título")]
             [DisplayName("Desconhecido 5")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(ByteUpDownEditor), typeof(ByteUpDownEditor))]
             public byte HeaderUnknown5
             {
@@ -483,7 +479,7 @@ namespace Pulse.UI
 
             [Category("Título")]
             [DisplayName("Desconhecido")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown4
             {
@@ -502,7 +498,7 @@ namespace Pulse.UI
             }
 
             [Category("A cauda")]
-            [DisplayName("A cauda (Tipoы 5,6)")]
+            [DisplayName("The tail (Types 5,6)")]
             [Description("Um conjunto constante de 48 bytes.")]
             [Editor(typeof(WrapTextBoxEditor), typeof(WrapTextBoxEditor))]
             public string Tail56
@@ -526,7 +522,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown1
             {
@@ -536,7 +532,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown2
             {
@@ -546,7 +542,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown3
             {
@@ -556,7 +552,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown4
             {
@@ -582,7 +578,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown1
             {
@@ -592,7 +588,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown2
             {
@@ -602,7 +598,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown3
             {
@@ -638,7 +634,7 @@ namespace Pulse.UI
 
             [Category("Eventos")]
             [DisplayName("Desconhecido 1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown1
             {
@@ -648,7 +644,7 @@ namespace Pulse.UI
 
             [Category("Eventos")]
             [DisplayName("Desconhecido 2")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown2
             {
@@ -684,7 +680,7 @@ namespace Pulse.UI
 
             [Category("Título")]
             [DisplayName("Desconhecido 1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int HUnknown1
             {
@@ -694,7 +690,7 @@ namespace Pulse.UI
 
             [Category("Título")]
             [DisplayName("Bandeiras?")]
-            [Description("Разворачивает анимацию колебания курсора.")]
+            [Description("Reverses the cursor oscillation animation.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int HUnknown2
             {
@@ -704,7 +700,7 @@ namespace Pulse.UI
 
             [Category("Título")]
             [DisplayName("Desconhecido 3")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int HUnknown3
             {
@@ -749,7 +745,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido 1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown1
             {
@@ -759,7 +755,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido 2")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float Unknown2
             {
@@ -769,7 +765,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido 3")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown3
             {
@@ -779,7 +775,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido 4")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown4
             {
@@ -789,7 +785,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido 5")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float Unknown5
             {
@@ -799,7 +795,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido 6")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(SingleUpDownEditor), typeof(SingleUpDownEditor))]
             public float Unknown6
             {
@@ -825,7 +821,7 @@ namespace Pulse.UI
 
             [Category("Eventos")]
             [DisplayName("Desconhecido 1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown1
             {
@@ -835,7 +831,7 @@ namespace Pulse.UI
 
             [Category("Eventos")]
             [DisplayName("Desconhecido 2")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown2
             {
@@ -844,8 +840,8 @@ namespace Pulse.UI
             }
 
             [Category("Eventos")]
-            [DisplayName("Анимация?")]
-            [Description("Каким-то образом влияет на анимацию.")]
+            [DisplayName("Animation?")]
+            [Description("Affects the animation in some way.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int OUnknown3
             {
@@ -939,8 +935,8 @@ namespace Pulse.UI
             }
 
             [Category("Textura")]
-            [DisplayName("Индекс")]
-            [Description("Какой-то номер.")]
+            [DisplayName("Index")]
+            [Description("Some number.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Index
             {
@@ -1012,7 +1008,7 @@ namespace Pulse.UI
 
             [Category("Textura")]
             [DisplayName("X")]
-            [Description("Координата X верхнего-левого угла fragmento de textura.")]
+            [Description("X coordinate of the top-left corner of the texture fragment.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceX
             {
@@ -1022,7 +1018,7 @@ namespace Pulse.UI
 
             [Category("Textura")]
             [DisplayName("Y")]
-            [Description("Координата Y верхнего-левого угла fragmento de textura.")]
+            [Description("Y coordinate of the top-left corner of the texture fragment.")]
             public int SourceY
             {
                 get => Viewport.SourceY;
@@ -1040,8 +1036,8 @@ namespace Pulse.UI
             }
 
             [Category("Textura")]
-            [DisplayName("Высота")]
-            [Description("Высота fragmento de textura.")]
+            [DisplayName("Height")]
+            [Description("Texture fragment height.")]
             public int SourceHeight
             {
                 get => Viewport.SourceHeight;
@@ -1058,8 +1054,8 @@ namespace Pulse.UI
             }
 
             [Category("Mostrar")]
-            [DisplayName("Высота")]
-            [Description("Высота exibir.")]
+            [DisplayName("Height")]
+            [Description("Display height.")]
             public int ViewportHeight
             {
                 get => Viewport.ViewportHeight;
@@ -1067,8 +1063,8 @@ namespace Pulse.UI
             }
 
             [Category("Mostrar")]
-            [DisplayName("Флаги")]
-            [Description("Различные модификаторы exibir.")]
+            [DisplayName("Flags")]
+            [Description("Various display modifiers.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Flags
             {
@@ -1078,7 +1074,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido 5")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown5
             {
@@ -1087,8 +1083,8 @@ namespace Pulse.UI
             }
 
             [Category("Gradiente")]
-            [DisplayName("Верхний-левый")]
-            [Description("Цвет верхнего-левого угла exibir.")]
+            [DisplayName("Top-left")]
+            [Description("Top-left corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperLeftColor
             {
@@ -1097,8 +1093,8 @@ namespace Pulse.UI
             }
 
             [Category("Gradiente")]
-            [DisplayName("Нижний-левый")]
-            [Description("Цвет нижнего-левого угла exibir.")]
+            [DisplayName("Bottom-left")]
+            [Description("Bottom-left corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomLeftColor
             {
@@ -1107,8 +1103,8 @@ namespace Pulse.UI
             }
 
             [Category("Gradiente")]
-            [DisplayName("Верхний-правый")]
-            [Description("Цвет верхнего-правого угла exibir.")]
+            [DisplayName("Top-right")]
+            [Description("Top-right corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperRightColor
             {
@@ -1118,7 +1114,7 @@ namespace Pulse.UI
 
             [Category("Gradiente")]
             [DisplayName("Bottom-right")]
-            [Description("Цвет нижнего-правого угла exibir.")]
+            [Description("Bottom-right corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomRightColor
             {
@@ -1151,8 +1147,8 @@ namespace Pulse.UI
             }
 
             [Category("Mostrar")]
-            [DisplayName("Высота")]
-            [Description("Высота exibir.")]
+            [DisplayName("Height")]
+            [Description("Display height.")]
             public int ViewportHeight
             {
                 get => Viewport.ViewportHeight;
@@ -1160,8 +1156,8 @@ namespace Pulse.UI
             }
 
             [Category("Gradiente")]
-            [DisplayName("Верхний-левый")]
-            [Description("Цвет верхнего-левого угла exibir.")]
+            [DisplayName("Top-left")]
+            [Description("Top-left corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperLeftColor
             {
@@ -1170,8 +1166,8 @@ namespace Pulse.UI
             }
 
             [Category("Gradiente")]
-            [DisplayName("Нижний-левый")]
-            [Description("Цвет нижнего-левого угла exibir.")]
+            [DisplayName("Bottom-left")]
+            [Description("Bottom-left corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomLeftColor
             {
@@ -1180,8 +1176,8 @@ namespace Pulse.UI
             }
 
             [Category("Gradiente")]
-            [DisplayName("Верхний-правый")]
-            [Description("Цвет верхнего-правого угла exibir.")]
+            [DisplayName("Top-right")]
+            [Description("Top-right corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperRightColor
             {
@@ -1191,7 +1187,7 @@ namespace Pulse.UI
 
             [Category("Gradiente")]
             [DisplayName("Bottom-right")]
-            [Description("Цвет нижнего-правого угла exibir.")]
+            [Description("Bottom-right corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomRightColor
             {
@@ -1201,7 +1197,7 @@ namespace Pulse.UI
 
             [Category("Mostrar")]
             [DisplayName("Desconhecido 1")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             public int Unknown1
             {
                 get => Viewport.Unknown1;
@@ -1210,7 +1206,7 @@ namespace Pulse.UI
 
             [Category("Mostrar")]
             [DisplayName("Desconhecido 2")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             public int Unknown2
             {
                 get => Viewport.Unknown2;
@@ -1234,7 +1230,7 @@ namespace Pulse.UI
 
             [Category("Textura")]
             [DisplayName("X")]
-            [Description("Координата X верхнего-левого угла fragmento de textura.")]
+            [Description("X coordinate of the top-left corner of the texture fragment.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int SourceX
             {
@@ -1244,7 +1240,7 @@ namespace Pulse.UI
 
             [Category("Textura")]
             [DisplayName("Y")]
-            [Description("Координата Y верхнего-левого угла fragmento de textura.")]
+            [Description("Y coordinate of the top-left corner of the texture fragment.")]
             public int SourceY
             {
                 get => Viewport.SourceY;
@@ -1262,8 +1258,8 @@ namespace Pulse.UI
             }
 
             [Category("Textura")]
-            [DisplayName("Высота")]
-            [Description("Высота fragmento de textura.")]
+            [DisplayName("Height")]
+            [Description("Texture fragment height.")]
             public int SourceHeight
             {
                 get => Viewport.SourceHeight;
@@ -1280,8 +1276,8 @@ namespace Pulse.UI
             }
 
             [Category("Mostrar")]
-            [DisplayName("Высота")]
-            [Description("Высота exibir.")]
+            [DisplayName("Height")]
+            [Description("Display height.")]
             public int ViewportHeight
             {
                 get => Viewport.ViewportHeight;
@@ -1289,8 +1285,8 @@ namespace Pulse.UI
             }
 
             [Category("Mostrar")]
-            [DisplayName("Флаги")]
-            [Description("Различные модификаторы exibir.")]
+            [DisplayName("Flags")]
+            [Description("Various display modifiers.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Flags
             {
@@ -1300,7 +1296,7 @@ namespace Pulse.UI
 
             [Category("Desconhecido")]
             [DisplayName("Desconhecido 5")]
-            [Description("Desconhecidoе valor.")]
+            [Description("Unknown value.")]
             [Editor(typeof(IntegerUpDownEditor), typeof(IntegerUpDownEditor))]
             public int Unknown5
             {
@@ -1309,8 +1305,8 @@ namespace Pulse.UI
             }
 
             [Category("Gradiente")]
-            [DisplayName("Верхний-левый")]
-            [Description("Цвет верхнего-левого угла exibir.")]
+            [DisplayName("Top-left")]
+            [Description("Top-left corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperLeftColor
             {
@@ -1319,8 +1315,8 @@ namespace Pulse.UI
             }
 
             [Category("Gradiente")]
-            [DisplayName("Нижний-левый")]
-            [Description("Цвет нижнего-левого угла exibir.")]
+            [DisplayName("Bottom-left")]
+            [Description("Bottom-left corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomLeftColor
             {
@@ -1329,8 +1325,8 @@ namespace Pulse.UI
             }
 
             [Category("Gradiente")]
-            [DisplayName("Верхний-правый")]
-            [Description("Цвет верхнего-правого угла exibir.")]
+            [DisplayName("Top-right")]
+            [Description("Top-right corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color UpperRightColor
             {
@@ -1340,7 +1336,7 @@ namespace Pulse.UI
 
             [Category("Gradiente")]
             [DisplayName("Bottom-right")]
-            [Description("Цвет нижнего-правого угла exibir.")]
+            [Description("Bottom-right corner display color.")]
             [Editor(typeof(ColorEditor), typeof(ColorEditor))]
             public Color BottomRightColor
             {

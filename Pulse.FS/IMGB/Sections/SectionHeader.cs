@@ -12,7 +12,7 @@ namespace Pulse.FS
         public SectionType Type;
         public int Version;
         public int Unknown2;
-        public int SectionLength; // Включая размер заголовков (>= 48)
+        public int SectionLength; // Including the header size (>= 48)
         public byte[] Junk;
 
         public void ReadFromStream(Stream stream)

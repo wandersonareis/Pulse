@@ -4,7 +4,7 @@ using System.IO;
 namespace Pulse.Core
 {
     /// <summary>
-    /// НЕ потокобезопасный!
+    /// NOT thread-safe!
     /// </summary>
     public sealed class StreamSegment : Stream
     {
@@ -16,9 +16,9 @@ namespace Pulse.Core
         {
             Exceptions.CheckArgumentNull(stream, "stream");
             if (offset < 0 || offset >= stream.Length)
-                throw new ArgumentOutOfRangeException(nameof(offset), offset, "Смещение выходит за границы потока.");
+                throw new ArgumentOutOfRangeException(nameof(offset), offset, "The offset is outside the bounds of the stream.");
             if (offset + length > stream.Length)
-                throw new ArgumentOutOfRangeException(nameof(length), length, "Недопустимая длина.");
+                throw new ArgumentOutOfRangeException(nameof(length), length, "Invalid length.");
 
             _offset = offset;
             _length = length;

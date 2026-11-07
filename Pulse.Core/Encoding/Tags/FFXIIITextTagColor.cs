@@ -15,7 +15,7 @@
         Rose = 0x48,
         Purple = 0x49,
         
-        // Градиент
+        // Gradient
         SandOrange = 0x4A,
         WhiteGray = 0x4B,
         WhitePurple = 0x4C,
@@ -25,7 +25,7 @@
         
         Transparent = 0x4E,
 
-        // Градиент во тьму / прозрачность
+        // Gradient to black / transparency
         CyanDark = 0x4F,
         OliveDark = 0x52,
         GreenDark = 0x53,

@@ -7,7 +7,7 @@ using Pulse.UI;
 namespace Pulse
 {
     /// <summary>
-    /// Логика взаимодействия для Window1.xaml
+    /// Interaction logic for Window1.xaml
     /// </summary>
     public partial class UiGamePartSelectDialog
     {

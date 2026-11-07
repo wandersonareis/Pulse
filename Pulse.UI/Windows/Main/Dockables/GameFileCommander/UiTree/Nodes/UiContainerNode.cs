@@ -30,10 +30,10 @@ namespace Pulse.UI
 
         public IEnumerable<UiNode> BindableHierarchyChilds
         {
-            get { return RequestChilds().Where(n => n.Type <= UiNodeType.Directory).Order(UiNodeComparer.Instance); }
+            get { return RequestChilds().Where(n => n.Type <= UiNodeType.Directory).OrderBy(n => n, UiNodeComparer.Instance); }
         }
 
-        public IEnumerable<UiNode> BindableChilds => GetChilds().Order(UiNodeComparer.Instance);
+        public IEnumerable<UiNode> BindableChilds => GetChilds().OrderBy(n => n, UiNodeComparer.Instance);
 
         public override UiNode[] GetChilds()
         {
@@ -86,8 +86,8 @@ namespace Pulse.UI
                 if (!parentChecked && node.IsChecked == false)
                     continue;
 
-                // Родительский контейнер может быть помечен, а вложенный нет
-                // Это сделано специально для отложенной загрузки вложенных элементов
+                // The parent container may be checked even if the nested one is not
+                // This is intentional to support lazy loading of nested items
                 bool isChecked = parentChecked || node.IsChecked == true;
 
                 switch (node)

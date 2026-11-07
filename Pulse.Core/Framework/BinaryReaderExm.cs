@@ -60,7 +60,7 @@ namespace Pulse.Core
             if (Equals(value, expected))
                 return value;
 
-            throw new InvalidDataException($"Неожиданное значение: [{value}], ожидается [{expected}].");
+            throw new InvalidDataException($"Unexpected value: [{value}], expected [{expected}].");
         }
     }
 }

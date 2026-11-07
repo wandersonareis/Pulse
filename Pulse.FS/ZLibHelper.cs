@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
+using System.IO.Compression;
 using System.Threading;
 using Pulse.Core;
-using zlib;
 
 namespace Pulse.FS
 {
@@ -11,8 +11,8 @@ namespace Pulse.FS
         public static byte[] Uncompress(Stream input, int uncompressedSize)
         {
             byte[] buff = new byte[uncompressedSize];
-            ZInputStream reader = new(input);
-            reader.EnsureRead(buff, 0, uncompressedSize);
+            using (ZLibStream reader = new(input, CompressionMode.Decompress, true))
+                reader.EnsureRead(buff, 0, uncompressedSize);
             return buff;
         }
 
@@ -43,10 +43,10 @@ namespace Pulse.FS
             Exceptions.CheckArgumentNull(output, "output");
             Exceptions.CheckArgumentOutOfRangeException(uncompressedSize, "uncompressedSize", 0, int.MaxValue);
 
-            ZInputStream reader = new(input);
+            using ZLibStream reader = new(input, CompressionMode.Decompress, true);
 
             int readed;
-            while (uncompressedSize > 0 && (readed = reader.read(buff, 0, Math.Min(buff.Length, uncompressedSize))) > 0)
+            while (uncompressedSize > 0 && (readed = reader.Read(buff, 0, Math.Min(buff.Length, uncompressedSize))) > 0)
             {
                 if (cancelationToken.IsCancellationRequested)
                     return;
@@ -57,7 +57,7 @@ namespace Pulse.FS
             }
 
             if (uncompressedSize != 0)
-                throw new("Неожиданный конец потока.");
+                throw new("??????????? ????? ??????.");
         }
 
         public static int Compress(Stream input, Stream output, int uncompressedSize, Action<long> compressed = null)
@@ -67,42 +67,24 @@ namespace Pulse.FS
             Exceptions.CheckArgumentOutOfRangeException(uncompressedSize, "uncompressedSize", 0, int.MaxValue);
 
             byte[] buff = new byte[Math.Min(32 * 1024, uncompressedSize)];
-            ZOutputStream writer = new(output, 6);
 
             long position = output.Position;
 
-            int readed;
-            while (uncompressedSize > 0 && (readed = input.Read(buff, 0, Math.Min(buff.Length, uncompressedSize))) > 0)
+            using (ZLibStream writer = new(output, CompressionLevel.Optimal, true))
             {
-                uncompressedSize -= readed;
-                writer.Write(buff, 0, readed);
-                compressed.NullSafeInvoke(readed);
+                int readed;
+                while (uncompressedSize > 0 && (readed = input.Read(buff, 0, Math.Min(buff.Length, uncompressedSize))) > 0)
+                {
+                    uncompressedSize -= readed;
+                    writer.Write(buff, 0, readed);
+                    compressed.NullSafeInvoke(readed);
+                }
             }
-
-            writer.finish();
 
             if (uncompressedSize != 0)
-                throw new("Неожиданный конец потока.");
+                throw new("??????????? ????? ??????.");
 
             return (int)(output.Position - position);
-        }
-
-        public static void EnsureRead(this ZInputStream self, byte[] buff, int offset, int size)
-        {
-            Exceptions.CheckArgumentNull(self, "self");
-
-            int readed;
-            while (size > 0 && (readed = self.read(buff, offset, size)) != 0)
-            {
-                if (readed < 0)
-                    throw new("Неожиданный конец потока.");
-
-                size -= readed;
-                offset += readed;
-            }
-
-            if (size != 0)
-                throw new("Неожиданный конец потока.");
         }
     }
 }

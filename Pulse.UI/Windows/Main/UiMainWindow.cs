@@ -20,8 +20,8 @@ namespace Pulse.UI
         {
             #region Construct
 
-            Assembly assembly = Assembly.GetEntryAssembly();
-            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(assembly.Location);
+            string processPath = Environment.ProcessPath ?? Assembly.GetEntryAssembly()?.Location ?? string.Empty;
+            FileVersionInfo fvi = FileVersionInfo.GetVersionInfo(processPath);
             Title = $"{fvi.ProductName} {fvi.FileVersion} {fvi.LegalCopyright}";
 
             Width = 640;

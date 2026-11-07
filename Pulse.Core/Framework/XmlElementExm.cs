@@ -12,7 +12,7 @@ namespace Pulse.Core
 
             XmlDocument doc = self.OwnerDocument;
             if (doc == null)
-                throw new ArgumentException("XmlDocument не найден.", nameof(self));
+                throw new ArgumentException("XmlDocument was not found.", nameof(self));
 
             return doc;
         }
@@ -24,7 +24,7 @@ namespace Pulse.Core
 
             XmlElement child = self[name];
             if (child == null)
-                throw Exceptions.CreateArgumentException("self", "Дочерний XmlElement '{0}' не найден.", name);
+                throw Exceptions.CreateArgumentException("self", "Child XmlElement '{0}' was not found.", name);
 
             return child;
         }
@@ -35,7 +35,7 @@ namespace Pulse.Core
 
             XmlElement child = self.ChildNodes[index] as XmlElement;
             if (child == null)
-                throw Exceptions.CreateArgumentException("self", "Дочерний XmlElement '{0}' не найден.", index);
+                throw Exceptions.CreateArgumentException("self", "Child XmlElement '{0}' was not found.", index);
 
             return child;
         }
@@ -47,7 +47,7 @@ namespace Pulse.Core
 
             XmlAttribute attr = self.Attributes[name];
             if (attr == null)
-                throw Exceptions.CreateArgumentException("self", "XmlAttribute '{0}' не найден.", name);
+                throw Exceptions.CreateArgumentException("self", "XmlAttribute '{0}' was not found.", name);
             
             return attr;
         }
@@ -241,7 +241,7 @@ namespace Pulse.Core
         {
             bool? value = FindBoolean(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -250,7 +250,7 @@ namespace Pulse.Core
         {
             char? value = FindChar(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -259,7 +259,7 @@ namespace Pulse.Core
         {
             sbyte? value = FindSByte(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -268,7 +268,7 @@ namespace Pulse.Core
         {
             byte? value = FindByte(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -277,7 +277,7 @@ namespace Pulse.Core
         {
             short? value = FindInt16(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -286,7 +286,7 @@ namespace Pulse.Core
         {
             ushort? value = FindUInt16(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -295,7 +295,7 @@ namespace Pulse.Core
         {
             int? value = FindInt32(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -304,7 +304,7 @@ namespace Pulse.Core
         {
             uint? value = FindUInt32(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -313,7 +313,7 @@ namespace Pulse.Core
         {
             long? value = FindInt64(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -322,7 +322,7 @@ namespace Pulse.Core
         {
             ulong? value = FindUInt64(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -331,7 +331,7 @@ namespace Pulse.Core
         {
             double? value = FindDouble(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value.Value;
         }
@@ -340,7 +340,7 @@ namespace Pulse.Core
         {
             string value = FindString(self, name);
             if (value == null)
-                throw Exceptions.CreateException("Аттрибут '{0}' не найден.", name);
+                throw Exceptions.CreateException("Attribute '{0}' was not found.", name);
 
             return value;
         }

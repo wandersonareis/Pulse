@@ -48,4 +48,11 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         public WaveCallbackStrategy CallbackStrategy => ((CallbackComboItem)comboBoxCallback.SelectedItem).Strategy;
     }
+
+    public enum WaveCallbackStrategy
+    {
+        Event,
+        NewWindow,
+        FunctionCallback
+    }
 }

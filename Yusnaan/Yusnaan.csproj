@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows10.0.26100.0</TargetFramework>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
@@ -67,7 +67,8 @@
     <ProjectReference Include="..\DifferenceEngine\DifferenceEngine.csproj" />
     <ProjectReference Include="..\Pulse.Core\Pulse.Core.csproj" />
     <ProjectReference Include="..\Pulse.FS\Pulse.FS.csproj" />
-    <ProjectReference Include="..\Pulse\Pulse.csproj" />
+    <ProjectReference Include="..\Pulse.DriectX\Pulse.DirectX.csproj" />
+    <ProjectReference Include="..\Pulse.UI\Pulse.UI.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -98,14 +99,6 @@
       <XamlRuntime>Wpf</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>
-  </ItemGroup>
-
-  <ItemGroup>
-    <EditorConfigFiles Remove="C:\Users\wande\source\repos\Pulse\Yusnaan\.editorconfig" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="C:\Users\wande\source\repos\Pulse\Yusnaan\.editorconfig" />
   </ItemGroup>
 
 </Project>

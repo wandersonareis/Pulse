@@ -60,7 +60,7 @@ namespace Pulse.Core
             if (blockOffset < GetReadableSize(offset))
                 return new FluteWriter(this, offset, size);
 
-            string error = $"Запись по смещению {offset} невозможна, так как блок данных содержит пустоты.";
+            string error = $"Writing at offset {offset} is not possible because the data block contains gaps.";
             throw new NotSupportedException(error);
         }
 
@@ -139,13 +139,13 @@ namespace Pulse.Core
 
             public override int Read(byte[] buffer, int offset, int count)
             {
-                throw new NotSupportedException("Поток не поддерживает чтение.");
+                throw new NotSupportedException("The stream does not support reading.");
             }
 
             public override void Write(byte[] buffer, int offset, int count)
             {
                 if (Interlocked.Read(ref _disposed) == 1)
-                    throw new ObjectDisposedException("Поток был освобождён.");
+                    throw new ObjectDisposedException("The stream has been disposed.");
 
                 long position = _output.PointerOffset + Position;
                 _output.Write(buffer, offset, count);
@@ -171,7 +171,7 @@ namespace Pulse.Core
 
             public override long Seek(long offset, SeekOrigin origin)
             {
-                throw new NotSupportedException("Поток не поддерживает поиск.");
+                throw new NotSupportedException("The stream does not support seeking.");
             }
 
             public override void SetLength(long value)
@@ -182,7 +182,7 @@ namespace Pulse.Core
             public override long Position
             {
                 get => _output.Position;
-                set => throw new NotSupportedException("Поток не поддерживает поиск.");
+                set => throw new NotSupportedException("The stream does not support seeking.");
             }
 
             public override long Length => _output.Length;
@@ -218,7 +218,7 @@ namespace Pulse.Core
             public override int Read(byte[] buffer, int offset, int count)
             {
                 if (Interlocked.Read(ref _disposed) == 1)
-                    throw new ObjectDisposedException("Поток был освобождён.");
+                    throw new ObjectDisposedException("The stream has been disposed.");
 
                 if (count == 0)
                     return 0;
@@ -233,7 +233,7 @@ namespace Pulse.Core
                     if (readableSize > 0)
                         break;
 
-                    Thread.Sleep(timeout); // Максимум 10 * 50(50+1)/2 = 50 сек 500 мсек
+                    Thread.Sleep(timeout); // Maximum 10 * 50(50+1)/2 = 50.5 seconds
                     timeout += 10;
                 }
 
@@ -242,7 +242,7 @@ namespace Pulse.Core
 
             public override void Write(byte[] buffer, int offset, int count)
             {
-                throw new NotSupportedException("Поток не поддерживает запись. ");
+                throw new NotSupportedException("The stream does not support writing.");
             }
 
             public override void Flush()

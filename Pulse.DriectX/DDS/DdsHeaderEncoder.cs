@@ -8,9 +8,11 @@ namespace Pulse.DirectX
 {
     public static class DdsHeaderEncoder
     {
+        public const int HeaderSize = 128;
+
         public static void ToFileStream(DdsHeader header, Stream output)
         {
-            byte[] buff = new byte[128];
+            byte[] buff = new byte[HeaderSize];
             using (SafeGCHandle handle = new(buff, GCHandleType.Pinned))
             {
                 IntPtr ptr = handle.AddrOfPinnedObject();

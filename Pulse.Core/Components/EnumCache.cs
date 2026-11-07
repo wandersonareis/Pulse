@@ -35,7 +35,7 @@ namespace Pulse.Core
         {
             T? result = TryParse(name, nameComparison);
             if (result == null)
-                throw Exceptions.CreateException("Тег '{0}' não especificado para transferência '{1}'.", name, TypeCache<T>.Type);
+                throw Exceptions.CreateException("Tag '{0}' is not specified for transfer '{1}'.", name, TypeCache<T>.Type);
             return result.Value;
         }
     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Threading;
 using Pulse.Core;
@@ -7,12 +8,14 @@ using Pulse.UI;
 namespace Pulse
 {
     /// <summary>
-    /// Логика взаимодействия для App.xaml
+    /// Interaction logic for App.xaml
     /// </summary>
     public partial class App
     {
         protected override void OnStartup(StartupEventArgs e)
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             Log.Message("The application is started.");
 
             AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;

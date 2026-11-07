@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Forms.Integration;
 using Be.Windows.Forms;
+using Xceed.Wpf.Toolkit.PropertyGrid;
 using Xceed.Wpf.Toolkit.PropertyGrid.Editors;
 
 namespace Pulse.UI
@@ -12,7 +13,7 @@ namespace Pulse.UI
     {
         protected override UiHexControl CreateEditor() => new();
 
-        protected override void SetControlProperties()
+        protected override void SetControlProperties(PropertyItem propertyItem)
         {
         }
 

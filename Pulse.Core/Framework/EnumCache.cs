@@ -41,7 +41,7 @@ namespace Pulse.Core
         {
             T? result = TryParse(name, nameComparison);
             if (result == null)
-                throw Exceptions.CreateException("Тег '{0}' не определен для перечисления '{1}'.", name, TypeCache<T>.Type);
+                throw Exceptions.CreateException("Tag '{0}' is not defined for enum '{1}'.", name, TypeCache<T>.Type);
             return result.Value;
         }
     }

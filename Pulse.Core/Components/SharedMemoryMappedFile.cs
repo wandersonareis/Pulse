@@ -70,7 +70,7 @@ namespace Pulse.Core
                 {
                     offset = MathEx.RoundUp(file.Length, 0x800);
                     file.SetLength(offset + value);
-                    _mmf = MemoryMappedFile.CreateFromFile(file, null, 0, MemoryMappedFileAccess.ReadWrite, null, HandleInheritability.Inheritable, false);
+                    _mmf = MemoryMappedFile.CreateFromFile(file, null, 0, MemoryMappedFileAccess.ReadWrite, HandleInheritability.Inheritable, false);
                 }
                 catch
                 {

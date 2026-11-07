@@ -1,58 +1,15 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
-using System.Reflection;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Pfim;
 using Pulse.Core;
 using Pulse.FS;
-using SharpDX;
-using SharpDX.Direct3D;
-using SharpDX.Direct3D11;
-using SharpDX.DXGI;
-using Resource = SharpDX.Direct3D11.Resource;
 
 namespace Pulse.DirectX
 {
     public static class DxTextureReader
     {
-        private static readonly Dx11Device _device;
-        private static readonly CreateTextureIssueWorkaround _textureCreatingWorkaround;
-
-        private delegate void CreateTextureIssueWorkaround(DeviceContext contextRef, Resource srcTextureRef, ImageFileFormat destFormat);
-        private delegate void D3DX11SaveTextureToMemory(DeviceContext contextRef, Resource srcTextureRef, ImageFileFormat destFormat, out Blob destBufOut, int flags);
-
-        static DxTextureReader ()
-        {
-            Configuration.EnableObjectTracking = true;
-            _device = Dx11Device.CreateDefaultAdapter();
-            _textureCreatingWorkaround = InitializeWorkaround();
-        }
-
-        private static CreateTextureIssueWorkaround InitializeWorkaround()
-        {
-            try
-            {
-                D3DX11SaveTextureToMemory saveMethod = (D3DX11SaveTextureToMemory)Delegate.CreateDelegate(
-                    typeof(D3DX11SaveTextureToMemory),
-                    null,
-                    typeof(Resource).Assembly.GetType("SharpDX.Direct3D11.D3DX11").GetMethod("SaveTextureToMemory", BindingFlags.Static | BindingFlags.NonPublic));
-
-                return (c, t, f) =>
-                {
-                    Blob buff;
-                    saveMethod(c, t, f, out buff, 0);
-                    buff.Dispose();
-                };
-            }
-            catch
-            {
-                return (c, t, f) =>
-                {
-                    using MemoryStream ms = new(32 * 1024);
-                    Resource.ToStream(c, t, f, ms);
-                };
-            }
-        }
-
         public static DxTexture ReadFromWpd(WpdArchiveListing listing, WpdEntry entry)
         {
             using Stream headers = listing.Accessor.ExtractHeaders();
@@ -75,173 +32,47 @@ namespace Pulse.DirectX
             if (gtex.Header.LayerCount == 0)
                 return null;
 
-            return gtex.Header.IsCubeMap
-                ? ReadTextureCubeFromStream(gtex, input)
-                : Read2DTextureFromStream(gtex, input);
+            GtexMipMapLocation mipMap = gtex.MipMapData[0];
+
+            DdsHeader header = DdsHeaderDecoder.FromGtexHeader(gtex.Header);
+            header.MipMapCount = 1;
+            header.Flags &= ~DdsHeaderFlags.MipMapCount;
+            header.SurfaceFlags = DdsHeaderSurfaceFlags.Texture;
+            header.CubemapFlags = 0;
+
+            byte[] data = new byte[mipMap.Length];
+            input.SetPosition(mipMap.Offset);
+            input.EnsureRead(data, 0, data.Length);
+
+            using MemoryStream stream = new(DdsHeaderEncoder.HeaderSize + data.Length);
+            DdsHeaderEncoder.ToFileStream(header, stream);
+            stream.Write(data, 0, data.Length);
+            stream.Position = 0;
+
+            using IImage image = Pfimage.FromStream(stream);
+            return new DxTexture(CreateBitmap(image), gtex.Header.IsCubeMap);
         }
 
-        private static DxTexture ReadTextureCubeFromStream(GtexData gtex, Stream input)
+        private static BitmapSource CreateBitmap(IImage image)
         {
-            Texture2DDescription descriptor = GetTextureCubeDescription(gtex);
-
-            using (SafeUnmanagedArray array = new(gtex.MipMapData.Sum(d => d.Length)))
+            BitmapSource bitmap;
+            switch (image.Format)
             {
-                DataRectangle[] rects = new DataRectangle[gtex.MipMapData.Length];
-                using (UnmanagedMemoryStream io = array.OpenStream(FileAccess.Write))
-                {
-                    byte[] buff = new byte[32 * 1024];
-                    for (int index = 0; index < gtex.MipMapData.Length; index++)
-                    {
-                        GtexMipMapLocation mimMap = gtex.MipMapData[index];
-                        int pitch = GetPitch(descriptor, index);
-                        rects[index] = CreateDataRectangle(array, io, pitch);
-                        input.SetPosition(mimMap.Offset);
-                        input.CopyToStream(io, mimMap.Length, buff);
-                    }
-                }
-
-                Texture2D texture = new(_device.Device, descriptor, rects);
-
-                // Workaround
-                _textureCreatingWorkaround(_device.Device.ImmediateContext, texture, ImageFileFormat.Dds);
-
-                return new(texture, descriptor);
-            }
-        }
-
-        private static DxTexture Read2DTextureFromStream(GtexData gtex, Stream input)
-        {
-            Texture2DDescription descriptor = Get2DTextureDescription(gtex);
-
-            using (SafeUnmanagedArray array = new(gtex.MipMapData.Sum(d => d.Length)))
-            {
-                DataRectangle[] rects = new DataRectangle[gtex.MipMapData.Length];
-                using (UnmanagedMemoryStream io = array.OpenStream(FileAccess.Write))
-                {
-                    byte[] buff = new byte[32 * 1024];
-                    for (int index = 0; index < gtex.MipMapData.Length; index++)
-                    {
-                        GtexMipMapLocation mimMap = gtex.MipMapData[index];
-                        int pitch = GetPitch(descriptor, index);
-                        rects[index] = CreateDataRectangle(array, io, pitch);
-                        input.SetPosition(mimMap.Offset);
-                        input.CopyToStream(io, mimMap.Length, buff);
-                    }
-                }
-                
-                Texture2D texture = new(_device.Device, descriptor, rects);
-
-                // Workaround
-                _textureCreatingWorkaround(_device.Device.ImmediateContext, texture, ImageFileFormat.Dds);
-
-                return new DxTexture(texture, descriptor);
-            }
-        }
-
-        private static int GetPitch(Texture2DDescription descriptor, int mipLevel)
-        {
-            return GetRowPitch(descriptor.Format, descriptor.Width, mipLevel);
-        }
-
-        private static void GetPitch(Texture3DDescription descriptor, int mipLevel, out int rowPitch, out int depthPitch)
-        {
-            rowPitch = GetRowPitch(descriptor.Format, descriptor.Width, mipLevel);
-            depthPitch = rowPitch * 6;
-        }
-
-        private static int GetRowPitch(Format format, int width, int mipLevel)
-        {
-            for (int i = 0; i < mipLevel; i++)
-                width >>= 1;
-
-            if (width == 0)
-                width = 1;
-
-            switch (format)
-            {
-                case Format.BC1_UNorm:
-                    return Math.Max(1, ((width + 3) / 4)) * 8;
-                case Format.BC2_UNorm_SRgb:
-                case Format.BC3_UNorm_SRgb:
-                    return Math.Max(1, ((width + 3) / 4)) * 16;
+                case ImageFormat.Rgba32:
+                    // Pfim's Rgba32 image data is laid out as B,G,R,A (the raw
+                    // little-endian order of the DDS/DXT source), so it maps
+                    // directly to WPF's Bgra32 without any channel swapping.
+                    bitmap = BitmapSource.Create(image.Width, image.Height, 96, 96, PixelFormats.Bgra32, null, image.Data, image.Stride);
+                    break;
+                case ImageFormat.Rgb24:
+                    bitmap = BitmapSource.Create(image.Width, image.Height, 96, 96, PixelFormats.Rgb24, null, image.Data, image.Stride);
+                    break;
+                default:
+                    throw new NotSupportedException($"Unsupported image format: {image.Format}");
             }
 
-            return width * FormatHelper.SizeOfInBytes(format);
-        }
-
-        private static DataRectangle CreateDataRectangle(SafeUnmanagedArray array, UnmanagedMemoryStream input, int pitch)
-        {
-            return new(new(array.DangerousGetHandle().ToInt64() + input.Position), pitch);
-        }
-
-        private static DataBox CreateDataBox(SafeUnmanagedArray array, UnmanagedMemoryStream input, int rowPitch, int depthPitch)
-        {
-            return new(new(array.DangerousGetHandle().ToInt64() + input.Position), rowPitch, depthPitch);
-        }
-
-        private static Texture2DDescription GetTextureCubeDescription(GtexData gtex)
-        {
-            if (!gtex.Header.IsCubeMap)
-                throw new("IsCubeMap: false");
-
-            return new()
-            {
-                ArraySize = 6,
-                Width = gtex.Header.Width,
-                Height = gtex.Header.Height,
-                Format = GetDxFormat(gtex.Header.Format),
-                
-                MipLevels = gtex.Header.MipMapCount,
-                
-                BindFlags = BindFlags.ShaderResource,
-                OptionFlags = ResourceOptionFlags.Shared | ResourceOptionFlags.TextureCube,
-                
-                Usage = ResourceUsage.Default,
-                CpuAccessFlags = CpuAccessFlags.None,
-                SampleDescription = new(1, 0)
-            };
-        }
-
-        private static Texture2DDescription Get2DTextureDescription(GtexData gtex)
-        {
-            if (gtex.Header.IsCubeMap)
-                throw new("IsCubeMap: true");
-
-            return new()
-            {
-                ArraySize = 1,
-                Width = gtex.Header.Width,
-                Height = gtex.Header.Height,
-                Format = GetDxFormat(gtex.Header.Format),
-                
-                MipLevels = gtex.Header.MipMapCount,
-                
-                BindFlags = BindFlags.ShaderResource,
-                OptionFlags = ResourceOptionFlags.Shared,
-                
-                Usage = ResourceUsage.Default,
-                CpuAccessFlags = CpuAccessFlags.None,
-                SampleDescription = new(1, 0)
-            };
-        }
-
-        private static Format GetDxFormat(GtexPixelFromat format)
-        {
-            switch (format)
-            {
-                case GtexPixelFromat.Dxt1:
-                    return Format.BC1_UNorm;
-                case GtexPixelFromat.Dxt3:
-                    return Format.BC2_UNorm_SRgb;
-                case GtexPixelFromat.Dxt5:
-                    return Format.BC3_UNorm_SRgb;
-                case GtexPixelFromat.A8R8G8B8:
-                    return Format.B8G8R8A8_UNorm;
-                case GtexPixelFromat.X8R8G8B8:
-                    return Format.B8G8R8X8_UNorm;
-            }
-
-            throw new NotImplementedException(format.ToString());
+            bitmap.Freeze();
+            return bitmap;
         }
 
         private static GtexData ReadGtexFromTxb(Stream headers)

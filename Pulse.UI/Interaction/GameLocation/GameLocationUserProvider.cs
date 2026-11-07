@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Threading;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using Pulse.Core;
 
 namespace Pulse.UI
@@ -14,7 +13,7 @@ namespace Pulse.UI
             if (!dispatcher.CheckAccess())
                 return dispatcher.Invoke(() => Provide());
 
-            using (CommonOpenFileDialog dlg = new("Укажите каталог Final Fantasy XIII..."))
+            using (CommonOpenFileDialog dlg = new("Select the Final Fantasy XIII directory..."))
             {
                 dlg.IsFolderPicker = true;
                 if (dlg.ShowDialog() != CommonFileDialogResult.Ok)

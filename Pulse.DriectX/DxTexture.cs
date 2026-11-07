@@ -1,79 +1,42 @@
 ﻿using System;
-using System.Collections.Generic;
-using Pulse.Core;
-using SharpDX;
-using SharpDX.Direct3D11;
-using SharpDX.Toolkit.Graphics;
-using Resource = SharpDX.Direct3D11.Resource;
+using System.Windows;
+using System.Windows.Media.Imaging;
 
 namespace Pulse.DirectX
 {
     public sealed class DxTexture : IDisposable
     {
-        private readonly Dictionary<IntPtr, IntPtr> _sharedViews = new(1);
+        public BitmapSource Bitmap { get; }
+        public bool IsCube { get; }
 
-        public readonly Resource Texture;
-        public readonly Texture2DDescription Descriptor2D;
-        public bool IsCube { get; private set; }
+        public int Width => Bitmap.PixelWidth;
+        public int Height => Bitmap.PixelHeight;
 
-        public DxTexture(Resource texture, Texture2DDescription descriptor2D)
+        public TextureDescriptor Descriptor2D => new(Width, Height);
+
+        public DxTexture(BitmapSource bitmap, bool isCube = false)
         {
-            Texture = texture;
-            Descriptor2D = descriptor2D;
-            IsCube = descriptor2D.ArraySize == 6;
+            Bitmap = bitmap ?? throw new ArgumentNullException(nameof(bitmap));
+            IsCube = isCube;
         }
 
         public void Dispose()
         {
-            DisposeSharedViews();
-            Texture.Dispose();
-        }
-
-        private void DisposeSharedViews()
-        {
-            try
-            {
-                lock (_sharedViews)
-                {
-                    foreach (IntPtr viewPointer in _sharedViews.Values)
-                        new ShaderResourceView(viewPointer).Dispose();
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex);
-            }
         }
 
         public void Draw(Device device, SpriteBatch spriteBatch, Vector2 position, Rectangle? sourceRectangle, float layerDepth)
         {
-            ShaderResourceView shaderView = GetShaderResourceView(device);
-            spriteBatch.Draw(shaderView,
-                position,
-                sourceRectangle,
-                new(0xff, 0xff, 0xff, 0xff),
-                0,
-                Vector2.Zero,
-                Vector2.One,
-                SpriteEffects.None, layerDepth);
-        }
+            Rectangle source = sourceRectangle ?? new Rectangle(0, 0, Width, Height);
 
-        private ShaderResourceView GetShaderResourceView(Device device)
-        {
-            lock (_sharedViews)
-            {
-                IntPtr viewPointer;
-                if (_sharedViews.TryGetValue(device.NativePointer, out viewPointer))
-                    return new(viewPointer);
+            int left = Math.Max(0, source.X);
+            int top = Math.Max(0, source.Y);
+            int right = Math.Min(Width, source.X + source.Width);
+            int bottom = Math.Min(Height, source.Y + source.Height);
+            if (right <= left || bottom <= top)
+                return;
 
-                using (SharpDX.DXGI.Resource resource = Texture.QueryInterface<SharpDX.DXGI.Resource>())
-                using (Resource sharedResource = device.OpenSharedResource<Resource>(resource.SharedHandle))
-                {
-                    ShaderResourceView shaderView = new(device, sharedResource);
-                    _sharedViews.Add(device.NativePointer, shaderView.NativePointer);
-                    return shaderView;
-                }
-            }
+            Rect destination = new(position.X + (left - source.X), position.Y + (top - source.Y), right - left, bottom - top);
+            spriteBatch.DrawImage(Bitmap, destination, new Int32Rect(left, top, right - left, bottom - top));
         }
 
         public void Draw(Device device, SpriteBatch spriteBatch, Vector2 position, Rectangle sourceRectangle, float layerDepth, Rectangle viewport)
@@ -104,7 +67,7 @@ namespace Pulse.DirectX
                 position.Y = 0;
             }
 
-            int oy = viewport.Height - (int)(position.Y + sourceRectangle.Height );
+            int oy = viewport.Height - (int)(position.Y + sourceRectangle.Height);
             if (oy < 0)
             {
                 sourceRectangle.Bottom += oy;

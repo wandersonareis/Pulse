@@ -9,30 +9,22 @@ namespace NAudioDemo.AudioPlaybackDemo
 
         public IWavePlayer CreateDevice(int latency)
         {
-            IWavePlayer device;
             WaveCallbackStrategy strategy = _waveOutSettingsPanel.CallbackStrategy;
-            if (strategy == WaveCallbackStrategy.Event)
-            {
-                WaveOutEvent waveOut = new()
-                {
-                    DeviceNumber = _waveOutSettingsPanel.SelectedDeviceNumber,
-                    DesiredLatency = latency
-                };
-                device = waveOut;
-            }
-            else
-            {
-                WaveCallbackInfo callbackInfo = strategy == WaveCallbackStrategy.NewWindow ? WaveCallbackInfo.NewWindow() : WaveCallbackInfo.FunctionCallback();
-                WaveOut outputDevice = new(callbackInfo)
-                {
-                    DeviceNumber = _waveOutSettingsPanel.SelectedDeviceNumber,
-                    DesiredLatency = latency
-                };
-                device = outputDevice;
-            }
-            // TODO: configurable number of buffers
 
-            return device;
+            if (strategy == WaveCallbackStrategy.NewWindow)
+            {
+                return new WaveOutWindow
+                {
+                    DeviceNumber = _waveOutSettingsPanel.SelectedDeviceNumber,
+                    DesiredLatency = latency
+                };
+            }
+
+            return new WaveOut
+            {
+                DeviceNumber = _waveOutSettingsPanel.SelectedDeviceNumber,
+                BufferMilliseconds = latency
+            };
         }
 
         public UserControl CreateSettingsPanel()

@@ -25,13 +25,13 @@ namespace Pulse.Core
                     case DirectoryInfo directoryInfo:
                         return directoryInfo.EnumerateFiles("*", SearchOption.AllDirectories).Sum(f => f.Length);
                     default:
-                        Log.Warning("[FileEx]Неизвестный наследник FileSystemInfo: {0}", fsi.GetType());
+                        Log.Warning("[FileEx] Unknown FileSystemInfo descendant: {0}", fsi.GetType());
                         return 0;
                 }
             }
             catch (Exception ex)
             {
-                Log.Warning(ex, "[FileEx]Непредвиденная ошибка.");
+                Log.Warning(ex, "[FileEx] Unexpected error.");
                 return 0;
             }
         }

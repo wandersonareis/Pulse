@@ -21,7 +21,7 @@ namespace Pulse.FS
         public short Unknown3; //* 01 00 
         public short Unknown4; //* 02 00
 
-        public short UnknownCounterOrType; //* 02 00 // Какой-то счётчик или тип
+        public short UnknownCounterOrType; //* 02 00 // Some counter or type
 
         public int[] Unknown6;
 
