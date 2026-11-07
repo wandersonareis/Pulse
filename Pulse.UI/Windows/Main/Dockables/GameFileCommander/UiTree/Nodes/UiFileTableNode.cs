@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using Pulse.Core;
 using Pulse.FS;
@@ -11,14 +12,16 @@ namespace Pulse.UI
         private readonly UiArchiveExtension _extension;
         private readonly ArchiveEntry _indices;
         private readonly ArchiveEntry _binary;
+        private readonly bool _excludeText;
 
-        public UiFileTableNode(ArchiveListing listing, UiArchiveExtension extension, ArchiveEntry indices, ArchiveEntry binary)
+        public UiFileTableNode(ArchiveListing listing, UiArchiveExtension extension, ArchiveEntry indices, ArchiveEntry binary, bool excludeText = false)
             : base(indices.Name, UiNodeType.FileTable)
         {
             _listing = listing;
             _extension = extension;
             _indices = indices;
             _binary = binary;
+            _excludeText = excludeText;
         }
 
         protected override UiNode[] ExpandChilds()
@@ -43,13 +46,17 @@ namespace Pulse.UI
             ImgbArchiveAccessor imgbAccessor = new(_listing, _indices, _binary);
             WpdArchiveListing wpdListing = WpdArchiveListingReader.Read(imgbAccessor);
 
-            UiNode[] result = new UiNode[wpdListing.Count];
-            for (int i = 0; i < result.Length; i++)
+            List<UiNode> result = new(wpdListing.Count);
+            for (int i = 0; i < wpdListing.Count; i++)
             {
                 WpdEntry xgrEntry = wpdListing[i];
-                result[i] = new UiWpdTableLeaf(xgrEntry.Name, xgrEntry, wpdListing) {Parent = this};
+
+                if (_excludeText && string.Equals(xgrEntry.Extension, "ztr", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                result.Add(new UiWpdTableLeaf(xgrEntry.Name, xgrEntry, wpdListing) {Parent = this});
             }
-            return result;
+            return result.ToArray();
         }
 
         private UiNode[] ExpandTrbChilds()

@@ -6,9 +6,11 @@
         Archive,
         FileTable,
         DataTable,
+        TextUnit,
         Directory,
         ArchiveLeaf,
         FileTableLeaf,
-        DataTableLeaf
+        DataTableLeaf,
+        TextUnitLeaf
     }
 }

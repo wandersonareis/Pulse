@@ -139,6 +139,12 @@ namespace Pulse.UI
                         yield return accessor;
                     break;
                 }
+                case UiNodeType.TextUnitLeaf:
+                {
+                    foreach (UiTextUnitLeafsAccessor accessor in GroupTextUnitLeafs(group.OfType<UiTextUnitLeaf>(), compression))
+                        yield return accessor;
+                    break;
+                }
                 default:
                 {
                     throw new NotImplementedException(group.Key.ToString());
@@ -162,6 +168,12 @@ namespace Pulse.UI
         {
             foreach (IGrouping<WdbMovieArchiveListing, UiWdbMovieLeaf> group in leafs.GroupBy(l => l.Listing))
                 yield return new(group.Key, conversion, group.Select(l => l.Entry).ToArray());
+        }
+
+        private IEnumerable<UiTextUnitLeafsAccessor> GroupTextUnitLeafs(IEnumerable<UiTextUnitLeaf> leafs, bool? compression)
+        {
+            foreach (IGrouping<ArchiveListing, UiTextUnitLeaf> group in leafs.GroupBy(l => l.Listing))
+                yield return new(group.Key, compression, group.Select(l => l).ToArray());
         }
     }
 }

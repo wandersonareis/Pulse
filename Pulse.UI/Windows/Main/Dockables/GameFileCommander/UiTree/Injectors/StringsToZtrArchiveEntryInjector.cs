@@ -43,18 +43,16 @@ namespace Pulse.UI
 
         private void Inject(ArchiveListing listing, ArchiveEntry entry, Dictionary<string, string> sourceEntries, Stream output)
         {
-            ZtrFileType type = ZtrFileType.LittleEndianUncompressedDictionary;
+            ZtrFileType type;
             ZtrFileEntry[] targetEntries;
             using (Stream original = listing.Accessor.ExtractBinary(entry))
             {
                 ZtrFileUnpacker unpacker = new(original, InteractionService.TextEncoding.Provide().Encoding);
                 targetEntries = unpacker.Unpack();
 
-                if (InteractionService.GamePart == FFXIIIGamePart.Part2)
-                {
-                    if (entry.Name.StartsWith("txtres/resident/system/txtres_", StringComparison.InvariantCultureIgnoreCase))
-                        type = ZtrFileType.BigEndianCompressedDictionary;
-                }
+                type = unpacker.Type;
+                if (type != ZtrFileType.BigEndianCompressedDictionary && type != ZtrFileType.LittleEndianUncompressedPair)
+                    type = ZtrFileType.LittleEndianUncompressedDictionary;
             }
 
             MergeEntries(sourceEntries, targetEntries);
@@ -63,7 +61,7 @@ namespace Pulse.UI
             packer.Pack(targetEntries);
         }
 
-        private static void MergeEntries(Dictionary<string, string> newEntries, ZtrFileEntry[] targetEntries)
+        public static void MergeEntries(Dictionary<string, string> newEntries, ZtrFileEntry[] targetEntries)
         {
             StringBuilder sb = new(1024);
             foreach (ZtrFileEntry entry in targetEntries)

@@ -25,7 +25,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseVSHostingProcess>true</UseVSHostingProcess>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,7 +35,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
@@ -45,7 +45,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
@@ -56,7 +56,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
@@ -69,7 +69,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <OutputPath>bin\x86\Release\</OutputPath>
@@ -80,7 +80,7 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>9</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Be.Windows.Forms.HexBox, Version=1.6.1.0, Culture=neutral, processorArchitecture=MSIL">
@@ -326,6 +326,11 @@
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiFileTableNode.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiLazyContainerNode.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiArchiveNode.cs" />
+    <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiTextUnitNode.cs" />
+    <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiTextUnitLeaf.cs" />
+    <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Accessors\UiTextUnitLeafsAccessor.cs" />
+    <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Extractors\UiTextUnitExtractor.cs" />
+    <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Injectors\UiTextUnitInjector.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\UiArchives.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\UiArchiveTreeBuilder.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiGameFileCommander.cs" />

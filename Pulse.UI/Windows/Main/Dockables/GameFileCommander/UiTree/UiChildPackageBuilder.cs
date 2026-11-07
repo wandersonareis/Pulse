@@ -13,11 +13,41 @@ namespace Pulse.UI
         private readonly ConcurrentDictionary<UiArchiveExtension, ConcurrentBag<UiNode>> _nodes = new();
         private readonly ConcurrentDictionary<string, Pair<ArchiveEntry, ArchiveEntry>> _pairs = new();
 
+        private readonly List<ZtrTextUnitFile> _textFiles = new();
+        private readonly Dictionary<string, ArchiveEntry> _textEntries = new(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _textUnitEntries = new(StringComparer.OrdinalIgnoreCase);
+        private readonly List<ZtrTextUnit> _textUnits = new();
+
         private readonly string _areasDirectory;
 
         public UiChildPackageBuilder(string areasDirectory)
         {
             _areasDirectory = areasDirectory;
+        }
+
+        public void CollectTextUnits(ArchiveListing listing)
+        {
+            if (InteractionService.GamePart != FFXIIIGamePart.Part3)
+                return;
+
+            foreach (ArchiveEntry entry in listing)
+                CollectTextUnit(listing, entry, entry.Name.ToLowerInvariant());
+
+            foreach (ZtrTextUnit unit in ZtrTextUnitScanner.Scan(_textFiles))
+            {
+                if (!unit.Files.ContainsKey("us"))
+                    continue;
+
+                _textUnits.Add(unit);
+
+                foreach (string path in unit.Files.Values)
+                    _textUnitEntries.Add(path);
+            }
+        }
+
+        public bool IsTextUnit(string entryPath)
+        {
+            return _textUnitEntries.Contains(entryPath);
         }
 
         public bool TryAdd(ArchiveListing listing, ArchiveEntry entry, string entryPath, string entryName)
@@ -37,10 +67,12 @@ namespace Pulse.UI
             return false;
         }
 
-        public UiContainerNode TryBuild()
+        public UiContainerNode TryBuild(ArchiveListing listing)
         {
-            if (_nodes.Count == 0)
+            if (_nodes.Count == 0 && _textUnits.Count == 0)
                 return null;
+
+            BuildTextUnits(listing);
 
             int counter = 0;
             UiContainerNode result = new(Lang.Dockable.GameFileCommander.ArchivesNode, UiNodeType.Group);
@@ -116,38 +148,88 @@ namespace Pulse.UI
         private bool TryAddDbFiles(ArchiveListing listing, ArchiveEntry entry, string entryPath, string entryName)
         {
             if (!entryPath.Contains("db/ai/npc/pack")) return false;
-            
+
             UiArchiveExtension extension = UiArchiveExtension.Bin;
 
-            UiFileTableNode node = new(listing, extension, entry, entry);
+            bool excludeText = InteractionService.GamePart == FFXIIIGamePart.Part3;
+
+            UiFileTableNode node = new(listing, extension, entry, entry, excludeText);
             ConcurrentBag<UiNode> container = ProvideRootNodeChilds(extension);
             container.Add(node);
             return true;
+        }
+
+        private void CollectTextUnit(ArchiveListing listing, ArchiveEntry entry, string entryPath)
+        {
+            if (!ZtrTextUnitScanner.TryGetContainerType(entryPath, out ZtrContainerType type))
+                return;
+
+            if (type == ZtrContainerType.Loose)
+            {
+                if (!entryPath.EndsWith(".ztr", StringComparison.OrdinalIgnoreCase))
+                    return;
+            }
+            else
+            {
+                if (entryPath.IndexOf("db/ai/npc/pack", StringComparison.OrdinalIgnoreCase) < 0)
+                    return;
+
+                if (!IsTextContainer(listing, entry, entryPath))
+                    return;
+            }
+
+            _textFiles.Add(new ZtrTextUnitFile(entryPath, type));
+            _textEntries[entryPath] = entry;
+        }
+
+        private static bool IsTextContainer(ArchiveListing listing, ArchiveEntry entry, string entryPath)
+        {
+            try
+            {
+                using (Stream input = listing.Accessor.ExtractBinary(entry))
+                    return ZtrContainer.TryDetect(input, entryPath, out ZtrContainerType _);
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private void BuildTextUnits(ArchiveListing listing)
+        {
+            if (_textUnits.Count == 0)
+                return;
+
+            ConcurrentBag<UiNode> container = ProvideRootNodeChilds(UiArchiveExtension.Ztr);
+            foreach (ZtrTextUnit unit in _textUnits)
+            {
+                Dictionary<string, ArchiveEntry> entries = new(StringComparer.OrdinalIgnoreCase);
+                foreach (KeyValuePair<string, string> pair in unit.Files)
+                {
+                    if (_textEntries.TryGetValue(pair.Value, out ArchiveEntry entry))
+                        entries.Add(pair.Key, entry);
+                }
+
+                container.Add(new UiTextUnitNode(listing, unit, entries));
+            }
         }
         private bool TryAddZoneListing(ArchiveListing parentListing, ArchiveEntry entry, string entryPath)
         {
             if (_areasDirectory == null)
                 return false;
 
-            if (!entryPath.StartsWith("zone/filelist"))
+            if (!entryPath.Contains("zone/filelist"))
                 return false;
 
             // Slip an empty archives
             if (entryPath.EndsWith("2"))
                 return false;
 
-            string binaryName;
-            switch (InteractionService.GamePart)
-            {
-                case FFXIIIGamePart.Part1:
-                    binaryName = $"white_{entryPath.Substring(14, 5)}_img{(entryPath.EndsWith("2") ? "2" : string.Empty)}.win32.bin";
-                    break;
-                case FFXIIIGamePart.Part2:
-                    binaryName = $"white_{entryPath.Substring(14, 6)}_img{(entryPath.EndsWith("2") ? "2" : string.Empty)}.win32.bin";
-                    break;
-                default:
-                    throw new NotSupportedException("InteractionService.GamePart");
-            }
+            string key = ExtractZoneKey(entryPath);
+            if (key == null)
+                return false;
+
+            string binaryName = $"white_{key}_img.win32.bin";
 
             string binaryPath = Path.Combine(_areasDirectory, binaryName);
             if (!File.Exists(binaryPath))
@@ -158,6 +240,25 @@ namespace Pulse.UI
             container.Add(new UiArchiveNode(accessor, parentListing));
 
             return true;
+        }
+
+        private static string ExtractZoneKey(string entryPath)
+        {
+            const string prefix = "filelist_";
+
+            int index = entryPath.LastIndexOf(prefix, StringComparison.OrdinalIgnoreCase);
+            if (index < 0)
+                return null;
+
+            int start = index + prefix.Length;
+            int end = entryPath.IndexOf('.', start);
+            if (end < 0)
+                end = entryPath.Length;
+
+            if (end <= start)
+                return null;
+
+            return entryPath.Substring(start, end - start);
         }
 
         private bool TryAddMoviesListing(ArchiveListing parentListing, ArchiveEntry entry, string entryName)

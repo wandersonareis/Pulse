@@ -14,6 +14,7 @@ namespace Pulse.UI
         public readonly string MovieDirectory;
         public readonly string UpdatesDirectory;
         public readonly string AreasDirectory;
+        public readonly string DlcDirectory;
 
         private const string Part1ResourceDirName = "white_data";
         private const string Part2ResourceDirName = "alba_data";
@@ -29,6 +30,7 @@ namespace Pulse.UI
             MovieDirectory = Path.Combine(resourcePath, "movie");
             AreasDirectory = Path.Combine(resourcePath, "zone");
             UpdatesDirectory = Path.Combine(resourcePath, "udp");
+            DlcDirectory = Path.Combine(resourcePath, "dlc");
         }
 
         public static string ResourceDirName
@@ -103,11 +105,44 @@ namespace Pulse.UI
         {
             if (Directory.Exists(SystemDirectory))
                 foreach (string path in Directory.EnumerateFiles(SystemDirectory, "filelist*.bin"))
+                {
+                    if (IsExcludedListing(path))
+                        continue;
+
                     yield return path;
+                }
 
             if (Directory.Exists(UpdatesDirectory))
                 foreach (string path in Directory.EnumerateFiles(UpdatesDirectory, "filelist*.bin"))
+                {
+                    if (IsExcludedListing(path))
+                        continue;
+
                     yield return path;
+                }
+
+            if (InteractionService.GamePart != FFXIIIGamePart.Part3)
+                yield break;
+
+            if (!Directory.Exists(DlcDirectory))
+                yield break;
+
+            foreach (string directory in Directory.EnumerateDirectories(DlcDirectory))
+            {
+                foreach (string path in Directory.EnumerateFiles(directory, "filelist*.bin"))
+                {
+                    if (IsExcludedListing(path))
+                        continue;
+
+                    yield return path;
+                }
+            }
+        }
+
+        private static bool IsExcludedListing(string path)
+        {
+            string name = Path.GetFileName(path);
+            return string.Equals(name, "filelist.info.bin", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

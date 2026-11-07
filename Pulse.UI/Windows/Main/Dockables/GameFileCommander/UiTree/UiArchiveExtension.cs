@@ -10,5 +10,6 @@
         Trb,
         Bin,
         Wdb,
+        Ztr,
     }
 }

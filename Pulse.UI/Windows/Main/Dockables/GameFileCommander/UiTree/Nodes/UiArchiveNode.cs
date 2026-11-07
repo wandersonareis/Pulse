@@ -28,8 +28,6 @@ namespace Pulse.UI
 
         protected override UiNode[] ExpandChilds()
         {
-            UiChildPackageBuilder childPackages = new(InteractionService.GameLocation.Provide().AreasDirectory);
-
             switch (InteractionService.GamePart)
             {
                 case FFXIIIGamePart.Part1:
@@ -50,6 +48,9 @@ namespace Pulse.UI
             HashSet<string> set = new();
             Dictionary<string, UiNode> dic = new(_listing.Count * 2);
 
+            UiChildPackageBuilder childPackages = new(InteractionService.GameLocation.Provide().AreasDirectory);
+            childPackages.CollectTextUnits(_listing);
+
             foreach (ArchiveEntry entry in _listing)
             {
                 UiNode parent = this;
@@ -60,6 +61,19 @@ namespace Pulse.UI
                 if (index > 0)
                 {
                     name = entryPath.Substring(index + 1);
+                }
+                else
+                {
+                    name = entryPath;
+                }
+
+                childPackages.TryAdd(_listing, entry, entryPath, name);
+
+                if (childPackages.IsTextUnit(entryPath))
+                    continue;
+
+                if (index > 0)
+                {
                     string directoryPath = entryPath.Substring(0, index);
                     set.Add(directoryPath);
                     if (!dic.TryGetValue(directoryPath, out parent))
@@ -73,18 +87,12 @@ namespace Pulse.UI
                         dic.Add(directoryPath, parent);
                     }
                 }
-                else
-                {
-                    name = entryPath;
-                }
 
                 if (!dic.ContainsKey(entryPath))
                     dic.Add(entryPath, new UiArchiveLeaf(name, entry, _listing) {Parent = parent});
-
-                childPackages.TryAdd(_listing, entry, entryPath, name);
             }
 
-            UiContainerNode packagesNode = childPackages.TryBuild();
+            UiContainerNode packagesNode = childPackages.TryBuild(_listing);
             if (packagesNode != null)
             {
                 packagesNode.Parent = this;
