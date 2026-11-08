@@ -6,15 +6,17 @@ namespace Pulse.UI
     {
         private readonly ArchiveListing _listing;
         private readonly ArchiveEntry[] _leafs;
+        private readonly ArchiveEntry[] _injectableLeafs;
         private readonly bool? _conversion;
         private readonly bool? _compression;
 
         public UiNodeType Type => UiNodeType.Archive;
 
-        public UiArciveLeafsAccessor(ArchiveListing listing, bool? conversion, bool? compression, params ArchiveEntry[] leafs)
+        public UiArciveLeafsAccessor(ArchiveListing listing, bool? conversion, bool? compression, ArchiveEntry[] leafs, ArchiveEntry[] injectableLeafs)
         {
             _listing = listing;
             _leafs = leafs;
+            _injectableLeafs = injectableLeafs;
             _conversion = conversion;
             _compression = compression;
         }
@@ -27,7 +29,7 @@ namespace Pulse.UI
 
         public void Inject(IUiInjectionSource source, UiInjectionManager manager)
         {
-            using (UiArchiveInjector injector = new(_listing, _leafs, _conversion, _compression, source))
+            using (UiArchiveInjector injector = new(_listing, _injectableLeafs, _conversion, _compression, source))
                 injector.Inject(manager);
         }
     }

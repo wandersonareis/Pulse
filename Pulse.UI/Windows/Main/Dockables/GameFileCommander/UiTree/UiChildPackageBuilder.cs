@@ -10,6 +10,13 @@ namespace Pulse.UI
 {
     public sealed class UiChildPackageBuilder
     {
+        private enum DbFileKind
+        {
+            Unknown,
+            ZtrContainer,
+            WpdTable,
+        }
+
         private readonly ConcurrentDictionary<UiArchiveExtension, ConcurrentBag<UiNode>> _nodes = new();
         private readonly ConcurrentDictionary<string, Pair<ArchiveEntry, ArchiveEntry>> _pairs = new();
 
@@ -17,12 +24,15 @@ namespace Pulse.UI
         private readonly Dictionary<string, ArchiveEntry> _textEntries = new(StringComparer.OrdinalIgnoreCase);
         private readonly HashSet<string> _textUnitEntries = new(StringComparer.OrdinalIgnoreCase);
         private readonly List<ZtrTextUnit> _textUnits = new();
+        private readonly Dictionary<string, DbFileKind> _dbFileKinds = new(StringComparer.OrdinalIgnoreCase);
 
         private readonly string _areasDirectory;
+        private readonly bool _allowZones;
 
-        public UiChildPackageBuilder(string areasDirectory)
+        public UiChildPackageBuilder(string areasDirectory, bool allowZones = true)
         {
             _areasDirectory = areasDirectory;
+            _allowZones = allowZones;
         }
 
         public void CollectTextUnits(ArchiveListing listing)
@@ -50,18 +60,20 @@ namespace Pulse.UI
             return _textUnitEntries.Contains(entryPath);
         }
 
-        public bool TryAdd(ArchiveListing listing, ArchiveEntry entry, string entryPath, string entryName)
+        public bool TryAdd(ArchiveListing listing, ArchiveEntry entry, string entryPath, string entryName, out UiNode childNode)
         {
-            if (TryAddZoneListing(listing, entry, entryPath))
+            childNode = null;
+
+            if (TryAddZoneListing(listing, entry, entryPath, out childNode))
+                return true;
+
+            if (TryAddDbFiles(listing, entry, entryPath, entryName, out childNode))
                 return true;
 
             if (TryAddMoviesListing(listing, entry, entryName))
                 return true;
 
             if (TryAddImgbPair(listing, entry, entryPath, entryName))
-                return true;
-
-            if (TryAddDbFiles(listing, entry, entryPath, entryName))
                 return true;
 
             return false;
@@ -145,18 +157,74 @@ namespace Pulse.UI
             return _pairs.GetOrAdd(entryPathWithoutExtension, p => new());
         }
 
-        private bool TryAddDbFiles(ArchiveListing listing, ArchiveEntry entry, string entryPath, string entryName)
+        private bool TryAddDbFiles(ArchiveListing listing, ArchiveEntry entry, string entryPath, string entryName, out UiNode childNode)
         {
+            childNode = null;
+
             if (!entryPath.Contains("db/ai/npc/pack")) return false;
+
+            if (InteractionService.GamePart == FFXIIIGamePart.Part3)
+            {
+                if (DetectDbFileKind(listing, entry, entryPath) != DbFileKind.ZtrContainer)
+                    return false;
+
+                childNode = new UiFileTableNode(listing, UiArchiveExtension.Bin, entry, entry, false, entryName);
+                return true;
+            }
 
             UiArchiveExtension extension = UiArchiveExtension.Bin;
 
-            bool excludeText = InteractionService.GamePart == FFXIIIGamePart.Part3;
-
-            UiFileTableNode node = new(listing, extension, entry, entry, excludeText);
+            UiFileTableNode node = new(listing, extension, entry, entry, false);
             ConcurrentBag<UiNode> container = ProvideRootNodeChilds(extension);
             container.Add(node);
             return true;
+        }
+
+        private DbFileKind DetectDbFileKind(ArchiveListing listing, ArchiveEntry entry, string entryPath)
+        {
+            if (_dbFileKinds.TryGetValue(entryPath, out DbFileKind cached))
+                return cached;
+
+            DbFileKind kind = DbFileKind.Unknown;
+
+            try
+            {
+                using (Stream input = listing.Accessor.ExtractBinary(entry))
+                {
+                    if (ZtrContainer.TryDetect(input, entryPath, out ZtrContainerType _))
+                    {
+                        kind = DbFileKind.ZtrContainer;
+                    }
+                    else if (input.CanSeek && TryReadWpdHeader(input, out WpdHeader _))
+                    {
+                        kind = DbFileKind.WpdTable;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                kind = DbFileKind.Unknown;
+            }
+
+            _dbFileKinds[entryPath] = kind;
+            return kind;
+        }
+
+        private static bool TryReadWpdHeader(Stream input, out WpdHeader header)
+        {
+            header = null;
+
+            try
+            {
+                input.Position = 0;
+                header = ZtrContainer.ReadHeader(input);
+            }
+            catch (Exception)
+            {
+                header = null;
+            }
+
+            return header != null && header.Entries != null && header.Entries.Length > 0;
         }
 
         private void CollectTextUnit(ArchiveListing listing, ArchiveEntry entry, string entryPath)
@@ -164,35 +232,14 @@ namespace Pulse.UI
             if (!ZtrTextUnitScanner.TryGetContainerType(entryPath, out ZtrContainerType type))
                 return;
 
-            if (type == ZtrContainerType.Loose)
-            {
-                if (!entryPath.EndsWith(".ztr", StringComparison.OrdinalIgnoreCase))
-                    return;
-            }
-            else
-            {
-                if (entryPath.IndexOf("db/ai/npc/pack", StringComparison.OrdinalIgnoreCase) < 0)
-                    return;
+            if (type != ZtrContainerType.Loose)
+                return;
 
-                if (!IsTextContainer(listing, entry, entryPath))
-                    return;
-            }
+            if (!entryPath.EndsWith(".ztr", StringComparison.OrdinalIgnoreCase))
+                return;
 
-            _textFiles.Add(new ZtrTextUnitFile(entryPath, type));
+            _textFiles.Add(ZtrTextUnitFile.ProvideLoose(entryPath));
             _textEntries[entryPath] = entry;
-        }
-
-        private static bool IsTextContainer(ArchiveListing listing, ArchiveEntry entry, string entryPath)
-        {
-            try
-            {
-                using (Stream input = listing.Accessor.ExtractBinary(entry))
-                    return ZtrContainer.TryDetect(input, entryPath, out ZtrContainerType _);
-            }
-            catch (Exception)
-            {
-                return false;
-            }
         }
 
         private void BuildTextUnits(ArchiveListing listing)
@@ -213,8 +260,13 @@ namespace Pulse.UI
                 container.Add(new UiTextUnitNode(listing, unit, entries));
             }
         }
-        private bool TryAddZoneListing(ArchiveListing parentListing, ArchiveEntry entry, string entryPath)
+        private bool TryAddZoneListing(ArchiveListing parentListing, ArchiveEntry entry, string entryPath, out UiNode childNode)
         {
+            childNode = null;
+
+            if (!_allowZones)
+                return false;
+
             if (_areasDirectory == null)
                 return false;
 
@@ -236,8 +288,7 @@ namespace Pulse.UI
                 return false;
 
             ArchiveAccessor accessor = parentListing.Accessor.CreateDescriptor(binaryPath, entry);
-            ConcurrentBag<UiNode> container = ProvideRootNodeChilds(UiArchiveExtension.Bin);
-            container.Add(new UiArchiveNode(accessor, parentListing));
+            childNode = new UiArchiveNode(accessor, parentListing, false);
 
             return true;
         }

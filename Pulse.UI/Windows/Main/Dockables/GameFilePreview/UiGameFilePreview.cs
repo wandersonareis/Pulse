@@ -60,7 +60,19 @@ namespace Pulse.UI
             }
 
             if (leaf is UiArchiveLeaf archiveLeaf)
+            {
                 OnArchiveLeafSelected(archiveLeaf);
+                return;
+            }
+
+            if (leaf is UiZtrTableLeaf ztrRecordLeaf)
+            {
+                OnZtrRecordLeafSelected(ztrRecordLeaf);
+                return;
+            }
+
+            if (leaf is UiTextUnitLeaf textUnitLeaf)
+                _ztr.Show(textUnitLeaf.Listing, textUnitLeaf.Entry);
         }
 
         private void OnWpdLeafSelected(UiWpdTableLeaf wpdLeaf)
@@ -80,10 +92,21 @@ namespace Pulse.UI
             }
         }
 
+        private void OnZtrRecordLeafSelected(UiZtrTableLeaf ztrRecordLeaf)
+        {
+            _ztr.Show(ztrRecordLeaf.Listing, ztrRecordLeaf.Entry);
+        }
+
         private void OnArchiveLeafSelected(UiArchiveLeaf archiveLeaf)
         {
             ArchiveEntry entry = archiveLeaf.Entry;
             ArchiveListing listing = archiveLeaf.Listing;
+
+            if (archiveLeaf.IsTextUnit)
+            {
+                _ztr.Show(listing, entry);
+                return;
+            }
 
             switch (Path.GetExtension(entry.Name))
             {

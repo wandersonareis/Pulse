@@ -98,7 +98,7 @@ namespace Pulse.UI
                     packed = output.ToArray();
                 }
 
-                using (Stream destination = OpenOutputStream(entry))
+                using (Stream destination = OpenOutputStream(entry, container.Length))
                 using (MemoryStream original = new(container))
                     ZtrContainer.WriteText(destination, original, packed);
             }
@@ -111,9 +111,9 @@ namespace Pulse.UI
             return _listing.Accessor.ExtractBinary(entry);
         }
 
-        private Stream OpenOutputStream(ArchiveEntry entry)
+        private Stream OpenOutputStream(ArchiveEntry entry, int size)
         {
-            MemoryStream ms = new((int)(entry.UncompressedSize * 1.3));
+            MemoryStream ms = new(size > 0 ? size : 1024);
 
             DisposableStream writer = new(ms);
             writer.BeforeDispose.Add(new DisposableAction(() => _listing.Accessor.OnWritingCompleted(entry, ms, _compression)));

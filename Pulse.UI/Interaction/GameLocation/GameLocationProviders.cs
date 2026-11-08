@@ -7,8 +7,9 @@ namespace Pulse.UI
         public GameLocationProviders()
             : base(Lang.InfoProvider.GameLocation.Title, Lang.InfoProvider.GameLocation.Description)
         {
-            Capacity = 3;
+            Capacity = 4;
             Add(new GameLocationConfigurationProvider());
+            Add(new GameLocationSteamLibraryProvider());
             Add(new GameLocationSteamRegistryProvider());
             Add(new GameLocationUserProvider());
         }

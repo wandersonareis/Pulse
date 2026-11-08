@@ -145,6 +145,12 @@ namespace Pulse.UI
                         yield return accessor;
                     break;
                 }
+                case UiNodeType.ZtrRecordLeaf:
+                {
+                    foreach (UiZtrRecordLeafsAccessor accessor in GroupZtrRecordLeafs(group.OfType<UiZtrTableLeaf>(), compression))
+                        yield return accessor;
+                    break;
+                }
                 default:
                 {
                     throw new NotImplementedException(group.Key.ToString());
@@ -155,7 +161,15 @@ namespace Pulse.UI
         private IEnumerable<UiArciveLeafsAccessor> GroupArchiveLeafs(IEnumerable<UiArchiveLeaf> leafs, bool? conversion, bool? compression)
         {
             foreach (IGrouping<ArchiveListing, UiArchiveLeaf> group in leafs.GroupBy(l => l.Listing))
-                yield return new(group.Key, conversion, compression, group.Select(l => l.Entry).ToArray());
+            {
+                UiArchiveLeaf[] items = group.ToArray();
+                yield return new(
+                    group.Key,
+                    conversion,
+                    compression,
+                    items.Select(l => l.Entry).ToArray(),
+                    items.Where(l => !l.IsTextUnit).Select(l => l.Entry).ToArray());
+            }
         }
 
         private IEnumerable<UiWpdLeafsAccessor> GroupWpdLeafs(IEnumerable<UiWpdTableLeaf> leafs, bool? conversion)
@@ -173,6 +187,12 @@ namespace Pulse.UI
         private IEnumerable<UiTextUnitLeafsAccessor> GroupTextUnitLeafs(IEnumerable<UiTextUnitLeaf> leafs, bool? compression)
         {
             foreach (IGrouping<ArchiveListing, UiTextUnitLeaf> group in leafs.GroupBy(l => l.Listing))
+                yield return new(group.Key, compression, group.Select(l => l).ToArray());
+        }
+
+        private IEnumerable<UiZtrRecordLeafsAccessor> GroupZtrRecordLeafs(IEnumerable<UiZtrTableLeaf> leafs, bool? compression)
+        {
+            foreach (IGrouping<WpdArchiveListing, UiZtrTableLeaf> group in leafs.GroupBy(l => l.Listing))
                 yield return new(group.Key, compression, group.Select(l => l).ToArray());
         }
     }

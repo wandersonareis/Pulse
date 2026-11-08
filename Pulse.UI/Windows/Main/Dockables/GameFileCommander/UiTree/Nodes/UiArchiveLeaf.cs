@@ -8,6 +8,7 @@ namespace Pulse.UI
     {
         public ArchiveEntry Entry { get; }
         public ArchiveListing Listing { get; }
+        public bool IsTextUnit { get; init; }
 
         public UiArchiveLeaf(string name, ArchiveEntry entry, ArchiveListing listing)
             : base(name, UiNodeType.ArchiveLeaf)

@@ -194,6 +194,8 @@ namespace Pulse.Core
                 public static readonly string ConfigurationDescription = GetGameLocation("ConfigurationDescription");
                 public static readonly string SteamRegistryTitle = GetGameLocation("SteamRegistryTitle");
                 public static readonly string SteamRegistryDescription = GetGameLocation("SteamRegistryDescription");
+                public static readonly string SteamLibraryTitle = GetGameLocation("SteamLibraryTitle");
+                public static readonly string SteamLibraryDescription = GetGameLocation("SteamLibraryDescription");
                 public static readonly string UserTitle = GetGameLocation("UserTitle");
                 public static readonly string UserDescription = GetGameLocation("UserDescription");
             }

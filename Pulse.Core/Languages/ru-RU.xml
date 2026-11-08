@@ -43,6 +43,8 @@
       ConfigurationDescription="Использует информацию, сохранённую в настроечном файле."
       SteamRegistryTitle="Из реестр (Steam)"
       SteamRegistryDescription="Получает информацию из реестра Windows, используя данные Steam."
+      SteamLibraryTitle="Из библиотеки Steam"
+      SteamLibraryDescription="Ищет игру в папках библиотек Steam."
       UserTitle="Ручной выбор"
       UserDescription="Позволяет вручную выбрать каталог, в который была установлена игра."
     />

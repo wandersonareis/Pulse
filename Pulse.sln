@@ -16,6 +16,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Yusnaan", "Yusnaan\Yusnaan.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DifferenceEngine", "DifferenceEngine\DifferenceEngine.csproj", "{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pulse.Tests", "Pulse.Tests\Pulse.Tests.csproj", "{3F2C6A17-5B84-4E2D-9A63-7C1D8E5B4A92}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C35DD1A9-03A4-4F46-87F2-87A3C8DF83B8}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
@@ -55,6 +57,10 @@ Global
 		{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8AE4897A-EA74-49B1-BA55-D892C27AF9C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F2C6A17-5B84-4E2D-9A63-7C1D8E5B4A92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F2C6A17-5B84-4E2D-9A63-7C1D8E5B4A92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F2C6A17-5B84-4E2D-9A63-7C1D8E5B4A92}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F2C6A17-5B84-4E2D-9A63-7C1D8E5B4A92}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

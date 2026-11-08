@@ -43,6 +43,8 @@
       ConfigurationDescription = "Uses the information stored in the configuration file."
       SteamRegistryTitle = "From registry (Steam)"
       SteamRegistryDescription = "Retrieves information from Windows registry, using data from Steam."
+      SteamLibraryTitle = "From Steam library"
+      SteamLibraryDescription = "Searches for the game in the Steam library folders."
       UserTitle = "Manual"
       UserDescription = "Allows you to manually select the directory to which you have installed the game."
     />

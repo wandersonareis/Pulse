@@ -12,13 +12,15 @@ namespace Pulse.UI
     {
         private readonly ArchiveAccessor _accessor;
         private readonly ArchiveListing _parentListing;
+        private readonly bool _allowZones;
         private ArchiveListing _listing;
 
-        public UiArchiveNode(ArchiveAccessor accessor, ArchiveListing parentListing)
+        public UiArchiveNode(ArchiveAccessor accessor, ArchiveListing parentListing, bool allowZones = true)
             : base(accessor.ListingEntry.Name, UiNodeType.Archive)
         {
             _accessor = accessor;
             _parentListing = parentListing;
+            _allowZones = allowZones;
         }
 
         protected override ImageSource GetIcon()
@@ -48,33 +50,36 @@ namespace Pulse.UI
             HashSet<string> set = new();
             Dictionary<string, UiNode> dic = new(_listing.Count * 2);
 
-            UiChildPackageBuilder childPackages = new(InteractionService.GameLocation.Provide().AreasDirectory);
+            UiChildPackageBuilder childPackages = new(InteractionService.GameLocation.Provide().AreasDirectory, _allowZones);
             childPackages.CollectTextUnits(_listing);
 
             foreach (ArchiveEntry entry in _listing)
             {
                 UiNode parent = this;
 
-                string name;
                 string entryPath = entry.Name.ToLowerInvariant();
-                int index = entryPath.LastIndexOf(Path.AltDirectorySeparatorChar);
+                string treePath = NormalizeEntryPath(entryPath);
+                if (treePath == null)
+                    continue;
+
+                int index = treePath.LastIndexOf(Path.AltDirectorySeparatorChar);
+                string name;
                 if (index > 0)
                 {
-                    name = entryPath.Substring(index + 1);
+                    name = treePath.Substring(index + 1);
                 }
                 else
                 {
-                    name = entryPath;
+                    name = treePath;
                 }
 
-                childPackages.TryAdd(_listing, entry, entryPath, name);
+                childPackages.TryAdd(_listing, entry, entryPath, name, out UiNode childNode);
 
-                if (childPackages.IsTextUnit(entryPath))
-                    continue;
+                bool isTextUnit = childPackages.IsTextUnit(entryPath);
 
                 if (index > 0)
                 {
-                    string directoryPath = entryPath.Substring(0, index);
+                    string directoryPath = treePath.Substring(0, index);
                     set.Add(directoryPath);
                     if (!dic.TryGetValue(directoryPath, out parent))
                     {
@@ -88,8 +93,20 @@ namespace Pulse.UI
                     }
                 }
 
-                if (!dic.ContainsKey(entryPath))
-                    dic.Add(entryPath, new UiArchiveLeaf(name, entry, _listing) {Parent = parent});
+                if (dic.ContainsKey(treePath))
+                    continue;
+
+                if (childNode != null)
+                {
+                    if (childNode is UiArchiveNode zoneNode)
+                        zoneNode.Name = PathEx.ChangeMultiDotExtension(name, null);
+
+                    childNode.Parent = parent;
+                    dic.Add(treePath, childNode);
+                    continue;
+                }
+
+                dic.Add(treePath, new UiArchiveLeaf(name, entry, _listing) {Parent = parent, IsTextUnit = isTextUnit});
             }
 
             UiContainerNode packagesNode = childPackages.TryBuild(_listing);
@@ -143,6 +160,38 @@ namespace Pulse.UI
             }
 
             return result;
+        }
+
+        private static string NormalizeEntryPath(string entryPath)
+        {
+            if (string.IsNullOrEmpty(entryPath))
+                return null;
+
+            string[] parts = entryPath.Replace('\\', '/').Split('/');
+            List<string> result = new(parts.Length);
+
+            foreach (string part in parts)
+            {
+                if (part.Length == 0)
+                    continue;
+
+                if (part == ".")
+                    continue;
+
+                if (part == "..")
+                {
+                    if (result.Count > 0)
+                        result.RemoveAt(result.Count - 1);
+                    continue;
+                }
+
+                result.Add(part);
+            }
+
+            if (result.Count == 0)
+                return null;
+
+            return string.Join("/", result);
         }
     }
 }

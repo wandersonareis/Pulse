@@ -81,6 +81,7 @@
     <Compile Include="Interaction\GameLocation\GameLocationConfigurationProvider.cs" />
     <Compile Include="Interaction\GameLocation\GameLocationProviders.cs" />
     <Compile Include="Interaction\GameLocation\GameLocationSteamRegistryProvider.cs" />
+    <Compile Include="Interaction\GameLocation\GameLocationSteamLibraryProvider.cs" />
     <Compile Include="Interaction\GameLocation\GameLocationUserProvider.cs" />
     <Compile Include="Interaction\CommonDialogs.cs" />
     <Compile Include="Interaction\GameLocation\GameLocationInfo.cs" />
@@ -158,12 +159,14 @@
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiContainerNode.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiNodeComparer.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiArchiveLeaf.cs" />
+    <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiZtrTableLeaf.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiFileTableNode.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiLazyContainerNode.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiArchiveNode.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiTextUnitNode.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiTextUnitLeaf.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Accessors\UiTextUnitLeafsAccessor.cs" />
+    <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Accessors\UiZtrRecordLeafsAccessor.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Extractors\UiTextUnitExtractor.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Injectors\UiTextUnitInjector.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\UiArchives.cs" />
@@ -181,6 +184,8 @@
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Accessors\UiWpdLeafsAccessor.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Nodes\UiWpdTableLeaf.cs" />
     <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Extractors\ZtrToStringsArchiveEntryExtractor.cs" />
+    <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Extractors\UiZtrRecordExtractor.cs" />
+    <Compile Include="Windows\Main\Dockables\GameFileCommander\UiTree\Injectors\UiZtrRecordInjector.cs" />
     <Compile Include="Windows\Main\Dockables\GameFilePreview\UiGameFilePreviewZtr.cs" />
     <Compile Include="Windows\Main\Dockables\GameFilePreview\UiGameFilePreviewYkd.cs" />
     <Compile Include="Windows\Main\Dockables\UiMainDockable.cs" />

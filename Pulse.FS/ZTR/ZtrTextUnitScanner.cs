@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Pulse.FS
@@ -80,6 +81,139 @@ namespace Pulse.FS
             }
 
             return false;
+        }
+
+        public static ZtrTextUnitFile ProvideTextUnitFile(string path)
+        {
+            if (string.IsNullOrEmpty(path))
+                return null;
+
+            if (!TryGetContainerType(path, out ZtrContainerType type))
+                return null;
+
+            return type == ZtrContainerType.Loose
+                ? ZtrTextUnitFile.ProvideLoose(path)
+                : ZtrTextUnitFile.ProvideContainer(path, null);
+        }
+
+        public static ZtrContainerType ResolveContainerType(string path)
+        {
+            return TryGetContainerType(path, out ZtrContainerType type) ? type : ZtrContainerType.Loose;
+        }
+
+        public static string ResolveInnerZtrName(byte[] containerBytes, string containerPath)
+        {
+            if (containerBytes == null || containerBytes.Length < ZtrContainer.HeaderSize)
+                return null;
+
+            using (MemoryStream input = new(containerBytes))
+                return ResolveInnerZtrName(input, containerPath);
+        }
+
+        public static string ResolveInnerZtrName(Stream container, string containerPath)
+        {
+            if (container == null || !container.CanSeek)
+                return null;
+
+            long position = container.Position;
+
+            try
+            {
+                container.Position = 0;
+
+                if (!TryReadWpdHeader(container, out WpdHeader header))
+                    return null;
+
+                WpdEntry entry = ZtrContainer.FindZtrEntry(header);
+                if (entry == null)
+                    return null;
+
+                return entry.NameWithoutExtension + ".ztr";
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+            finally
+            {
+                container.Position = position;
+            }
+        }
+
+        private static bool TryReadWpdHeader(Stream input, out WpdHeader header)
+        {
+            header = null;
+
+            byte[] magic = new byte[4];
+            if (ReadExact(input, magic, 4) != 4)
+                return false;
+
+            if (magic[0] != 0x57 || magic[1] != 0x50 || magic[2] != 0x44 || magic[3] != 0x00)
+                return false;
+
+            byte[] head = new byte[12];
+            if (ReadExact(input, head, 12) != 12)
+                return false;
+
+            int count = (head[0] << 24) | (head[1] << 16) | (head[2] << 8) | head[3];
+            if (count < 0 || count > 0x10000)
+                return false;
+
+            input.Position = ZtrContainer.HeaderSize;
+
+            byte[] table = new byte[count * ZtrContainer.RecordSize];
+            if (count > 0 && ReadExact(input, table, table.Length) != table.Length)
+                return false;
+
+            header = new WpdHeader
+            {
+                Magic = WpdHeader.MagicNumber,
+                Count = count,
+                Entries = new WpdEntry[count]
+            };
+
+            for (int i = 0; i < count; i++)
+            {
+                int offset = i * ZtrContainer.RecordSize;
+
+                int nameLength = 0;
+                while (nameLength < 16 && table[offset + nameLength] != 0)
+                    nameLength++;
+
+                string name = System.Text.Encoding.ASCII.GetString(table, offset, nameLength);
+                int value = ReadBigInt32(table, offset + 16);
+                int length = ReadBigInt32(table, offset + 20);
+
+                int extensionLength = 0;
+                while (extensionLength < 8 && table[offset + 24 + extensionLength] != 0)
+                    extensionLength++;
+
+                string extension = System.Text.Encoding.ASCII.GetString(table, offset + 24, extensionLength);
+
+                header.Entries[i] = new(i, name, value, length, extension);
+            }
+
+            return true;
+        }
+
+        private static int ReadBigInt32(byte[] data, int offset)
+        {
+            return (int)((uint)(data[offset] << 24) | (uint)(data[offset + 1] << 16) | (uint)(data[offset + 2] << 8) | data[offset + 3]);
+        }
+
+        private static int ReadExact(Stream input, byte[] buffer, int size)
+        {
+            int total = 0;
+            while (total < size)
+            {
+                int readed = input.Read(buffer, total, size - total);
+                if (readed <= 0)
+                    break;
+
+                total += readed;
+            }
+
+            return total;
         }
 
         public static ZtrTextUnit[] Scan(IEnumerable<ZtrTextUnitFile> files, Func<string, string> typeResolver = null)

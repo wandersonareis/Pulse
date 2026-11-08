@@ -11,6 +11,7 @@
         ArchiveLeaf,
         FileTableLeaf,
         DataTableLeaf,
-        TextUnitLeaf
+        TextUnitLeaf,
+        ZtrRecordLeaf
     }
 }

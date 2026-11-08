@@ -15,7 +15,12 @@ namespace Pulse.UI
         private readonly bool _excludeText;
 
         public UiFileTableNode(ArchiveListing listing, UiArchiveExtension extension, ArchiveEntry indices, ArchiveEntry binary, bool excludeText = false)
-            : base(indices.Name, UiNodeType.FileTable)
+            : this(listing, extension, indices, binary, excludeText, null)
+        {
+        }
+
+        public UiFileTableNode(ArchiveListing listing, UiArchiveExtension extension, ArchiveEntry indices, ArchiveEntry binary, bool excludeText, string displayName)
+            : base(displayName ?? indices.Name, UiNodeType.FileTable)
         {
             _listing = listing;
             _extension = extension;
@@ -54,7 +59,13 @@ namespace Pulse.UI
                 if (_excludeText && string.Equals(xgrEntry.Extension, "ztr", StringComparison.OrdinalIgnoreCase))
                     continue;
 
-                result.Add(new UiWpdTableLeaf(xgrEntry.Name, xgrEntry, wpdListing) {Parent = this});
+                bool isZtrRecord = string.Equals(xgrEntry.Extension, "ztr", StringComparison.OrdinalIgnoreCase);
+
+                string ztrDisplayName = Path.GetFileName(PathEx.ChangeMultiDotExtension(_indices.Name, ".ztr"));
+
+                result.Add(isZtrRecord
+                    ? new UiZtrTableLeaf(ztrDisplayName, xgrEntry, wpdListing) {Parent = this}
+                    : new UiWpdTableLeaf(xgrEntry.Name, xgrEntry, wpdListing) {Parent = this});
             }
             return result.ToArray();
         }

@@ -119,6 +119,10 @@
     <Compile Include="ZTR\ZtrFileType.cs" />
     <Compile Include="ZTR\ZtrFileUnpacker.cs" />
     <Compile Include="ZTR\ZtrTextReader.cs" />
+    <Compile Include="Steam\SteamKeyValues.cs" />
+    <Compile Include="Steam\SteamPath.cs" />
+    <Compile Include="Steam\SteamLibraryFolders.cs" />
+    <Compile Include="Steam\SteamAppManifest.cs" />
     <Content Include="SCD\_insert.cpp" />
     <Content Include="IMGB\Sections\Partially Stolen.txt" />
   </ItemGroup>
