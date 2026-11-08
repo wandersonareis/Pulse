@@ -1,40 +1,35 @@
 # Pulse
 
-Final Fantasy XIII resource editor
+Final Fantasy XIII resource editor.
 
+## Supported games
 
-# Files with problems
+- Final Fantasy XIII
+- Final Fantasy XIII-2
+- Lightning Returns: Final Fantasy XIII
 
-auto_yus_us.bin
-resident/system/txtres.ztr
+## Text
 
-I have a problem with the **auto_yus_us.bin** file.
-The game does not accept text resources files larger than 256kb.
-It will crash during loading from any part of the city of yusnan.
-# Solution
-For the **auto_yus_us.bin** files, use Yusnaan tool **Strings to Ztr** using ZtrCompressor.
+Game texts live in the `txtres` folders (`.ztr` files, exported as `.strings`).
+In Lightning Returns: Final Fantasy XIII, texts are also stored inside the
+`db/ai/npc/pack` containers.
 
-**resident/system/txtres.ztr** 
-For this file, use **Strings to ZTr Pulse fakecompression**.
-This file is incompatible with ZtrCompressor.
+Pulse reads, edits and re-injects those texts, rebuilding the containers around
+the new payload.
 
-## ZtrCompressor
-Compression algorithm created by lehieugch68.
-Decompression is compatible with all ztr files.
-Compression is compatible with most files.
+## Fonts
 
-It is incompatible with the resident/system/txtres.ztr file and event/ev_yuaa_010
+The game font sources (`.wfl` files inside the `.win32.imgb` archives) can be
+edited, including the glyph tables and their textures.
 
+## Images
 
-# Pulse
-Created by albeoris.
-Decompression compatible with all ztr, imgb, wpd files and videos.
-Fakecompression compatible with most files, except auto_yus_us.bin.
+Textures are stored as `txbh`/`vtex` records inside WPD archives and as DDS
+images inside the `.win32.imgb` archives. Both can be viewed and replaced.
 
+## Other formats
 
-## Yusnaan
-I created this to make it easier to use the two tools.
-Extracting and re-inserting ztr file into the wpd archives in white_imga\dbai\npc\pack.
-Decompression and compression of the ztr files.
-
-For image files, for example imgb, use Pulse.exe.
+- Music and voice: `scd`
+- Animation data: `ykd`
+- Archives: encrypted filelists (Final Fantasy XIII-2 and Lightning Returns)
+  plus WPD/IMGB containers with optional compression
